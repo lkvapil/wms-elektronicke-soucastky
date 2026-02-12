@@ -1,0 +1,80 @@
+@startuml WMS pro správu elektronických součástek - Use Case Diagram
+
+left to right direction
+skinparam packageStyle rectangle
+
+actor "Uživatel" as User
+actor "Zebra Čtečka" as Scanner #lightgray
+actor "TME API" as TMEAPI #lightgray
+actor "Zebra Tiskárna" as Printer #lightgray
+
+rectangle "BOM Manager System" {
+  
+  package "Skenování a Správa Součástek" {
+    usecase "Naskenovat QR kód" as UC1
+    usecase "Parsovat data z QR kódu" as UC2
+    usecase "Zobrazit detail součástky" as UC3
+    usecase "Upravit množství" as UC4
+    usecase "Smazat součástku" as UC5
+    usecase "Načíst QR z obrázku" as UC15
+  }
+  
+  package "Správa Projektů" {
+    usecase "Vytvořit projekt" as UC6
+    usecase "Přiřadit součástku k projektu" as UC7
+    usecase "Zobrazit součástky projektu" as UC8
+    usecase "Upravit projekt" as UC9
+  }
+  
+  package "Správa Skladových Míst" {
+    usecase "Vytvořit skladové místo" as UC10
+    usecase "Přiřadit součástku na místo" as UC11
+    usecase "Vytisknout štítek skladového místa" as UC12
+  }
+  
+  package "Export a Import" {
+    usecase "Exportovat BOM do CSV" as UC13
+    usecase "Exportovat do JSON" as UC14
+    usecase "Importovat BOM" as UC16
+  }
+  
+  package "TME Integrace" {
+    usecase "Vyhledat součástku v TME" as UC17
+    usecase "Získat informace o součástce" as UC18
+    usecase "Aktualizovat cenu" as UC19
+  }
+}
+
+' Vztahy uživatele
+User --> UC1
+User --> UC3
+User --> UC4
+User --> UC5
+User --> UC6
+User --> UC7
+User --> UC8
+User --> UC9
+User --> UC10
+User --> UC11
+User --> UC12
+User --> UC13
+User --> UC14
+User --> UC15
+User --> UC16
+User --> UC17
+
+' Extends a includes vztahy
+UC1 ..> UC2 : <<include>>
+UC2 ..> UC18 : <<extend>>
+UC3 ..> UC7 : <<extend>>
+UC3 ..> UC11 : <<extend>>
+
+UC17 ..> UC18 : <<include>>
+UC18 ..> UC19 : <<extend>>
+
+' Vztahy k externím aktérům
+Scanner --> UC1 : poskytuje vstup
+TMEAPI --> UC18 : poskytuje data
+Printer --> UC12 : tiskne štítky
+
+@enduml

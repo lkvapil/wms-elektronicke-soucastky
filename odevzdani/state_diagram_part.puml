@@ -1,0 +1,128 @@
+@startuml Part - State Machine Diagram
+
+title State Machine Diagram - Part (Součástka)
+
+[*] --> New : QR kód naskenován
+
+state New {
+    [*] --> Parsing
+    Parsing --> Validated : Data validní
+    Parsing --> Invalid : Data nevalidní
+    Invalid --> [*]
+}
+
+New --> InBOM : Přidáno do BOM
+
+state InBOM {
+    [*] --> Unallocated
+    
+    state Unallocated {
+        [*] --> WaitingForLocation
+        WaitingForLocation : Součástka bez umístění
+        WaitingForLocation : Projekty: žádné
+    }
+    
+    Unallocated --> PartiallyAllocated : assign_location()
+    
+    state PartiallyAllocated {
+        [*] --> HasLocation
+        HasLocation : Má přiřazené skladové místo
+        HasLocation : Projekty: možná žádné
+        
+        HasLocation --> HasLocationAndProjects : assign_to_project()
+        HasLocationAndProjects : Má skladové místo
+        HasLocationAndProjects : Má přiřazené projekty
+        
+        HasLocationAndProjects --> HasLocation : remove_from_all_projects()
+    }
+    
+    state FullyAllocated {
+        [*] --> Complete
+        Complete : Skladové místo: přiřazeno
+        Complete : Projekty: alespoň 1
+        Complete : Štítek: vytištěn
+    }
+    
+    PartiallyAllocated --> FullyAllocated : print_label()
+    Unallocated --> PartiallyAllocated : assign_to_project()
+}
+
+InBOM --> QuantityChanged : scan_again() / add_quantity()
+
+state QuantityChanged {
+    [*] --> Updated
+    Updated : entry / update_quantity()
+    Updated : entry / add_scan_timestamp()
+    Updated : do / refresh_display()
+}
+
+QuantityChanged --> InBOM : [quantity > 0]
+
+InBOM --> LowStock : [quantity < threshold]
+
+state LowStock {
+    [*] --> Warning
+    Warning : entry / show_warning()
+    Warning : Množství pod minimem
+}
+
+LowStock --> InBOM : add_quantity() [quantity >= threshold]
+
+InBOM --> OutOfStock : [quantity == 0]
+
+state OutOfStock {
+    [*] --> Empty
+    Empty : entry / mark_as_empty()
+    Empty : Nelze přiřadit k projektu
+}
+
+OutOfStock --> InBOM : add_quantity() [quantity > 0]
+OutOfStock --> Archived : archive()
+
+state Archived {
+    [*] --> Removed
+    Removed : entry / remove_from_active_bom()
+    Removed : Součástka archivována
+    Removed : Historie zachována
+}
+
+Archived --> [*]
+
+InBOM --> Deleted : delete()
+Deleted --> [*]
+
+' Actions and Events
+note right of New
+  **Events:**
+  - QR kód naskenován
+  
+  **Actions:**
+  - parse_qr_code()
+  - validate_data()
+  - create_part_object()
+end note
+
+note bottom of InBOM
+  **Composite state** s vnořenými stavy
+  reprezentujícími různé úrovně
+  alokace součástky.
+  
+  **Guards:**
+  - [quantity > 0]
+  - [quantity < threshold]
+  - [quantity == 0]
+end note
+
+note right of QuantityChanged
+  **Entry actions:**
+  - update_quantity()
+  - add_scan_timestamp()
+  
+  **Do activities:**
+  - refresh_display()
+  
+  Automatický přechod zpět
+  do InBOM po aktualizaci.
+end note
+
+@enduml

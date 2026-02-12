@@ -1,0 +1,116 @@
+@startuml WMS pro správu elektronických součástek - Sekvenční Diagram (Skenání a Přiřazení Součástky)
+
+actor "Uživatel" as User
+participant "BOMScanner\nGUI" as GUI
+participant "Scanner\nInput" as Scanner
+participant "QR Parser" as Parser
+participant "TME API\nClient" as TME
+participant "BOM\nManager" as BOM
+participant "Storage\nManager" as Storage
+participant "Project\nManager" as Project
+participant "Database\n(JSON)" as DB
+
+== Inicializace ==
+User -> GUI: Spustit aplikaci
+activate GUI
+GUI -> DB: Načíst existující BOM
+activate DB
+DB --> GUI: BOM data
+deactivate DB
+GUI -> DB: Načíst projekty
+activate DB
+DB --> GUI: Seznam projektů
+deactivate DB
+GUI -> DB: Načíst skladová místa
+activate DB
+DB --> GUI: Seznam skladových míst
+deactivate DB
+GUI --> User: Zobrazit hlavní okno
+deactivate GUI
+
+== Skenování QR Kódu ==
+User -> Scanner: Naskenovat QR kód
+activate Scanner
+Scanner -> GUI: Odeslat data (Enter)
+activate GUI
+GUI -> Parser: Parsovat QR data
+activate Parser
+Parser -> Parser: Rozpoznat formát\n(PN, MPN, QTY, etc.)
+Parser --> GUI: Parsed data
+deactivate Parser
+
+alt Součástka existuje v BOM
+    GUI -> BOM: Najít existující součástku
+    activate BOM
+    BOM --> GUI: Součástka nalezena
+    deactivate BOM
+    GUI -> GUI: Aktualizovat množství\n(přičíst QTY)
+else Nová součástka
+    GUI -> TME: Vyhledat součástku (MPN)
+    activate TME
+    TME -> TME: API request\n(SearchProducts)
+    TME --> GUI: Informace o součástce\n(kategorie, popis, cena)
+    deactivate TME
+    GUI -> BOM: Přidat novou součástku
+    activate BOM
+    BOM --> GUI: Součástka přidána
+    deactivate BOM
+end
+
+GUI -> DB: Uložit aktualizovaný BOM
+activate DB
+DB --> GUI: Uloženo
+deactivate DB
+
+GUI --> User: Zobrazit aktualizovaný seznam
+deactivate GUI
+deactivate Scanner
+
+== Přiřazení Skladového Místa ==
+User -> GUI: Otevřít detail součástky
+activate GUI
+GUI --> User: Zobrazit dialog s detaily
+User -> GUI: Kliknout "Manage Storage Locations"
+GUI --> User: Zobrazit seznam skladových míst
+
+User -> GUI: Vybrat skladové místo
+GUI -> Storage: Přiřadit součástku na místo
+activate Storage
+Storage --> GUI: Přiřazeno
+deactivate Storage
+
+GUI -> DB: Uložit změnu
+activate DB
+DB --> GUI: Uloženo
+deactivate DB
+
+GUI --> User: Zobrazit aktualizované umístění
+deactivate GUI
+
+== Přiřazení k Projektu ==
+User -> GUI: Kliknout "Manage Projects"
+activate GUI
+GUI -> Project: Načíst dostupné projekty
+activate Project
+Project --> GUI: Seznam projektů
+deactivate Project
+
+GUI --> User: Zobrazit checkboxy projektů
+
+User -> GUI: Zaškrtnout projekty
+User -> GUI: Kliknout "Save"
+
+GUI -> Project: Aktualizovat přiřazení
+activate Project
+Project --> GUI: Aktualizováno
+deactivate Project
+
+GUI -> DB: Uložit změny
+activate DB
+DB --> GUI: Uloženo
+deactivate DB
+
+GUI --> User: Zobrazit úspěšné přiřazení
+deactivate GUI
+
+@enduml

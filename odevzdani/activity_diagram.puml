@@ -1,0 +1,150 @@
+@startuml WMS pro správu elektronických součástek - Diagram Aktivit (Komplexní Workflow)
+
+|Uživatel|
+start
+:Spustit WMS aplikaci;
+
+|Systém|
+:Načíst existující data z JSON;
+:Inicializovat TME API klienta;
+:Zobrazit hlavní okno;
+
+|Uživatel|
+:Kliknout do pole pro skenování;
+
+|Uživatel|
+repeat
+  |Zebra Čtečka|
+  :Naskenovat QR kód součástky;
+  
+  |Systém|
+  :Přijmout data z čtečky;
+  :Parsovat QR kód;
+  note right
+    Extrahovat:
+    - PN (Part Number)
+    - MPN (Manufacturer Part Number)
+    - QTY (Quantity)
+    - MFR (Manufacturer)
+    - CoO, PO, URL, atd.
+  end note
+  
+  if (Součástka již existuje v BOM?) then (ano)
+    :Najít existující záznam;
+    :Přičíst množství (QTY);
+    :Přidat timestamp do historie;
+  else (ne)
+    fork
+      :Vytvořit nový záznam;
+    fork again
+      :Vyhledat v TME API;
+      if (Nalezeno v TME?) then (ano)
+        :Získat kategorii a popis;
+        :Doplnit informace;
+      else (ne)
+        :Použít pouze data z QR;
+      endif
+    end fork
+    :Přidat do BOM tabulky;
+  endif
+  
+  :Aktualizovat zobrazení tabulky;
+  :Automaticky uložit BOM do JSON;
+  :Vymazat vstupní pole;
+  
+  |Uživatel|
+repeat while (Další součástka k naskenování?) is (ano)
+->ne;
+
+|Uživatel|
+if (Potřeba přiřadit skladová místa?) then (ano)
+  |Uživatel|
+  :Přejít na záložku\n"Allocating Storage Locations";
+  
+  repeat
+    :Vybrat součástku ze seznamu;
+    :Vybrat skladové místo;
+    :Kliknout "Assign Location";
+    
+    |Systém|
+    :Aktualizovat přiřazení;
+    :Uložit změny;
+    :Zobrazit potvrzení;
+  repeat while (Další součástka?) is (ano)
+  ->ne;
+endif
+
+|Uživatel|
+if (Potřeba vytisknout štítky?) then (ano)
+  |Uživatel|
+  :Přejít na záložku\n"Print Labels";
+  
+  repeat
+    :Zadat kód skladového místa;
+    
+    |Systém|
+    :Generovat ZPL kód;
+    :Zobrazit náhled štítku;
+    
+    |Uživatel|
+    if (Způsob exportu?) then (clipboard)
+      |Systém|
+      :Zkopírovat ZPL do schránky;
+    else (soubor)
+      |Systém|
+      :Uložit jako .zpl soubor;
+    endif
+    
+    |Zebra Tiskárna|
+    :Vytisknout štítek;
+    
+  repeat while (Další štítek?) is (ano)
+  ->ne;
+endif
+
+|Uživatel|
+if (Potřeba přiřadit k projektům?) then (ano)
+  repeat
+    :Vybrat součástku;
+    :Otevřít detail součástky;
+    :Kliknout "Manage Projects";
+    
+    |Systém|
+    :Zobrazit seznam projektů;
+    
+    |Uživatel|
+    :Zaškrtnout projekty;
+    :Uložit změny;
+    
+    |Systém|
+    :Aktualizovat přiřazení;
+    :Uložit do JSON;
+    
+  repeat while (Další součástka?) is (ano)
+  ->ne;
+endif
+
+|Uživatel|
+if (Exportovat data?) then (ano)
+  if (Formát exportu?) then (CSV)
+    |Systém|
+    :Vytvořit CSV soubor s timestampem;
+    :Exportovat všechny součástky;
+  else (JSON)
+    |Systém|
+    :Exportovat do JSON formátu;
+  endif
+  :Uložit soubor;
+  :Zobrazit potvrzení;
+endif
+
+|Uživatel|
+:Zavřít aplikaci;
+
+|Systém|
+:Automaticky uložit všechna data;
+:Uložit nastavení aplikace;
+
+stop
+
+@enduml

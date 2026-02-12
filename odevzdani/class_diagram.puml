@@ -1,0 +1,305 @@
+@startuml WMS pro správu elektronických součástek - Class Diagram
+
+' Styling
+skinparam classAttributeIconSize 0
+skinparam class {
+    BackgroundColor<<Entity>> LightYellow
+    BackgroundColor<<UI>> LightBlue
+    BackgroundColor<<API>> LightGreen
+    BackgroundColor<<Manager>> PaleGreen
+}
+
+' ==== UI Layer ====
+package "UI Layer" <<Rectangle>> {
+    class BOMScannerMainWindow <<UI>> {
+        - settings: QSettings
+        - scanned_codes: List[Dict]
+        - projects_data: List[Dict]
+        - storage_locations_data: List[Dict]
+        - bom_table: QTableWidget
+        - projects_table: QTableWidget
+        - storage_table: QTableWidget
+        + __init__()
+        + init_ui()
+        + on_scan_received(code: str)
+        + add_code_to_list(code: str)
+        + export_to_json()
+        + export_to_csv()
+        + save_bom()
+        + load_bom()
+        + refresh_projects_table()
+    }
+    
+    class PartDetailDialog <<UI>> {
+        - parsed_data: Dict
+        - history: List[str]
+        - raw_code: str
+        - part_index: int
+        - history_table: QTableWidget
+        + __init__(parsed_data, history, raw_code, parent)
+        + init_ui()
+        + manage_projects()
+        + manage_storage_locations()
+        + delete_selected_history()
+        + clear_history()
+    }
+    
+    class ProjectDialog <<UI>> {
+        - project_data: Dict
+        - parts_table: QTableWidget
+        + __init__(project_data, parent)
+        + init_ui()
+        + refresh_parts_table()
+    }
+    
+    class ZPLGeneratorTab <<UI>> {
+        - location_input: QLineEdit
+        - zpl_output: QTextEdit
+        + __init__(parent)
+        + init_ui()
+        + generate_zpl(location: str): str
+        + copy_to_clipboard()
+        + save_to_file()
+    }
+}
+
+' ==== Entity Layer ====
+package "Domain Model" <<Rectangle>> {
+    class Part <<Entity>> {
+        - pn: str
+        - mpn: str
+        - manufacturer: str
+        - quantity: int
+        - location: str
+        - value: str
+        - category: str
+        - coo: str
+        - po: str
+        - url: str
+        - rohs: bool
+        - projects: List[str]
+        - scan_history: List[str]
+        + __init__(parsed_data: Dict)
+        + add_quantity(qty: int)
+        + update_location(location: str)
+        + add_to_project(project_name: str)
+        + remove_from_project(project_name: str)
+        + add_scan_timestamp()
+        + get_category(): str
+        + to_dict(): Dict
+    }
+    
+    class Project <<Entity>> {
+        - name: str
+        - description: str
+        - created_date: str
+        - parts: List[str]
+        + __init__(name: str, description: str)
+        + add_part(pn: str)
+        + remove_part(pn: str)
+        + get_parts_count(): int
+        + to_dict(): Dict
+        + from_dict(data: Dict): Project
+    }
+    
+    class StorageLocation <<Entity>> {
+        - code: str
+        - description: str
+        - created_date: str
+        - parts: List[str]
+        + __init__(code: str, description: str)
+        + assign_part(pn: str)
+        + remove_part(pn: str)
+        + is_empty(): bool
+        + to_dict(): Dict
+        + from_dict(data: Dict): StorageLocation
+    }
+    
+    class ScanRecord <<Entity>> {
+        - code: str
+        - timestamp: str
+        - parsed_data: Dict
+        - length: int
+        + __init__(code: str)
+        + parse(): Dict
+        + to_dict(): Dict
+    }
+}
+
+' ==== Manager Layer ====
+package "Business Logic" <<Rectangle>> {
+    class BOMManager <<Manager>> {
+        - parts: Dict[str, Part]
+        - filename: str
+        + __init__(filename: str)
+        + add_or_update_part(parsed_data: Dict): Part
+        + get_part(pn: str): Part
+        + remove_part(pn: str)
+        + get_all_parts(): List[Part]
+        + save(): bool
+        + load(): bool
+        + export_to_csv(filename: str)
+        + get_parts_by_project(project: str): List[Part]
+        + get_parts_by_location(location: str): List[Part]
+    }
+    
+    class ProjectManager <<Manager>> {
+        - projects: Dict[str, Project]
+        - filename: str
+        + __init__(filename: str)
+        + create_project(name: str, desc: str): Project
+        + get_project(name: str): Project
+        + delete_project(name: str)
+        + get_all_projects(): List[Project]
+        + save(): bool
+        + load(): bool
+    }
+    
+    class StorageManager <<Manager>> {
+        - locations: Dict[str, StorageLocation]
+        - filename: str
+        + __init__(filename: str)
+        + create_location(code: str, desc: str): StorageLocation
+        + get_location(code: str): StorageLocation
+        + delete_location(code: str)
+        + get_all_locations(): List[StorageLocation]
+        + save(): bool
+        + load(): bool
+    }
+    
+    class QRParser <<Manager>> {
+        {static} + parse_qr_code(code: str): Dict
+        {static} - extract_field(code: str, field: str): str
+        {static} - parse_quantity(qty_str: str): int
+        {static} + validate_format(code: str): bool
+    }
+    
+    class ZPLGenerator <<Manager>> {
+        {static} - DPI: int = 203
+        {static} - LABEL_WIDTH: int = 2
+        {static} - LABEL_HEIGHT: int = 1
+        {static} + generate_label(location: str): str
+        {static} + save_to_file(zpl: str, filename: str)
+        {static} + send_to_printer(zpl: str, printer_name: str)
+    }
+}
+
+' ==== API Layer ====
+package "External Integration" <<Rectangle>> {
+    class TMEAPI <<API>> {
+        - token: str
+        - app_secret: str
+        - base_url: str
+        - default_country: str
+        + __init__(token: str, app_secret: str)
+        + search_products(symbol: str): Dict
+        + get_product_details(symbol: str): Dict
+        + get_prices(symbol: str): List
+        - _generate_signature(method: str, uri: str, params: Dict): str
+        - _make_request(action: str, params: Dict): Dict
+    }
+    
+    class ZebraPrinterDriver <<API>> {
+        - printer_name: str
+        - connection_type: str
+        + __init__(printer_name: str)
+        + print_zpl(zpl_code: str): bool
+        + get_status(): str
+        + is_connected(): bool
+    }
+}
+
+' ==== Utility ====
+package "Utilities" <<Rectangle>> {
+    class CategoryMapper {
+        {static} + get_category(pn: str, value: str, tme_api: TMEAPI): str
+        {static} - categorize_by_prefix(pn: str): str
+        {static} - categorize_by_tme(mpn: str, tme_api: TMEAPI): str
+    }
+    
+    class FileExporter {
+        {static} + export_to_csv(data: List[Dict], filename: str)
+        {static} + export_to_json(data: List[Dict], filename: str)
+        {static} + import_from_csv(filename: str): List[Dict]
+    }
+}
+
+' ==== Relationships ====
+
+' UI dependencies
+BOMScannerMainWindow "1" *-- "0..*" ScanRecord : manages
+BOMScannerMainWindow "1" --> "1" BOMManager : uses
+BOMScannerMainWindow "1" --> "1" ProjectManager : uses
+BOMScannerMainWindow "1" --> "1" StorageManager : uses
+BOMScannerMainWindow "1" --> "0..1" TMEAPI : uses
+BOMScannerMainWindow "1" ..> "0..*" PartDetailDialog : creates
+BOMScannerMainWindow "1" ..> "0..*" ProjectDialog : creates
+BOMScannerMainWindow "1" *-- "1" ZPLGeneratorTab : contains
+
+PartDetailDialog "1" --> "1" Part : displays
+ProjectDialog "1" --> "1" Project : displays
+
+ZPLGeneratorTab "1" --> "1" ZPLGenerator : uses
+ZPLGeneratorTab "1" --> "0..1" ZebraPrinterDriver : uses
+
+' Manager to Entity relationships
+BOMManager "1" o-- "0..*" Part : manages >
+ProjectManager "1" o-- "0..*" Project : manages >
+StorageManager "1" o-- "0..*" StorageLocation : manages >
+
+' Entity associations
+Part "0..*" -- "0..*" Project : assigned to >
+Part "0..*" -- "0..1" StorageLocation : stored in >
+Part "1" *-- "1..*" ScanRecord : has history >
+
+Project "1" o-- "0..*" Part : contains >
+StorageLocation "1" o-- "0..*" Part : stores >
+
+' Utility relationships
+BOMScannerMainWindow ..> QRParser : uses
+QRParser ..> Part : creates
+BOMManager ..> FileExporter : uses
+Part ..> CategoryMapper : uses
+CategoryMapper ..> TMEAPI : queries
+
+ZPLGenerator ..> ZebraPrinterDriver : uses
+
+' Notes
+note right of Part
+  Hlavní entita systému.
+  Reprezentuje součástku s jejími
+  atributy a vztahy k projektům
+  a skladovým místům.
+  
+  Klíčové atributy:
+  - PN (Part Number) - primární klíč
+  - MPN (Manufacturer Part Number)
+  - quantity - aktuální množství
+end note
+
+note bottom of BOMManager
+  Centrální správce všech součástek.
+  Zodpovídá za CRUD operace,
+  persistenci dat a business logiku.
+  
+  Agregace: obsahuje kolekci Part objektů
+  Kardinalita: 1 manager -> 0..* parts
+end note
+
+note right of TMEAPI
+  Externí API pro získání
+  dodatečných informací
+  o součástkách (kategorie,
+  ceny, parametry)
+end note
+
+note left of QRParser
+  Statická třída pro parsování
+  QR kódů. Extrahuje strukturovaná
+  data z textového řetězce.
+  
+  Kvalifikovaná vazba: používá
+  field name jako kvalifikátor
+end note
+
+@enduml

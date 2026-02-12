@@ -1,0 +1,222 @@
+@startuml BOMScanner - State Machine Diagram
+
+title State Machine Diagram - BOMScanner (Hlavní aplikace)
+
+[*] --> Initializing : start_application()
+
+state Initializing {
+    [*] --> LoadingSettings
+    LoadingSettings : entry / load_qsettings()
+    LoadingSettings --> LoadingData
+    LoadingData : entry / load_bom_from_json()
+    LoadingData : entry / load_projects()
+    LoadingData : entry / load_storage_locations()
+    LoadingData --> InitializingUI
+    InitializingUI : entry / create_widgets()
+    InitializingUI : entry / setup_layouts()
+    InitializingUI --> ConnectingAPI
+    ConnectingAPI : entry / initialize_tme_api()
+    ConnectingAPI --> [*] : [success]
+}
+
+Initializing --> Ready : initialization_complete
+
+state Ready {
+    [*] --> Idle
+    
+    state Idle {
+        [*] --> WaitingForScan
+        WaitingForScan : Textové pole aktivní
+        WaitingForScan : Čeká na vstup z čtečky
+        WaitingForScan : exit / clear_input_field()
+    }
+    
+    Idle --> Processing : scan_received(code)
+    
+    state Processing {
+        [*] --> ParsingCode
+        ParsingCode : entry / parse_qr_code()
+        ParsingCode --> CheckingExistence : [valid_data]
+        ParsingCode --> ErrorHandling : [invalid_data]
+        
+        CheckingExistence : do / search_in_bom()
+        
+        state fork_check <<fork>>
+        CheckingExistence --> fork_check
+        
+        fork_check --> UpdatingExisting : [part_exists]
+        fork_check --> CreatingNew : [part_not_exists]
+        
+        state UpdatingExisting {
+            [*] --> IncrementQuantity
+            IncrementQuantity : entry / add_quantity()
+            IncrementQuantity --> UpdateHistory
+            UpdateHistory : entry / add_scan_timestamp()
+            UpdateHistory --> [*]
+        }
+        
+        state CreatingNew {
+            [*] --> QueryingTME
+            QueryingTME : do / tme_api.search_products()
+            QueryingTME --> EnrichingData : [found]
+            QueryingTME --> UsingQRDataOnly : [not_found]
+            
+            EnrichingData : entry / add_category()
+            EnrichingData : entry / add_description()
+            EnrichingData --> AddingToBOM
+            
+            UsingQRDataOnly --> AddingToBOM
+            
+            AddingToBOM : entry / bom_manager.add_part()
+            AddingToBOM --> [*]
+        }
+        
+        state join_update <<join>>
+        UpdatingExisting --> join_update
+        CreatingNew --> join_update
+        
+        join_update --> SavingData
+        
+        state SavingData {
+            [*] --> WritingJSON
+            WritingJSON : entry / save_bom()
+            WritingJSON --> RefreshingUI
+            RefreshingUI : entry / update_table_display()
+            RefreshingUI --> [*]
+        }
+        
+        SavingData --> [*]
+        
+        state ErrorHandling {
+            [*] --> ShowError
+            ShowError : entry / display_error_message()
+            ShowError --> [*]
+        }
+        
+        ErrorHandling --> [*]
+    }
+    
+    Processing --> Idle : processing_complete
+    
+    Idle --> ManagingData : user_action
+    
+    state ManagingData {
+        [*] --> choice_action <<choice>>
+        
+        choice_action --> ViewingDetails : [view_part]
+        choice_action --> EditingProjects : [manage_projects]
+        choice_action --> AllocatingStorage : [allocate_storage]
+        choice_action --> PrintingLabels : [print_label]
+        choice_action --> ExportingData : [export]
+        
+        state ViewingDetails {
+            [*] --> ShowDetailDialog
+            ShowDetailDialog : Zobrazení PartDetailDialog
+            ShowDetailDialog --> [*]
+        }
+        
+        state EditingProjects {
+            [*] --> SelectProject
+            SelectProject --> AssignParts
+            AssignParts : entry / update_part_projects()
+            AssignParts --> SaveChanges
+            SaveChanges : entry / save_bom()
+            SaveChanges --> [*]
+        }
+        
+        state AllocatingStorage {
+            [*] --> SelectLocation
+            SelectLocation --> AssignLocation
+            AssignLocation : entry / update_part_location()
+            AssignLocation --> SaveChanges
+            SaveChanges : entry / save_bom()
+            SaveChanges --> [*]
+        }
+        
+        state PrintingLabels {
+            [*] --> GenerateZPL
+            GenerateZPL : entry / zpl_generator.generate()
+            GenerateZPL --> SendToPrinter : [auto_print]
+            GenerateZPL --> CopyToClipboard : [manual]
+            SendToPrinter --> [*]
+            CopyToClipboard --> [*]
+        }
+        
+        state ExportingData {
+            [*] --> SelectFormat
+            SelectFormat --> ExportCSV : [format==CSV]
+            SelectFormat --> ExportJSON : [format==JSON]
+            ExportCSV : entry / export_to_csv()
+            ExportJSON : entry / export_to_json()
+            ExportCSV --> [*]
+            ExportJSON --> [*]
+        }
+        
+        ViewingDetails --> [*]
+        EditingProjects --> [*]
+        AllocatingStorage --> [*]
+        PrintingLabels --> [*]
+        ExportingData --> [*]
+    }
+    
+    ManagingData --> Idle : action_complete
+}
+
+Ready --> Saving : close_application()
+
+state Saving {
+    [*] --> AutoSave
+    AutoSave : entry / save_bom()
+    AutoSave : entry / save_projects()
+    AutoSave : entry / save_storage_locations()
+    AutoSave : entry / save_settings()
+    AutoSave --> [*]
+}
+
+Saving --> [*] : exit_application()
+
+' Notes
+note right of Initializing
+  **Inicializační sekvence:**
+  1. Načtení nastavení
+  2. Načtení dat z JSON
+  3. Vytvoření UI komponent
+  4. Připojení k TME API
+  
+  **Guard:** [success]
+  Pokud API nepřipojeno,
+  pokračuje bez integrace
+end note
+
+note bottom of Processing
+  **Composite state** s fork/join
+  pro paralelní zpracování.
+  
+  **Fork:** Kontrola existence
+  **Join:** Sloučení po update/create
+  
+  **Guards:**
+  - [valid_data] / [invalid_data]
+  - [part_exists] / [part_not_exists]
+  - [found] / [not_found]
+end note
+
+note left of ManagingData
+  **Choice pseudostate**
+  pro směrování na základě
+  uživatelské akce.
+  
+  Každá větev má vlastní
+  vnořený stavový diagram.
+end note
+
+note right of Saving
+  **Final state activities:**
+  Auto-save všech dat
+  před ukončením aplikace.
+  
+  Zajišťuje, že žádná
+  data nejsou ztracena.
+end note
+
+@enduml
