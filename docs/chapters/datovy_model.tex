@@ -1,9 +1,6 @@
 \chapter{Datový model}
 \label{chap:datovy_model}
 
-Datový model je zachycen platformově nezávislým konceptuálním diagramem tříd,
-který zachycuje doménové koncepty, generalizaci a asociativní třídu.
-
 \section{Přehled entit}
 
 Systém pracuje s~následujícími hlavními třídami:
@@ -52,17 +49,6 @@ Konceptuální model zachycuje:
   \includegraphics[width=\textwidth]{02a_conceptual_model.png}
   \caption{Konceptuální model tříd}
   \label{fig:conceptual}
-\end{figure}
-
-\section{ER diagram}
-
-Kompletní ER diagram datového modelu je zobrazen na \autoref{fig:er_diagram}.
-
-\begin{figure}[H]
-  \centering
-  \includegraphics[width=\textwidth]{03_er_diagram.png}
-  \caption{ER diagram datového modelu}
-  \label{fig:er_diagram}
 \end{figure}
 
 \section{Popis atributů tříd}
@@ -150,8 +136,6 @@ Kompletní ER diagram datového modelu je zobrazen na \autoref{fig:er_diagram}.
     id                  & int          & Jednoznačný identifikátor lokace \\
     kodLokace           & String       & Unikátní kód místa v~skladu (např.\,A-01-03) \\
     popis               & String       & Textový popis lokace \\
-    pridatSoucastku()   & void         & Přiřadí součástku do lokace \\
-    odebratSoucastku()  & void         & Odebere součástku z~lokace \\
     \bottomrule
   \end{tabularx}
 \end{table}
@@ -173,6 +157,52 @@ Kompletní ER diagram datového modelu je zobrazen na \autoref{fig:er_diagram}.
   \end{tabularx}
 \end{table}
 
+\subsection{Třída \texttt{Naskladneni}}
+
+\begin{table}[H]
+  \centering
+  \caption{Atributy a metody třídy Naskladneni}
+  \begin{tabularx}{\textwidth}{llX}
+    \toprule
+    \textbf{Název}         & \textbf{Typ} & \textbf{Popis} \\
+    \midrule
+    cisloDodavky          & String       & Číslo dodávky od dodavatele \\
+    provestNaskladneni()  & void         & Provede příjem součástek na sklad \\
+    \bottomrule
+  \end{tabularx}
+\end{table}
+
+\subsection{Třída \texttt{Vyskladneni}}
+
+\begin{table}[H]
+  \centering
+  \caption{Atributy a metody třídy Vyskladneni}
+  \begin{tabularx}{\textwidth}{llX}
+    \toprule
+    \textbf{Název}         & \textbf{Typ} & \textbf{Popis} \\
+    \midrule
+    duvod                 & String       & Důvod výdeje ze skladu \\
+    provestVyskladneni()  & void         & Provede výdej součástek ze skladu \\
+    \bottomrule
+  \end{tabularx}
+\end{table}
+
+\subsection{Třída \texttt{Presun}}
+
+\begin{table}[H]
+  \centering
+  \caption{Atributy a metody třídy Presun}
+  \begin{tabularx}{\textwidth}{llX}
+    \toprule
+    \textbf{Název}         & \textbf{Typ} & \textbf{Popis} \\
+    \midrule
+    zdrojovaLokace        & String       & Kód zdrojové lokace \\
+    cilovaLokace          & String       & Kód cílové lokace \\
+    provestPresun()       & void         & Provede přesun součástek mezi lokacemi \\
+    \bottomrule
+  \end{tabularx}
+\end{table}
+
 \subsection{Třída \texttt{Projekt}}
 
 \begin{table}[H]
@@ -187,7 +217,6 @@ Kompletní ER diagram datového modelu je zobrazen na \autoref{fig:er_diagram}.
     popis                 & String       & Textový popis projektu \\
     pridatSoucastku()     & void         & Přiřadí součástku k~projektu \\
     odebratSoucastku()    & void         & Odebere součástku z~projektu \\
-    zobrazitSoucastky()   & List         & Vrátí seznam součástek projektu \\
     \bottomrule
   \end{tabularx}
 \end{table}
