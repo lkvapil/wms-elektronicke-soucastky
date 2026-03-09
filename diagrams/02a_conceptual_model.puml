@@ -67,7 +67,6 @@ class Projekt {
   popis : String
   +pridatSoucastku()
   +odebratSoucastku()
-  +zobrazitSoucastky()
 }
 
 class ProjektSoucastka {
@@ -77,21 +76,21 @@ class ProjektSoucastka {
 
 ' ===== vztahy =====
 
-KategorieSoucastky "1" -- "0..*" Soucastka : kategorizuje
+KategorieSoucastky "1" -- "0..*" Soucastka : kategorie
 Dodavatel "1" -- "0..*" Soucastka : dodava
 
 Sklad "1" *-- "0..*" SkladovaLokace : obsahuje
 
 SkladovaLokace "1" -- "0..*" Soucastka : [kodLokace]
 
-Soucastka "1" -- "0..*" PohybSkladu : pohyb
-SkladovaLokace "1" -- "0..*" PohybSkladu : misto
+Soucastka "1" -- "0..*" PohybSkladu : soucastka
+SkladovaLokace "1" -- "0..*" PohybSkladu : lokace
 
 PohybSkladu <|-- Naskladneni
 PohybSkladu <|-- Vyskladneni
 PohybSkladu <|-- Presun
 
-Projekt "1" -- "0..*" ProjektSoucastka : obsahuje
-Soucastka "1" -- "0..*" ProjektSoucastka : jePouzitaV
+Projekt "1" o-- "0..*" ProjektSoucastka : obsahuje
+Soucastka "1" -- "0..*" ProjektSoucastka : komponenta
 
 @enduml
