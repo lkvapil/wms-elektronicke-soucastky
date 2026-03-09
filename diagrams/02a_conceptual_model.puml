@@ -1,6 +1,8 @@
 @startuml
 top to bottom direction
 skinparam classAttributeIconSize 0
+skinparam stereotypeCBackgroundColor transparent
+skinparam stereotypeCBorderColor transparent
 
 class Sklad {
   id : int
