@@ -1,4 +1,5 @@
 @startuml
+left to right direction
 hide circle
 
 class Soucastka {
@@ -59,13 +60,12 @@ class ProjektSoucastka {
   mnozstvi : int
 }
 
-' ===== vztahy =====
+' ===== hlavní vztahy =====
 
 KategorieSoucastky "1" -- "0..*" Soucastka : kategorie
 Dodavatel "1" -- "0..*" Soucastka : dodava
 
 Sklad "1" *-- "0..*" SkladovaLokace : obsahuje
-
 SkladovaLokace "1" -- "0..*" Soucastka : [kodLokace]
 
 Soucastka "1" -- "0..*" PohybSkladu : soucastka
@@ -77,5 +77,11 @@ PohybSkladu <|-- Presun
 
 Projekt "1" o-- "0..*" ProjektSoucastka : obsahuje
 Soucastka "1" -- "0..*" ProjektSoucastka : komponenta
+
+' ===== pomocné skryté vazby pro rozložení =====
+
+KategorieSoucastky -[hidden]- Dodavatel
+Soucastka -[hidden]- Projekt
+Sklad -[hidden]- PohybSkladu
 
 @enduml
