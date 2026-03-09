@@ -1,4 +1,4 @@
-@startuml Konceptualni model - WMS Elektronicke soucastky
+@startuml
 hide circle
 
 class Soucastka {
