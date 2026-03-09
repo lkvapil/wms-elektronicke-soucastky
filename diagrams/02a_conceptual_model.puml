@@ -11,7 +11,6 @@ class Soucastka {
 class KategorieSoucastky {
   id : int
   nazev : String
-  popis : String
 }
 
 class Dodavatel {
@@ -30,7 +29,6 @@ class Sklad {
 class SkladovaLokace {
   id : int
   kodLokace : String
-  popis : String
 }
 
 class PohybSkladu {
@@ -48,17 +46,17 @@ class Vyskladneni {
 }
 
 class Presun {
+  zdrojLokace : String
+  cilLokace : String
 }
 
 class Projekt {
   id : int
   nazev : String
-  popis : String
 }
 
 class ProjektSoucastka {
   mnozstvi : int
-  poznamka : String
 }
 
 ' ===== vztahy =====

@@ -66,7 +66,6 @@ Systém pracuje s~následujícími hlavními třídami:
     \midrule
     id             & int          & Jednoznačný identifikátor kategorie \\
     nazev          & String       & Název kategorie (rezistor, IC, \ldots) \\
-    popis          & String       & Textový popis kategorie \\
     \bottomrule
   \end{tabularx}
 \end{table}
@@ -115,7 +114,6 @@ Systém pracuje s~následujícími hlavními třídami:
     \midrule
     id                  & int          & Jednoznačný identifikátor lokace \\
     kodLokace           & String       & Unikátní kód místa v~skladu (např.\,A-01-03) \\
-    popis               & String       & Textový popis lokace \\
     \bottomrule
   \end{tabularx}
 \end{table}
@@ -166,7 +164,18 @@ Systém pracuje s~následujícími hlavními třídami:
 
 \subsection{Třída \texttt{Presun}}
 
-Třída \texttt{Presun} nedefinuje vlastní atributy; dědí vše z~\texttt{PohybSkladu}.
+\begin{table}[H]
+  \centering
+  \caption{Atributy třídy Presun}
+  \begin{tabularx}{\textwidth}{llX}
+    \toprule
+    \textbf{Název}   & \textbf{Typ} & \textbf{Popis} \\
+    \midrule
+    zdrojLokace     & String       & Kód zdrojové lokace \\
+    cilLokace       & String       & Kód cílové lokace \\
+    \bottomrule
+  \end{tabularx}
+\end{table}
 
 \subsection{Třída \texttt{Projekt}}
 
@@ -179,7 +188,6 @@ Třída \texttt{Presun} nedefinuje vlastní atributy; dědí vše z~\texttt{Pohy
     \midrule
     id              & int          & Jednoznačný identifikátor projektu \\
     nazev           & String       & Název projektu \\
-    popis           & String       & Textový popis projektu \\
     \bottomrule
   \end{tabularx}
 \end{table}
@@ -194,7 +202,6 @@ Třída \texttt{Presun} nedefinuje vlastní atributy; dědí vše z~\texttt{Pohy
     \textbf{Název} & \textbf{Typ} & \textbf{Popis} \\
     \midrule
     mnozstvi       & int          & Požadované množství součástky pro projekt \\
-    poznamka       & String       & Volitelná poznámka k~vazbě \\
     \bottomrule
   \end{tabularx}
 \end{table}
