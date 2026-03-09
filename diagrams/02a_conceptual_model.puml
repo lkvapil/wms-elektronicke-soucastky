@@ -1,14 +1,7 @@
 @startuml
-scale 1.8
-left to right direction
+scale 1.2
+top to bottom direction
 hide circle
-
-class Soucastka {
-  id : int
-  nazev : String
-  popis : String
-  partNumber : String
-}
 
 class KategorieSoucastky {
   id : int
@@ -22,7 +15,7 @@ class Dodavatel {
   telefon : String
 }
 
-class Sklad {
+class Soucastka {
   id : int
   nazev : String
   adresa : String
@@ -60,6 +53,8 @@ class Projekt {
 class ProjektSoucastka {
   mnozstvi : int
 }
+
+' vztahy
 
 KategorieSoucastky "1" -- "0..*" Soucastka : kategorie
 Dodavatel "1" -- "0..*" Soucastka : dodava
