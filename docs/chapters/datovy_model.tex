@@ -27,28 +27,13 @@ Systém pracuje s~následujícími hlavními třídami:
         a \texttt{poznamka}.
 \end{description}
 
-\section{Konceptuální model tříd}
-
-Konceptuální model zachycuje:
-\begin{itemize}
-  \item \textbf{Generalizaci (dědičnost)} -- třída \texttt{PohybSkladu}
-        je rodičovskou třídou pro \texttt{Naskladneni}, \texttt{Vyskladneni}
-        a \texttt{Presun}. Sdílené atributy (\texttt{id}, \texttt{datum},
-        \texttt{mnozstvi}) a operace jsou definovány jednou v~rodičovské třídě.
-  \item \textbf{Asociativní třídu} -- \texttt{ProjektSoucastka} reprezentuje
-        vztah $M{:}N$ mezi \texttt{Projekt} a \texttt{Soucastka} a přidává
-        k~tomuto vztahu vlastní atributy (\texttt{mnozstvi}, \texttt{poznamka}).
-  \item \textbf{Asociace} -- \texttt{KategorieSoucastky} a \texttt{Dodavatel}
-        jsou propojeny se \texttt{Soucastka}; \texttt{Sklad} sdružuje
-        \texttt{SkladovaLokace}; pohyby skladu jsou svázány jak se
-        \texttt{SkladovaLokace}, tak se \texttt{Soucastka}.
-\end{itemize}
+\section{Diagram tříd}
 
 \begin{figure}[H]
   \centering
   \includegraphics[width=\textwidth]{02a_conceptual_model.png}
-  \caption{Konceptuální model tříd}
-  \label{fig:conceptual}
+  \caption{Diagram tříd}
+  \label{fig:class_diagram}
 \end{figure}
 
 \section{Popis atributů tříd}
@@ -57,7 +42,7 @@ Konceptuální model zachycuje:
 
 \begin{table}[H]
   \centering
-  \caption{Atributy a metody třídy Soucastka}
+  \caption{Atributy třídy Soucastka}
   \begin{tabularx}{\textwidth}{llX}
     \toprule
     \textbf{Název}    & \textbf{Typ} & \textbf{Popis} \\
@@ -66,8 +51,6 @@ Konceptuální model zachycuje:
     nazev             & String       & Obchodní název součástky \\
     popis             & String       & Textový popis součástky \\
     partNumber        & String       & Katalogové číslo výrobce \\
-    upravitUdaje()    & void         & Aktualizuje katalogové informace \\
-    zobrazInformace() & String       & Vrátí přehled informací o~součástce \\
     \bottomrule
   \end{tabularx}
 \end{table}
@@ -92,7 +75,7 @@ Konceptuální model zachycuje:
 
 \begin{table}[H]
   \centering
-  \caption{Atributy a metody třídy Dodavatel}
+  \caption{Atributy třídy Dodavatel}
   \begin{tabularx}{\textwidth}{llX}
     \toprule
     \textbf{Název}   & \textbf{Typ} & \textbf{Popis} \\
@@ -101,7 +84,6 @@ Konceptuální model zachycuje:
     nazev            & String       & Obchodní název dodavatele \\
     email            & String       & Kontaktní e-mail \\
     telefon          & String       & Kontaktní telefonní číslo \\
-    upravitKontakt() & void         & Aktualizuje kontaktní údaje \\
     \bottomrule
   \end{tabularx}
 \end{table}
@@ -110,7 +92,7 @@ Konceptuální model zachycuje:
 
 \begin{table}[H]
   \centering
-  \caption{Atributy a metody třídy Sklad}
+  \caption{Atributy třídy Sklad}
   \begin{tabularx}{\textwidth}{llX}
     \toprule
     \textbf{Název}   & \textbf{Typ} & \textbf{Popis} \\
@@ -118,8 +100,6 @@ Konceptuální model zachycuje:
     id               & int          & Jednoznačný identifikátor skladu \\
     nazev            & String       & Název skladu \\
     adresa           & String       & Fyzická adresa skladu \\
-    pridatLokaci()   & void         & Přidá novou skladovou lokaci \\
-    odebratLokaci()  & void         & Odebere skladovou lokaci \\
     \bottomrule
   \end{tabularx}
 \end{table}
@@ -128,7 +108,7 @@ Konceptuální model zachycuje:
 
 \begin{table}[H]
   \centering
-  \caption{Atributy a metody třídy SkladovaLokace}
+  \caption{Atributy třídy SkladovaLokace}
   \begin{tabularx}{\textwidth}{llX}
     \toprule
     \textbf{Název}      & \textbf{Typ} & \textbf{Popis} \\
@@ -144,7 +124,7 @@ Konceptuální model zachycuje:
 
 \begin{table}[H]
   \centering
-  \caption{Atributy a metody třídy PohybSkladu}
+  \caption{Atributy třídy PohybSkladu}
   \begin{tabularx}{\textwidth}{llX}
     \toprule
     \textbf{Název}  & \textbf{Typ} & \textbf{Popis} \\
@@ -152,7 +132,6 @@ Konceptuální model zachycuje:
     id              & int          & Jednoznačný identifikátor pohybu \\
     datum           & Date         & Datum provedení pohybu \\
     mnozstvi        & int          & Počet kusů daného pohybu \\
-    provestPohyb()  & void         & Provede pohyb skladu \\
     \bottomrule
   \end{tabularx}
 \end{table}
@@ -161,13 +140,12 @@ Konceptuální model zachycuje:
 
 \begin{table}[H]
   \centering
-  \caption{Atributy a metody třídy Naskladneni}
+  \caption{Atributy třídy Naskladneni}
   \begin{tabularx}{\textwidth}{llX}
     \toprule
-    \textbf{Název}         & \textbf{Typ} & \textbf{Popis} \\
+    \textbf{Název}  & \textbf{Typ} & \textbf{Popis} \\
     \midrule
-    cisloDodavky          & String       & Číslo dodávky od dodavatele \\
-    provestNaskladneni()  & void         & Provede příjem součástek na sklad \\
+    cisloDodavky    & String       & Číslo dodávky od dodavatele \\
     \bottomrule
   \end{tabularx}
 \end{table}
@@ -176,47 +154,32 @@ Konceptuální model zachycuje:
 
 \begin{table}[H]
   \centering
-  \caption{Atributy a metody třídy Vyskladneni}
+  \caption{Atributy třídy Vyskladneni}
   \begin{tabularx}{\textwidth}{llX}
     \toprule
-    \textbf{Název}         & \textbf{Typ} & \textbf{Popis} \\
+    \textbf{Název}  & \textbf{Typ} & \textbf{Popis} \\
     \midrule
-    duvod                 & String       & Důvod výdeje ze skladu \\
-    provestVyskladneni()  & void         & Provede výdej součástek ze skladu \\
+    duvod           & String       & Důvod výdeje ze skladu \\
     \bottomrule
   \end{tabularx}
 \end{table}
 
 \subsection{Třída \texttt{Presun}}
 
-\begin{table}[H]
-  \centering
-  \caption{Atributy a metody třídy Presun}
-  \begin{tabularx}{\textwidth}{llX}
-    \toprule
-    \textbf{Název}         & \textbf{Typ} & \textbf{Popis} \\
-    \midrule
-    zdrojovaLokace        & String       & Kód zdrojové lokace \\
-    cilovaLokace          & String       & Kód cílové lokace \\
-    provestPresun()       & void         & Provede přesun součástek mezi lokacemi \\
-    \bottomrule
-  \end{tabularx}
-\end{table}
+Třída \texttt{Presun} nedefinuje vlastní atributy; dědí vše z~\texttt{PohybSkladu}.
 
 \subsection{Třída \texttt{Projekt}}
 
 \begin{table}[H]
   \centering
-  \caption{Atributy a metody třídy Projekt}
+  \caption{Atributy třídy Projekt}
   \begin{tabularx}{\textwidth}{llX}
     \toprule
-    \textbf{Název}        & \textbf{Typ} & \textbf{Popis} \\
+    \textbf{Název}  & \textbf{Typ} & \textbf{Popis} \\
     \midrule
-    id                    & int          & Jednoznačný identifikátor projektu \\
-    nazev                 & String       & Název projektu \\
-    popis                 & String       & Textový popis projektu \\
-    pridatSoucastku()     & void         & Přiřadí součástku k~projektu \\
-    odebratSoucastku()    & void         & Odebere součástku z~projektu \\
+    id              & int          & Jednoznačný identifikátor projektu \\
+    nazev           & String       & Název projektu \\
+    popis           & String       & Textový popis projektu \\
     \bottomrule
   \end{tabularx}
 \end{table}

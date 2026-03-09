@@ -6,8 +6,6 @@ class Soucastka {
   nazev : String
   popis : String
   partNumber : String
-  +upravitUdaje()
-  +zobrazInformace()
 }
 
 class KategorieSoucastky {
@@ -21,15 +19,12 @@ class Dodavatel {
   nazev : String
   email : String
   telefon : String
-  +upravitKontakt()
 }
 
 class Sklad {
   id : int
   nazev : String
   adresa : String
-  +pridatLokaci()
-  +odebratLokaci()
 }
 
 class SkladovaLokace {
@@ -42,31 +37,23 @@ class PohybSkladu {
   id : int
   datum : Date
   mnozstvi : int
-  +provestPohyb()
 }
 
 class Naskladneni {
   cisloDodavky : String
-  +provestNaskladneni()
 }
 
 class Vyskladneni {
   duvod : String
-  +provestVyskladneni()
 }
 
 class Presun {
-  zdrojovaLokace : String
-  cilovaLokace : String
-  +provestPresun()
 }
 
 class Projekt {
   id : int
   nazev : String
   popis : String
-  +pridatSoucastku()
-  +odebratSoucastku()
 }
 
 class ProjektSoucastka {
