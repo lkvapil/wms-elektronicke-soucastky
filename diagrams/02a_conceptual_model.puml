@@ -1,7 +1,6 @@
 @startuml
 scale 1.2
 top to bottom direction
-hide circle
 
 class KategorieSoucastky {
   id : int
