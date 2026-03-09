@@ -1,77 +1,101 @@
 @startuml Konceptualni model - WMS Elektronicke soucastky
 hide circle
 
-
-abstract class PohybSkladu {
+class Soucastka {
   - id : int
-  - datum : DateTime
-  - mnozstvi : int
+  - nazev : String
+  - popis : String
+  - partNumber : String
   --
-  + validovatMnozstvi()
-  + ulozitZaznam()
+  + upravitUdaje()
+  + zobrazInformace()
 }
 
-class Naskladneni {
-  - lokace : String
-  --
-  + provestNaskladneni()
-  + zvysitMnozstvi()
+class KategorieSoucastky {
+  - id : int
+  - nazev : String
+  - popis : String
 }
 
-class Vyskladneni {
-  - cil : String
+class Dodavatel {
+  - id : int
+  - nazev : String
+  - email : String
+  - telefon : String
   --
-  + provestVyskladneni()
-  + snizitMnozstvi()
+  + upravitKontakt()
 }
 
-class Presun {
-  - zdrojLokace : String
-  - cilovaLokace : String
+class Sklad {
+  - id : int
+  - nazev : String
+  - adresa : String
   --
-  + provestPresun()
+  + pridatLokaci()
+  + odebratLokaci()
 }
 
 class SkladovaLokace {
+  - id : int
   - kodLokace : String
   - popis : String
   --
   + pridatSoucastku()
   + odebratSoucastku()
-  + zobrazObsah()
 }
 
-class Soucastka {
-  - partNumber : String
-  - nazev : String
-  - kategorie : String
+class PohybSkladu {
+  - id : int
+  - datum : Date
   - mnozstvi : int
   --
-  + aktualizovatUdaje()
-  + ziskatStav()
+  + provestPohyb()
 }
 
-class Dodavatel {
-  - nazev : String
-  - zeme : String
-  - adresa : String
-  - email : String
+class Naskladneni {
   --
-  + aktualizovatKontakt()
-  + zobrazSoucastky()
+  + provestNaskladneni()
 }
 
-' Generalizace
+class Vyskladneni {
+  --
+  + provestVyskladneni()
+}
+
+class Presun {
+  --
+  + provestPresun()
+}
+
+class Projekt {
+  - id : int
+  - nazev : String
+  - popis : String
+  --
+  + pridatSoucastku()
+  + odebratSoucastku()
+  + zobrazitSoucastky()
+}
+
+class ProjektSoucastka {
+  - mnozstvi : int
+  - poznamka : String
+}
+
+' Vztahy
+KategorieSoucastky "1" -- "0..*" Soucastka
+Dodavatel "1" -- "0..*" Soucastka
+
+Sklad "1" -- "0..*" SkladovaLokace
+
+SkladovaLokace "1" -- "0..*" PohybSkladu
+Soucastka "1" -- "0..*" PohybSkladu
+
 PohybSkladu <|-- Naskladneni
 PohybSkladu <|-- Vyskladneni
 PohybSkladu <|-- Presun
 
-' Kvalifikovana vazba: Dodavatel[katalogCislo] -> 0..1 Soucastka
-Dodavatel "1 [katalogCislo]" --> "0..1" Soucastka : dodava >
-
-' Ostatni asociace
-SkladovaLokace "1" -- "0..*" Soucastka : obsahuje >
-PohybSkladu "0..*" --> "1" SkladovaLokace : probiha na >
-PohybSkladu "0..*" --> "1" Soucastka : tyka se >
+Projekt "1" -- "0..*" ProjektSoucastka
+Soucastka "1" -- "0..*" ProjektSoucastka
 
 @enduml

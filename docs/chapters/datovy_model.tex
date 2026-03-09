@@ -2,49 +2,49 @@
 \label{chap:datovy_model}
 
 Datový model je zachycen platformově nezávislým konceptuálním diagramem tříd,
-který zachycuje doménové koncepty, generalizaci a kvalifikovanou vazbu.
+který zachycuje doménové koncepty, generalizaci a asociativní třídu.
 
 \section{Přehled entit}
 
 Systém pracuje s~následujícími hlavními třídami:
 
 \begin{description}
-  \item[\texttt{PohybSkladu}] Abstraktní základní třída pro všechny pohyby skladu.
-        Obsahuje společné atributy \texttt{id}, \texttt{datum} a \texttt{mnozstvi}.
-  \item[\texttt{Naskladneni}] Konkrétní podtřída -- příjem zboží do skladu.
-        Rozšiřuje \texttt{PohybSkladu} o~atribut \texttt{lokace}.
-  \item[\texttt{Vyskladneni}] Konkrétní podtřída -- výdej zboží ze skladu.
-        Rozšiřuje \texttt{PohybSkladu} o~atribut \texttt{cil}.
-  \item[\texttt{Presun}] Konkrétní podtřída -- přesun zboží mezi lokacemi.
-        Rozšiřuje \texttt{PohybSkladu} o~atributy \texttt{zdrojLokace}
-        a \texttt{cilovaLokace}.
-  \item[\texttt{SkladovaLokace}] Fyzické místo v~skladovém prostoru
-        identifikované kódem \texttt{kodLokace}.
   \item[\texttt{Soucastka}] Elektronická součástka s~katalogovými údaji
-        (\texttt{partNumber}, \texttt{nazev}, \texttt{kategorie}) a aktuálním množstvím.
+        (\texttt{partNumber}, \texttt{nazev}, \texttt{popis}).
+  \item[\texttt{KategorieSoucastky}] Kategorie pro třídění součástek
+        (např.\ rezistor, kondenzátor, obvod).
   \item[\texttt{Dodavatel}] Dodavatel součástek s~kontaktními údaji
-        (\texttt{nazev}, \texttt{zeme}, \texttt{adresa}, \texttt{email}).
+        (\texttt{nazev}, \texttt{email}, \texttt{telefon}).
+  \item[\texttt{Sklad}] Fyzický sklad identifikovaný názvem a adresou;
+        sdružuje skladové lokace.
+  \item[\texttt{SkladovaLokace}] Konkrétní místo v~skladu (přihrádka, regál)
+        identifikované kódem \texttt{kodLokace}.
+  \item[\texttt{PohybSkladu}] Základní třída pro všechny pohyby skladu;
+        obsahuje společné atributy \texttt{id}, \texttt{datum} a \texttt{mnozstvi}.
+  \item[\texttt{Naskladneni}] Podtřída -- příjem součástek na sklad.
+  \item[\texttt{Vyskladneni}] Podtřída -- výdej součástek ze skladu.
+  \item[\texttt{Presun}] Podtřída -- přesun součástek mezi lokacemi.
+  \item[\texttt{Projekt}] Projekt, ke kterému jsou přiřazovány součástky.
+  \item[\texttt{ProjektSoucastka}] Asociativní třída vztahu $M{:}N$ mezi
+        \texttt{Projekt} a \texttt{Soucastka}; nese atributy \texttt{mnozstvi}
+        a \texttt{poznamka}.
 \end{description}
 
 \section{Konceptuální model tříd}
 
 Konceptuální model zachycuje:
 \begin{itemize}
-  \item \textbf{Generalizaci (dědičnost)} -- abstraktní třída \texttt{PohybSkladu}
+  \item \textbf{Generalizaci (dědičnost)} -- třída \texttt{PohybSkladu}
         je rodičovskou třídou pro \texttt{Naskladneni}, \texttt{Vyskladneni}
         a \texttt{Presun}. Sdílené atributy (\texttt{id}, \texttt{datum},
-        \texttt{mnozstvi}) a operace (\texttt{validovatMnozstvi()},
-        \texttt{ulozitZaznam()}) jsou definovány jednou v~rodičovské třídě.
-  \item \textbf{Kvalifikovanou vazbu} --
-        \texttt{Dodavatel[katalogCislo]~$\to$~0..1~Soucastka}:
-        pro daného dodavatele a jeho konkrétní katalogové číslo existuje
-        nejvýše jedna součástka. Bez kvalifikátoru by byla násobnost $0..*$.
-  \item \textbf{Agregaci} -- \texttt{SkladovaLokace} agreguje $0..*$
-        instancí \texttt{Soucastka} (součástka může existovat nezávisle
-        na lokaci).
-  \item \textbf{Asociace} -- každý pohyb skladu (\texttt{PohybSkladu})
-        se vztahuje k~právě jedné \texttt{SkladovaLokace} a právě jedné
-        \texttt{Soucastka}.
+        \texttt{mnozstvi}) a operace jsou definovány jednou v~rodičovské třídě.
+  \item \textbf{Asociativní třídu} -- \texttt{ProjektSoucastka} reprezentuje
+        vztah $M{:}N$ mezi \texttt{Projekt} a \texttt{Soucastka} a přidává
+        k~tomuto vztahu vlastní atributy (\texttt{mnozstvi}, \texttt{poznamka}).
+  \item \textbf{Asociace} -- \texttt{KategorieSoucastky} a \texttt{Dodavatel}
+        jsou propojeny se \texttt{Soucastka}; \texttt{Sklad} sdružuje
+        \texttt{SkladovaLokace}; pohyby skladu jsou svázány jak se
+        \texttt{SkladovaLokace}, tak se \texttt{Soucastka}.
 \end{itemize}
 
 \begin{figure}[H]
@@ -67,24 +67,6 @@ Kompletní ER diagram datového modelu je zobrazen na \autoref{fig:er_diagram}.
 
 \section{Popis atributů tříd}
 
-\subsection{Třída \texttt{PohybSkladu} (abstraktní)}
-
-\begin{table}[H]
-  \centering
-  \caption{Atributy a metody třídy PohybSkladu}
-  \begin{tabularx}{\textwidth}{llX}
-    \toprule
-    \textbf{Název}        & \textbf{Typ}  & \textbf{Popis} \\
-    \midrule
-    id                    & int           & Jednoznačný identifikátor pohybu \\
-    datum                 & DateTime      & Datum a čas provedení pohybu \\
-    mnozstvi              & int           & Počet kusů daného pohybu \\
-    validovatMnozstvi()   & void          & Ověří, že množství je kladné číslo \\
-    ulozitZaznam()        & void          & Persistuje pohyb do úložiště \\
-    \bottomrule
-  \end{tabularx}
-\end{table}
-
 \subsection{Třída \texttt{Soucastka}}
 
 \begin{table}[H]
@@ -92,32 +74,30 @@ Kompletní ER diagram datového modelu je zobrazen na \autoref{fig:er_diagram}.
   \caption{Atributy a metody třídy Soucastka}
   \begin{tabularx}{\textwidth}{llX}
     \toprule
-    \textbf{Název}        & \textbf{Typ}  & \textbf{Popis} \\
+    \textbf{Název}    & \textbf{Typ} & \textbf{Popis} \\
     \midrule
-    partNumber            & String        & Katalogové číslo výrobce (unikátní) \\
-    nazev                 & String        & Obchodní název součástky \\
-    kategorie             & String        & Kategorie (rezistor, kondenzátor, \ldots) \\
-    mnozstvi              & int           & Aktuální stav zásob \\
-    aktualizovatUdaje()   & void          & Aktualizuje katalogové informace \\
-    ziskatStav()          & String        & Vrátí stav zásoby (dostatek / minimum / chybí) \\
+    id                & int          & Jednoznačný identifikátor součástky \\
+    nazev             & String       & Obchodní název součástky \\
+    popis             & String       & Textový popis součástky \\
+    partNumber        & String       & Katalogové číslo výrobce \\
+    upravitUdaje()    & void         & Aktualizuje katalogové informace \\
+    zobrazInformace() & String       & Vrátí přehled informací o~součástce \\
     \bottomrule
   \end{tabularx}
 \end{table}
 
-\subsection{Třída \texttt{SkladovaLokace}}
+\subsection{Třída \texttt{KategorieSoucastky}}
 
 \begin{table}[H]
   \centering
-  \caption{Atributy a metody třídy SkladovaLokace}
+  \caption{Atributy třídy KategorieSoucastky}
   \begin{tabularx}{\textwidth}{llX}
     \toprule
-    \textbf{Název}        & \textbf{Typ} & \textbf{Popis} \\
+    \textbf{Název} & \textbf{Typ} & \textbf{Popis} \\
     \midrule
-    kodLokace             & String       & Unikátní kód místa v~skladu (např.\,A-01-03) \\
-    popis                 & String       & Textový popis lokace \\
-    pridatSoucastku()     & void         & Přiřadí součástku do lokace \\
-    odebratSoucastku()    & void         & Odebere součástku z~lokace \\
-    zobrazObsah()         & List         & Vrátí seznam součástek v~lokaci \\
+    id             & int          & Jednoznačný identifikátor kategorie \\
+    nazev          & String       & Název kategorie (rezistor, IC, \ldots) \\
+    popis          & String       & Textový popis kategorie \\
     \bottomrule
   \end{tabularx}
 \end{table}
@@ -129,14 +109,100 @@ Kompletní ER diagram datového modelu je zobrazen na \autoref{fig:er_diagram}.
   \caption{Atributy a metody třídy Dodavatel}
   \begin{tabularx}{\textwidth}{llX}
     \toprule
-    \textbf{Název}         & \textbf{Typ} & \textbf{Popis} \\
+    \textbf{Název}   & \textbf{Typ} & \textbf{Popis} \\
     \midrule
-    nazev                  & String       & Obchodní název dodavatele \\
-    zeme                   & String       & Země sídla dodavatele \\
-    adresa                 & String       & Poštovní adresa \\
-    email                  & String       & Kontaktní e-mail \\
-    aktualizovatKontakt()  & void         & Aktualizuje kontaktní údaje \\
-    zobrazSoucastky()      & List         & Vrátí seznam dodávaných součástek \\
+    id               & int          & Jednoznačný identifikátor dodavatele \\
+    nazev            & String       & Obchodní název dodavatele \\
+    email            & String       & Kontaktní e-mail \\
+    telefon          & String       & Kontaktní telefonní číslo \\
+    upravitKontakt() & void         & Aktualizuje kontaktní údaje \\
+    \bottomrule
+  \end{tabularx}
+\end{table}
+
+\subsection{Třída \texttt{Sklad}}
+
+\begin{table}[H]
+  \centering
+  \caption{Atributy a metody třídy Sklad}
+  \begin{tabularx}{\textwidth}{llX}
+    \toprule
+    \textbf{Název}   & \textbf{Typ} & \textbf{Popis} \\
+    \midrule
+    id               & int          & Jednoznačný identifikátor skladu \\
+    nazev            & String       & Název skladu \\
+    adresa           & String       & Fyzická adresa skladu \\
+    pridatLokaci()   & void         & Přidá novou skladovou lokaci \\
+    odebratLokaci()  & void         & Odebere skladovou lokaci \\
+    \bottomrule
+  \end{tabularx}
+\end{table}
+
+\subsection{Třída \texttt{SkladovaLokace}}
+
+\begin{table}[H]
+  \centering
+  \caption{Atributy a metody třídy SkladovaLokace}
+  \begin{tabularx}{\textwidth}{llX}
+    \toprule
+    \textbf{Název}      & \textbf{Typ} & \textbf{Popis} \\
+    \midrule
+    id                  & int          & Jednoznačný identifikátor lokace \\
+    kodLokace           & String       & Unikátní kód místa v~skladu (např.\,A-01-03) \\
+    popis               & String       & Textový popis lokace \\
+    pridatSoucastku()   & void         & Přiřadí součástku do lokace \\
+    odebratSoucastku()  & void         & Odebere součástku z~lokace \\
+    \bottomrule
+  \end{tabularx}
+\end{table}
+
+\subsection{Třída \texttt{PohybSkladu}}
+
+\begin{table}[H]
+  \centering
+  \caption{Atributy a metody třídy PohybSkladu}
+  \begin{tabularx}{\textwidth}{llX}
+    \toprule
+    \textbf{Název}  & \textbf{Typ} & \textbf{Popis} \\
+    \midrule
+    id              & int          & Jednoznačný identifikátor pohybu \\
+    datum           & Date         & Datum provedení pohybu \\
+    mnozstvi        & int          & Počet kusů daného pohybu \\
+    provestPohyb()  & void         & Provede pohyb skladu \\
+    \bottomrule
+  \end{tabularx}
+\end{table}
+
+\subsection{Třída \texttt{Projekt}}
+
+\begin{table}[H]
+  \centering
+  \caption{Atributy a metody třídy Projekt}
+  \begin{tabularx}{\textwidth}{llX}
+    \toprule
+    \textbf{Název}        & \textbf{Typ} & \textbf{Popis} \\
+    \midrule
+    id                    & int          & Jednoznačný identifikátor projektu \\
+    nazev                 & String       & Název projektu \\
+    popis                 & String       & Textový popis projektu \\
+    pridatSoucastku()     & void         & Přiřadí součástku k~projektu \\
+    odebratSoucastku()    & void         & Odebere součástku z~projektu \\
+    zobrazitSoucastky()   & List         & Vrátí seznam součástek projektu \\
+    \bottomrule
+  \end{tabularx}
+\end{table}
+
+\subsection{Asociativní třída \texttt{ProjektSoucastka}}
+
+\begin{table}[H]
+  \centering
+  \caption{Atributy asociativní třídy ProjektSoucastka}
+  \begin{tabularx}{\textwidth}{llX}
+    \toprule
+    \textbf{Název} & \textbf{Typ} & \textbf{Popis} \\
+    \midrule
+    mnozstvi       & int          & Požadované množství součástky pro projekt \\
+    poznamka       & String       & Volitelná poznámka k~vazbě \\
     \bottomrule
   \end{tabularx}
 \end{table}
