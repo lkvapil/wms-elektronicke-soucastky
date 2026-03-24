@@ -1,0 +1,37 @@
+@startuml
+title Activity diagram - WMS proces
+
+start
+
+:Vytvoreni pozadavku na pohyb;
+
+:Zadani dat o soucastce;
+:Kontrola dat;
+
+if (Data v poradku?) then (ano)
+  :Schvaleni pohybu;
+
+  if (Schvaleno?) then (ano)
+    :Priprava pohybu;
+    :Provedeni pohybu;
+
+    if (Chyba?) then (ano)
+      :Oprava chyby;
+      :Kontrola dat;
+    else (ne)
+      :Aktualizace skladu;
+      :Potvrzeni operace;
+    endif
+
+  else (ne)
+    :Zamitnuti pozadavku;
+  endif
+
+else (ne)
+  :Oprava dat;
+  :Kontrola dat;
+endif
+
+stop
+
+@enduml
