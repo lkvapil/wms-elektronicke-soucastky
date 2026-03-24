@@ -1,16 +1,20 @@
 @startuml
-title Stavovy diagram - Soucastka v projektu
+title State diagram - Soucastka
 
 [*] --> Volna
 
 Volna --> Prirazena : priraditProjekt()
+
+Prirazena : entry / rezervace_skladu
+Prirazena --> Prirazena : kontrola_stavu
+
 Prirazena --> Pouzita : pouzit()
-Pouzita --> Odepsana
+
+Pouzita : entry / odecteni_ze_skladu
+Pouzita --> Odepsana : odepsat()
 
 Prirazena --> Volna : [zruseni]
 Pouzita --> Prirazena : [vraceni]
-
-Prirazena : entry / rezervace ve skladu
 
 Odepsana --> [*]
 

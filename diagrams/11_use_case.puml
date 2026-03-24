@@ -1,6 +1,6 @@
 @startuml
 left to right direction
-title Use Case Diagram - WMS
+title Use Case diagram - WMS
 
 actor Administrator
 
@@ -12,8 +12,10 @@ rectangle WMS {
   Administrator -- (Zobrazeni skladu)
 
   (Sprava soucastek) .> (Kontrola stavu) : <<include>>
-  (Vytvoreni pohybu) .> (Schvaleni pohybu) : <<extend>>
+  (Vytvoreni pohybu) .> (Kontrola dat) : <<include>>
   (Prirazeni soucastky k projektu) .> (Kontrola dostupnosti) : <<include>>
+
+  (Vytvoreni pohybu) .> (Schvaleni pohybu) : <<extend>>
 
 }
 

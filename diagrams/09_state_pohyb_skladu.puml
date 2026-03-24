@@ -1,16 +1,23 @@
 @startuml
-title Stavovy diagram - Pohyb
+title State diagram - Pohyb
 
 [*] --> Vytvoren
 
-Vytvoren --> Schvalen : schvalit()
-Schvalen --> Proveden : provestPohyb()
-Proveden --> Dokonceno
+Vytvoren --> KontrolaDat
 
-Schvalen --> Vytvoren : [chyba]
-Proveden --> Schvalen : [neprovedeno]
+KontrolaDat --> Schvalen : [data_ok]
+KontrolaDat --> Vytvoren : [chyba_dat]
 
-Proveden : entry / aktualizace skladu
+Schvalen --> ProbihaPohyb : provestPohyb()
+
+ProbihaPohyb : entry / aktualizovat_log
+ProbihaPohyb --> ProbihaPohyb : kontrola_stavu
+
+ProbihaPohyb --> Dokonceno : [hotovo]
+ProbihaPohyb --> Chyba : [chyba]
+
+Chyba : entry / log_chyby
+Chyba --> Vytvoren : oprava()
 
 Dokonceno --> [*]
 

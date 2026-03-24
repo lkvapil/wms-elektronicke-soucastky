@@ -5,7 +5,6 @@ class Soucastka {
   -id: int
   -nazev: String
   -mnozstvi: int
-
   +zvysMnozstvi(pocet: int)
   +snizMnozstvi(pocet: int)
 }
@@ -13,7 +12,6 @@ class Soucastka {
 class Projekt {
   -id: int
   -nazev: String
-
   +priradSoucastku(s: Soucastka)
   +odeberSoucastku(s: Soucastka)
 }
@@ -22,13 +20,12 @@ class Pohyb {
   -id: int
   -typ: String
   -datum: Date
-
   +vytvoritPohyb()
   +schvalit()
   +provestPohyb()
 }
 
-Soucastka "1" --> "*" Pohyb
+Soucastka "1" --> "*" Pohyb : vytvari
 Projekt "1" --> "*" Soucastka : obsahuje
 
 @enduml
