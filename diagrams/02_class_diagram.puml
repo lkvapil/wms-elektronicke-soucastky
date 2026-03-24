@@ -1,6 +1,14 @@
 @startuml
 title Class diagram - WMS
-scale 0.75
+top to bottom direction
+skinparam linetype ortho
+
+class Projekt {
+  -id: int
+  -nazev: String
+  +priradSoucastku(s: Soucastka)
+  +odeberSoucastku(s: Soucastka)
+}
 
 class Soucastka {
   -id: int
@@ -8,13 +16,6 @@ class Soucastka {
   -mnozstvi: int
   +zvysMnozstvi(pocet: int)
   +snizMnozstvi(pocet: int)
-}
-
-class Projekt {
-  -id: int
-  -nazev: String
-  +priradSoucastku(s: Soucastka)
-  +odeberSoucastku(s: Soucastka)
 }
 
 class Pohyb {
@@ -26,7 +27,8 @@ class Pohyb {
   +provestPohyb()
 }
 
-Soucastka "1" --> "*" Pohyb : vytvari
-Projekt "1" --> "*" Soucastka : obsahuje
+' vertikalni vazby (A4 optimalizace)
+Projekt --> Soucastka : obsahuje
+Soucastka --> Pohyb : vytvari
 
 @enduml
