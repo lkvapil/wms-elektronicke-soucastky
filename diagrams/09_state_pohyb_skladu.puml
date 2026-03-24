@@ -1,28 +1,14 @@
 @startuml
-title Stavovy diagram - PohybSkladu
+title Stavovy diagram - Pohyb
 
 [*] --> Vytvoren
 
-Vytvoren --> KontrolaDat
+Vytvoren --> Schvalen : schvalit()
+Schvalen --> Proveden : provestPohyb()
+Proveden --> Dokonceno
 
-KontrolaDat --> CekaNaSchvaleni : [data_ok]
-KontrolaDat --> OpravaDat : [chyba_dat]
-
-OpravaDat --> KontrolaDat
-
-CekaNaSchvaleni --> Schvalen : [schvaleno]
-CekaNaSchvaleni --> Zamitnut : [zamitnuto]
-
-Schvalen --> PripravaPohybu
-PripravaPohybu --> ProbihaPohyb
-
-ProbihaPohyb --> ProbihaPohyb : kontrola_stavu
-ProbihaPohyb --> Dokonceno : [hotovo]
-ProbihaPohyb --> Chyba : [chyba]
-
-Chyba --> OpravaDat
+Schvalen --> Vytvoren : [chyba]
 
 Dokonceno --> [*]
-Zamitnut --> [*]
 
 @enduml

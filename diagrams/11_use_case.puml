@@ -2,22 +2,16 @@
 left to right direction
 title Use Case Diagram - WMS
 
-actor Uzivatel
 actor Administrator
 
 rectangle WMS {
-  
-  Uzivatel -- (Vytvořit pohyb)
-  Uzivatel -- (Zobrazit sklad)
-  Uzivatel -- (Přiřadit součástku projektu)
 
-  (Vytvořit pohyb) --> (Zkontrolovat data) : <<include>>
-  (Přiřadit součástku projektu) --> (Zkontrolovat data) : <<include>>
+  Administrator -- (Sprava soucastek)
+  Administrator -- (Vytvoreni pohybu)
+  Administrator -- (Prirazeni soucastky k projektu)
 
-  (Vytvořit pohyb) <-- (Schválit pohyb) : <<extend>> [je potřeba schválení]
-
-  Administrator -- (Schválit pohyb)
-  Administrator -- (Správa skladu)
+  (Sprava soucastek) .> (Kontrola stavu) : <<include>>
+  (Vytvoreni pohybu) .> (Schvaleni pohybu) : <<extend>>
 
 }
 

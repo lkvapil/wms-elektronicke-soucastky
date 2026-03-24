@@ -1,46 +1,24 @@
 @startuml
 title Class diagram - WMS
 
-class Sklad {
-  id
-  nazev
-}
-
-class Lokace {
-  id
-  oznaceni
-}
-
 class Soucastka {
   id
   nazev
-  typ
+  mnozstvi
 }
 
 class Projekt {
   id
   nazev
-  stav
 }
 
-class PohybSkladu {
+class Pohyb {
   id
   typ
-  mnozstvi
-  stav
+  datum
 }
 
-class SoucastkaProjekt {
-  mnozstvi
-}
-
-Sklad "1" -- "*" Lokace
-Lokace "1" -- "*" Soucastka
-
-Soucastka "1" -- "*" PohybSkladu
-Lokace "1" -- "*" PohybSkladu
-
-Projekt "1" -- "*" SoucastkaProjekt
-Soucastka "1" -- "*" SoucastkaProjekt
+Soucastka --> Pohyb
+Projekt --> Soucastka : prirazeni
 
 @enduml

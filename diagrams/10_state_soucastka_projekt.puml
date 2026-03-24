@@ -1,25 +1,14 @@
 @startuml
-title Stavovy diagram - SoucastkaProjekt
+title Stavovy diagram - Soucastka (v projektu)
 
-[*] --> Vytvoreno
+[*] --> Volna
 
-Vytvoreno --> KontrolaDat
+Volna --> Prirazena : priraditProjekt()
+Prirazena --> Pouzita : pouzit()
+Pouzita --> Odepsana
 
-KontrolaDat --> KontrolaSkladu : [data_ok]
-KontrolaDat --> OpravaDat : [chyba_dat]
+Prirazena --> Volna : [zruseni]
 
-OpravaDat --> KontrolaDat
-
-KontrolaSkladu --> Rezervace : [dostatek]
-KontrolaSkladu --> Nedostatek : [nedostatek]
-
-Nedostatek --> OpravaDat
-
-Rezervace --> Prirazeno : rezervovat / update_sklad
-
-Prirazeno --> Prirazeno : kontrola_stavu
-Prirazeno --> Dokonceno : [hotovo]
-
-Dokonceno --> [*]
+Odepsana --> [*]
 
 @enduml

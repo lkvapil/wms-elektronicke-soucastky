@@ -21,25 +21,12 @@ systému co nejpřesnější.
 Systém pracuje s~následujícími hlavními třídami:
 
 \begin{description}
-  \item[\texttt{Soucastka}] Elektronická součástka s~katalogovými údaji
-        (\texttt{partNumber}, \texttt{nazev}, \texttt{popis}).
-  \item[\texttt{KategorieSoucastky}] Kategorie pro třídění součástek
-        (např.\ rezistor, kondenzátor, obvod).
-  \item[\texttt{Dodavatel}] Dodavatel součástek s~kontaktními údaji
-        (\texttt{nazev}, \texttt{email}, \texttt{telefon}).
-  \item[\texttt{Sklad}] Fyzický sklad identifikovaný názvem a adresou;
-        sdružuje skladové lokace.
-  \item[\texttt{SkladovaLokace}] Konkrétní místo v~skladu (přihrádka, regál)
-        identifikované kódem \texttt{kodLokace}.
-  \item[\texttt{PohybSkladu}] Základní třída pro všechny pohyby skladu;
-        obsahuje společné atributy \texttt{id}, \texttt{datum} a \texttt{mnozstvi}.
-  \item[\texttt{Naskladneni}] Podtřída -- příjem součástek na sklad.
-  \item[\texttt{Vyskladneni}] Podtřída -- výdej součástek ze skladu.
-  \item[\texttt{Presun}] Podtřída -- přesun součástek mezi lokacemi.
-  \item[\texttt{Projekt}] Projekt, ke kterému jsou přiřazovány součástky.
-  \item[\texttt{ProjektSoucastka}] Asociativní třída vztahu $M{:}N$ mezi
-        \texttt{Projekt} a \texttt{Soucastka}; nese atributy \texttt{mnozstvi}
-        a \texttt{poznamka}.
+  \item[\texttt{Soucastka}] Elektronická součástka evidovaná v~systému;
+        obsahuje atributy \texttt{id}, \texttt{nazev} a aktuální \texttt{mnozstvi} na skladě.
+  \item[\texttt{Projekt}] Projekt, ke kterému jsou součástky přiřazovány;
+        identifikován pomocí \texttt{id} a \texttt{nazev}.
+  \item[\texttt{Pohyb}] Záznam o~pohybu součástky (příjem, výdej, přesun);
+        obsahuje \texttt{id}, \texttt{typ} pohybu a \texttt{datum} provedení.
 \end{description}
 
 \section{Diagram tříd}
@@ -51,21 +38,21 @@ Systém pracuje s~následujícími hlavními třídami:
   \label{fig:class_diagram}
 \end{figure}
 
-\section{Stavový diagram \texttt{PohybSkladu}}
+\section{Stavový diagram \texttt{Pohyb}}
 
 \begin{figure}[H]
   \centering
   \includegraphics[width=\textwidth]{09_state_pohyb_skladu.png}
-  \caption{Stavový diagram třídy PohybSkladu}
+  \caption{Stavový diagram třídy Pohyb}
   \label{fig:state_pohyb}
 \end{figure}
 
-\section{Stavový diagram \texttt{SoucastkaProjekt}}
+\section{Stavový diagram \texttt{Soucastka} (v projektu)}
 
 \begin{figure}[H]
   \centering
   \includegraphics[width=\textwidth]{10_state_soucastka_projekt.png}
-  \caption{Stavový diagram třídy SoucastkaProjekt}
+  \caption{Stavový diagram třídy Soucastka (v projektu)}
   \label{fig:state_soucastka_projekt}
 \end{figure}
 
@@ -87,134 +74,11 @@ Systém pracuje s~následujícími hlavními třídami:
   \caption{Atributy třídy Soucastka}
   \begin{tabularx}{\textwidth}{llX}
     \toprule
-    \textbf{Název}    & \textbf{Typ} & \textbf{Popis} \\
-    \midrule
-    id                & int          & Jednoznačný identifikátor součástky \\
-    nazev             & String       & Obchodní název součástky \\
-    popis             & String       & Textový popis součástky \\
-    partNumber        & String       & Katalogové číslo výrobce \\
-    \bottomrule
-  \end{tabularx}
-\end{table}
-
-\subsection{Třída \texttt{KategorieSoucastky}}
-
-\begin{table}[H]
-  \centering
-  \caption{Atributy třídy KategorieSoucastky}
-  \begin{tabularx}{\textwidth}{llX}
-    \toprule
-    \textbf{Název} & \textbf{Typ} & \textbf{Popis} \\
-    \midrule
-    id             & int          & Jednoznačný identifikátor kategorie \\
-    nazev          & String       & Název kategorie (rezistor, IC, \ldots) \\
-    \bottomrule
-  \end{tabularx}
-\end{table}
-
-\subsection{Třída \texttt{Dodavatel}}
-
-\begin{table}[H]
-  \centering
-  \caption{Atributy třídy Dodavatel}
-  \begin{tabularx}{\textwidth}{llX}
-    \toprule
-    \textbf{Název}   & \textbf{Typ} & \textbf{Popis} \\
-    \midrule
-    id               & int          & Jednoznačný identifikátor dodavatele \\
-    nazev            & String       & Obchodní název dodavatele \\
-    email            & String       & Kontaktní e-mail \\
-    telefon          & String       & Kontaktní telefonní číslo \\
-    \bottomrule
-  \end{tabularx}
-\end{table}
-
-\subsection{Třída \texttt{Sklad}}
-
-\begin{table}[H]
-  \centering
-  \caption{Atributy třídy Sklad}
-  \begin{tabularx}{\textwidth}{llX}
-    \toprule
-    \textbf{Název}   & \textbf{Typ} & \textbf{Popis} \\
-    \midrule
-    id               & int          & Jednoznačný identifikátor skladu \\
-    nazev            & String       & Název skladu \\
-    adresa           & String       & Fyzická adresa skladu \\
-    \bottomrule
-  \end{tabularx}
-\end{table}
-
-\subsection{Třída \texttt{SkladovaLokace}}
-
-\begin{table}[H]
-  \centering
-  \caption{Atributy třídy SkladovaLokace}
-  \begin{tabularx}{\textwidth}{llX}
-    \toprule
-    \textbf{Název}      & \textbf{Typ} & \textbf{Popis} \\
-    \midrule
-    id                  & int          & Jednoznačný identifikátor lokace \\
-    kodLokace           & String       & Unikátní kód místa v~skladu (např.\,A-01-03) \\
-    \bottomrule
-  \end{tabularx}
-\end{table}
-
-\subsection{Třída \texttt{PohybSkladu}}
-
-\begin{table}[H]
-  \centering
-  \caption{Atributy třídy PohybSkladu}
-  \begin{tabularx}{\textwidth}{llX}
-    \toprule
     \textbf{Název}  & \textbf{Typ} & \textbf{Popis} \\
     \midrule
-    id              & int          & Jednoznačný identifikátor pohybu \\
-    datum           & Date         & Datum provedení pohybu \\
-    mnozstvi        & int          & Počet kusů daného pohybu \\
-    \bottomrule
-  \end{tabularx}
-\end{table}
-
-\subsection{Třída \texttt{Naskladneni}}
-
-\begin{table}[H]
-  \centering
-  \caption{Atributy třídy Naskladneni}
-  \begin{tabularx}{\textwidth}{llX}
-    \toprule
-    \textbf{Název}  & \textbf{Typ} & \textbf{Popis} \\
-    \midrule
-    cisloDodavky    & String       & Číslo dodávky od dodavatele \\
-    \bottomrule
-  \end{tabularx}
-\end{table}
-
-\subsection{Třída \texttt{Vyskladneni}}
-
-\begin{table}[H]
-  \centering
-  \caption{Atributy třídy Vyskladneni}
-  \begin{tabularx}{\textwidth}{llX}
-    \toprule
-    \textbf{Název}  & \textbf{Typ} & \textbf{Popis} \\
-    \midrule
-    duvod           & String       & Důvod výdeje ze skladu \\
-    \bottomrule
-  \end{tabularx}
-\end{table}
-
-\subsection{Třída \texttt{Presun}}
-
-\begin{table}[H]
-  \centering
-  \caption{Atributy třídy Presun}
-  \begin{tabularx}{\textwidth}{llX}
-    \toprule
-    \textbf{Název}   & \textbf{Typ} & \textbf{Popis} \\
-    \midrule
-    zdrojLokace     & String       & Kód zdrojové lokace \\
-    cilLokace       & String       & Kód cílové lokace \\
+    id              & int          & Jednoznačný identifikátor součástky \\
+    nazev           & String       & Název součástky \\
+    mnozstvi        & int          & Aktuální počet kusů na skladě \\
     \bottomrule
   \end{tabularx}
 \end{table}
@@ -234,16 +98,18 @@ Systém pracuje s~následujícími hlavními třídami:
   \end{tabularx}
 \end{table}
 
-\subsection{Asociativní třída \texttt{ProjektSoucastka}}
+\subsection{Třída \texttt{Pohyb}}
 
 \begin{table}[H]
   \centering
-  \caption{Atributy asociativní třídy ProjektSoucastka}
+  \caption{Atributy třídy Pohyb}
   \begin{tabularx}{\textwidth}{llX}
     \toprule
-    \textbf{Název} & \textbf{Typ} & \textbf{Popis} \\
+    \textbf{Název}  & \textbf{Typ} & \textbf{Popis} \\
     \midrule
-    mnozstvi       & int          & Požadované množství součástky pro projekt \\
+    id              & int          & Jednoznačný identifikátor pohybu \\
+    typ             & String       & Typ pohybu (příjem, výdej, přesun) \\
+    datum           & Date         & Datum provedení pohybu \\
     \bottomrule
   \end{tabularx}
 \end{table}
