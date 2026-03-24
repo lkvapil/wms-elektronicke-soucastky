@@ -1,303 +1,46 @@
-@startuml 02_class_diagram
-!theme cerulean-outline
-title WMS Elektronické součástky – Třídní diagram
+@startuml
+title Class diagram - WMS
 
-skinparam backgroundColor #FAFAFA
-skinparam classBackgroundColor #F2F2F2
-skinparam classBorderColor #444444
-skinparam classArrowColor #222222
-skinparam classFontSize 11
-skinparam packageBackgroundColor #E8E8E8
-
-'══════════════════════════════════════════════════════════════════════════════
-'  ENUMERACE
-'══════════════════════════════════════════════════════════════════════════════
-enum MovementType {
-  RECEIPT
-  ISSUE
-  TRANSFER
-  ADJUSTMENT
+class Sklad {
+  id
+  nazev
 }
 
-enum OrderStatus {
-  DRAFT
-  SENT
-  CONFIRMED
-  RECEIVED
-  CANCELLED
+class Lokace {
+  id
+  oznaceni
 }
 
-enum UserRole {
-  ADMIN
-  SKLADNIK
-  CTENAR
+class Soucastka {
+  id
+  nazev
+  typ
 }
 
-enum PackageType {
-  SMD_0201
-  SMD_0402
-  SMD_0603
-  SMD_0805
-  SMD_1206
-  DIP_8
-  DIP_14
-  DIP_16
-  DIP_28
-  DIP_40
-  TO_92
-  TO_220
-  SOT_23
-  SOIC_8
-  TQFP_32
-  LQFP_64
-  OTHER
+class Projekt {
+  id
+  nazev
+  stav
 }
 
-'══════════════════════════════════════════════════════════════════════════════
-'  UŽIVATELÉ A ROLE
-'══════════════════════════════════════════════════════════════════════════════
-package "Uživatelé" {
-
-  class User {
-    - id : int
-    - username : str
-    - email : str
-    - password_hash : str
-    - role : UserRole
-    - full_name : str
-    - is_active : bool
-    - created_at : datetime
-    - last_login : datetime
-    + authenticate(password: str) : bool
-    + has_permission(action: str) : bool
-    + deactivate() : void
-  }
-
+class PohybSkladu {
+  id
+  typ
+  mnozstvi
+  stav
 }
 
-'══════════════════════════════════════════════════════════════════════════════
-'  KATALOG SOUČÁSTEK
-'══════════════════════════════════════════════════════════════════════════════
-package "Katalog" {
-
-  class ComponentCategory {
-    - id : int
-    - name : str
-    - description : str
-    - icon : str
-    - parent_id : int | None
-    + get_full_path() : str
-    + get_children() : List[ComponentCategory]
-  }
-
-  class Component {
-    - id : int
-    - part_number : str
-    - name : str
-    - manufacturer : str
-    - value : str
-    - unit : str
-    - package : PackageType
-    - tolerance : str
-    - voltage_rating : str
-    - datasheet_url : str
-    - barcode : str
-    - min_stock : int
-    - description : str
-    - notes : str
-    - is_active : bool
-    - created_at : datetime
-    - updated_at : datetime
-    + get_total_stock() : int
-    + is_below_minimum() : bool
-    + get_stock_by_location() : Dict[Location, int]
-    + archive() : void
-  }
-
-  ComponentCategory "1" *-- "0..*" Component : kategorizuje >
-  ComponentCategory "0..1" *-- "0..*" ComponentCategory : nadřazená >
-
+class SoucastkaProjekt {
+  mnozstvi
 }
 
-'══════════════════════════════════════════════════════════════════════════════
-'  SKLAD A ZÁSOBY
-'══════════════════════════════════════════════════════════════════════════════
-package "Sklad" {
+Sklad "1" -- "*" Lokace
+Lokace "1" -- "*" Soucastka
 
-  class Location {
-    - id : int
-    - code : str
-    - name : str
-    - section : str
-    - shelf : str
-    - bin : str
-    - capacity : int
-    - is_active : bool
-    - parent_id : int | None
-    + get_full_code() : str
-    + get_total_items() : int
-    + get_children() : List[Location]
-  }
+Soucastka "1" -- "*" PohybSkladu
+Lokace "1" -- "*" PohybSkladu
 
-  class Stock {
-    - id : int
-    - quantity : int
-    - reserved_qty : int
-    - unit_price : Decimal
-    - updated_at : datetime
-    + available_qty() : int
-    + reserve(qty: int) : bool
-    + release_reservation(qty: int) : void
-    + total_value() : Decimal
-  }
-
-  class StockMovement {
-    - id : int
-    - movement_type : MovementType
-    - quantity : int
-    - unit_price : Decimal
-    - reference : str
-    - notes : str
-    - created_at : datetime
-    + calculate_total() : Decimal
-  }
-
-  Location "1" *-- "0..*" Location : nadřazená >
-  Location "1" *-- "0..*" Stock : obsahuje >
-  Component "1" *-- "0..*" Stock : evidována v >
-  Component "1" *-- "0..*" StockMovement : pohyb >
-  Location "0..1" -- "0..*" StockMovement : from_location
-  Location "0..1" -- "0..*" StockMovement : to_location
-
-}
-
-'══════════════════════════════════════════════════════════════════════════════
-'  OBJEDNÁVKY A DODAVATELÉ
-'══════════════════════════════════════════════════════════════════════════════
-package "Objednávky" {
-
-  class Supplier {
-    - id : int
-    - name : str
-    - code : str
-    - contact_person : str
-    - email : str
-    - phone : str
-    - website : str
-    - lead_time_days : int
-    - notes : str
-    - is_active : bool
-    + get_open_orders() : List[Order]
-    + get_avg_lead_time() : float
-  }
-
-  class Order {
-    - id : int
-    - order_number : str
-    - status : OrderStatus
-    - order_date : date
-    - expected_delivery : date
-    - actual_delivery : date | None
-    - total_amount : Decimal
-    - notes : str
-    - created_at : datetime
-    + send() : void
-    + confirm() : void
-    + receive() : void
-    + cancel() : void
-    + calculate_total() : Decimal
-  }
-
-  class OrderItem {
-    - id : int
-    - quantity_ordered : int
-    - quantity_received : int
-    - unit_price : Decimal
-    - notes : str
-    + remaining_qty() : int
-    + line_total() : Decimal
-  }
-
-  Supplier "1" *-- "0..*" Order : dodává >
-  Order "1" *-- "1..*" OrderItem : obsahuje >
-  Component "1" -- "0..*" OrderItem : objednávána >
-
-}
-
-'══════════════════════════════════════════════════════════════════════════════
-'  PROJEKTY
-'══════════════════════════════════════════════════════════════════════════════
-package "Projekty" {
-
-  class Project {
-    - id : int
-    - code : str
-    - name : str
-    - description : str
-    - status : str
-    - created_at : datetime
-    + get_bom() : List[StockMovement]
-    + get_total_cost() : Decimal
-  }
-
-}
-
-'══════════════════════════════════════════════════════════════════════════════
-'  AUDITNÍ LOG
-'══════════════════════════════════════════════════════════════════════════════
-class AuditLog {
-  - id : int
-  - entity_type : str
-  - entity_id : int
-  - action : str
-  - old_values : JSON | None
-  - new_values : JSON | None
-  - ip_address : str
-  - created_at : datetime
-}
-
-'══════════════════════════════════════════════════════════════════════════════
-'  INVENTURA
-'══════════════════════════════════════════════════════════════════════════════
-class InventoryCycle {
-  - id : int
-  - start_date : datetime
-  - end_date : datetime | None
-  - status : str
-  - created_by : int
-  - notes : str
-  + start() : void
-  + close() : void
-  + generate_sheet() : PDF
-}
-
-class InventoryItem {
-  - id : int
-  - expected_qty : int
-  - counted_qty : int | None
-  - difference : int
-  - is_confirmed : bool
-  + calculate_difference() : int
-}
-
-InventoryCycle "1" *-- "1..*" InventoryItem : obsahuje >
-InventoryItem -- Stock : odkazuje >
-
-'══════════════════════════════════════════════════════════════════════════════
-'  VAZBY PŘES BALÍČKY
-'══════════════════════════════════════════════════════════════════════════════
-User "1" -- "0..*" StockMovement : provádí >
-User "1" -- "0..*" Order : vytváří >
-User "1" -- "0..*" AuditLog : generuje >
-User "1" -- "0..*" InventoryCycle : zahajuje >
-
-StockMovement "0..1" -- "0..1" OrderItem : navazuje >
-StockMovement "0..1" -- "0..1" Project : výdej pro >
-
-'── Enumerace vazby ────────────────────────────────────────────────────────
-Component ..> PackageType : uses
-StockMovement ..> MovementType : type
-Order ..> OrderStatus : status
-User ..> UserRole : role
+Projekt "1" -- "*" SoucastkaProjekt
+Soucastka "1" -- "*" SoucastkaProjekt
 
 @enduml

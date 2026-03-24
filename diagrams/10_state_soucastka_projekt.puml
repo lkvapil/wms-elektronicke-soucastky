@@ -1,0 +1,25 @@
+@startuml
+title Stavovy diagram - SoucastkaProjekt
+
+[*] --> Vytvoreno
+
+Vytvoreno --> KontrolaDat
+
+KontrolaDat --> KontrolaSkladu : [data_ok]
+KontrolaDat --> OpravaDat : [chyba_dat]
+
+OpravaDat --> KontrolaDat
+
+KontrolaSkladu --> Rezervace : [dostatek]
+KontrolaSkladu --> Nedostatek : [nedostatek]
+
+Nedostatek --> OpravaDat
+
+Rezervace --> Prirazeno : rezervovat / update_sklad
+
+Prirazeno --> Prirazeno : kontrola_stavu
+Prirazeno --> Dokonceno : [hotovo]
+
+Dokonceno --> [*]
+
+@enduml
