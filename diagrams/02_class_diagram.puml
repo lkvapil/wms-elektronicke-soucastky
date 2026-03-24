@@ -1,5 +1,6 @@
 @startuml
 title Class diagram - WMS
+scale 0.75
 
 class Soucastka {
   -id: int
