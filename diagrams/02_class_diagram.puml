@@ -6,6 +6,7 @@ skinparam linetype ortho
 class Projekt {
   -id: int
   -nazev: String
+
   +priradSoucastku(s: Soucastka)
   +odeberSoucastku(s: Soucastka)
 }
@@ -14,6 +15,7 @@ class Soucastka {
   -id: int
   -nazev: String
   -mnozstvi: int
+
   +zvysMnozstvi(pocet: int)
   +snizMnozstvi(pocet: int)
 }
@@ -22,13 +24,28 @@ class Pohyb {
   -id: int
   -typ: String
   -datum: Date
+  -stav: String
+
   +vytvoritPohyb()
   +schvalit()
   +provestPohyb()
 }
 
-' vertikalni vazby (A4 optimalizace)
-Projekt --> Soucastka : obsahuje
-Soucastka --> Pohyb : vytvari
+class Sklad {
+  -id: int
+  -nazev: String
+}
+
+class Lokace {
+  -id: int
+  -oznaceni: String
+}
+
+' vztahy (logicky dolu)
+Sklad "1" --> "*" Lokace
+Lokace "1" --> "*" Soucastka
+
+Soucastka "1" --> "*" Pohyb : vytvari
+Projekt "1" --> "*" Soucastka : obsahuje
 
 @enduml

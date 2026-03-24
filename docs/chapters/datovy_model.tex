@@ -21,19 +21,23 @@ systému co nejpřesnější.
 Systém pracuje s~následujícími hlavními třídami:
 
 \begin{description}
+  \item[\texttt{Sklad}] Fyzický sklad identifikovaný názvem;
+        sdružuje skladové lokace.
+  \item[\texttt{Lokace}] Konkrétní místo v~skladu (přihrádka, regál)
+        identifikované označením.
   \item[\texttt{Soucastka}] Elektronická součástka evidovaná v~systému;
         obsahuje atributy \texttt{id}, \texttt{nazev} a aktuální \texttt{mnozstvi} na skladě.
   \item[\texttt{Projekt}] Projekt, ke kterému jsou součástky přiřazovány;
         identifikován pomocí \texttt{id} a \texttt{nazev}.
   \item[\texttt{Pohyb}] Záznam o~pohybu součástky (příjem, výdej, přesun);
-        obsahuje \texttt{id}, \texttt{typ} pohybu a \texttt{datum} provedení.
+        obsahuje \texttt{id}, \texttt{typ} pohybu, \texttt{datum} provedení a aktuální \texttt{stav}.
 \end{description}
 
 \section{Diagram tříd}
 
 \begin{figure}[H]
   \centering
-  \includegraphics[width=0.55\textwidth]{02_class_diagram.png}
+  \includegraphics[width=0.7\textwidth]{02_class_diagram.png}
   \caption{Class diagram WMS}
   \label{fig:class_diagram}
 \end{figure}
@@ -131,6 +135,37 @@ Systém pracuje s~následujícími hlavními třídami:
     id              & int          & Jednoznačný identifikátor pohybu \\
     typ             & String       & Typ pohybu (příjem, výdej, přesun) \\
     datum           & Date         & Datum provedení pohybu \\
+    stav            & String       & Aktuální stav pohybu (Vytvořen, Schválen, Proveden, Dokončeno) \\
+    \bottomrule
+  \end{tabularx}
+\end{table}
+
+\subsection{Třída \texttt{Sklad}}
+
+\begin{table}[H]
+  \centering
+  \caption{Atributy třídy Sklad}
+  \begin{tabularx}{\textwidth}{llX}
+    \toprule
+    \textbf{Název}  & \textbf{Typ} & \textbf{Popis} \\
+    \midrule
+    id              & int          & Jednoznačný identifikátor skladu \\
+    nazev           & String       & Název skladu \\
+    \bottomrule
+  \end{tabularx}
+\end{table}
+
+\subsection{Třída \texttt{Lokace}}
+
+\begin{table}[H]
+  \centering
+  \caption{Atributy třídy Lokace}
+  \begin{tabularx}{\textwidth}{llX}
+    \toprule
+    \textbf{Název}  & \textbf{Typ} & \textbf{Popis} \\
+    \midrule
+    id              & int          & Jednoznačný identifikátor lokace \\
+    oznaceni        & String       & Označení místa v~skladu (např.\,A-01-03) \\
     \bottomrule
   \end{tabularx}
 \end{table}
