@@ -2,23 +2,33 @@
 title Class diagram - WMS
 
 class Soucastka {
-  id
-  nazev
-  mnozstvi
+  -id: int
+  -nazev: String
+  -mnozstvi: int
+
+  +zvysMnozstvi(pocet: int)
+  +snizMnozstvi(pocet: int)
 }
 
 class Projekt {
-  id
-  nazev
+  -id: int
+  -nazev: String
+
+  +priradSoucastku(s: Soucastka)
+  +odeberSoucastku(s: Soucastka)
 }
 
 class Pohyb {
-  id
-  typ
-  datum
+  -id: int
+  -typ: String
+  -datum: Date
+
+  +vytvoritPohyb()
+  +schvalit()
+  +provestPohyb()
 }
 
-Soucastka --> Pohyb
-Projekt --> Soucastka : prirazeni
+Soucastka "1" --> "*" Pohyb
+Projekt "1" --> "*" Soucastka : obsahuje
 
 @enduml

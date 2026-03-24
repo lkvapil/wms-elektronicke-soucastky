@@ -8,6 +8,9 @@ Schvalen --> Proveden : provestPohyb()
 Proveden --> Dokonceno
 
 Schvalen --> Vytvoren : [chyba]
+Proveden --> Schvalen : [neprovedeno]
+
+Proveden : entry / aktualizace skladu
 
 Dokonceno --> [*]
 

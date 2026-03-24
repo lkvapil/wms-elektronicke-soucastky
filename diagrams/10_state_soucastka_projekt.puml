@@ -1,5 +1,5 @@
 @startuml
-title Stavovy diagram - Soucastka (v projektu)
+title Stavovy diagram - Soucastka v projektu
 
 [*] --> Volna
 
@@ -8,6 +8,9 @@ Prirazena --> Pouzita : pouzit()
 Pouzita --> Odepsana
 
 Prirazena --> Volna : [zruseni]
+Pouzita --> Prirazena : [vraceni]
+
+Prirazena : entry / rezervace ve skladu
 
 Odepsana --> [*]
 

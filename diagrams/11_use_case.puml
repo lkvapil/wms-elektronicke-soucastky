@@ -9,9 +9,11 @@ rectangle WMS {
   Administrator -- (Sprava soucastek)
   Administrator -- (Vytvoreni pohybu)
   Administrator -- (Prirazeni soucastky k projektu)
+  Administrator -- (Zobrazeni skladu)
 
   (Sprava soucastek) .> (Kontrola stavu) : <<include>>
   (Vytvoreni pohybu) .> (Schvaleni pohybu) : <<extend>>
+  (Prirazeni soucastky k projektu) .> (Kontrola dostupnosti) : <<include>>
 
 }
 
