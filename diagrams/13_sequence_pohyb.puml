@@ -1,0 +1,25 @@
+@startuml
+title Sekvencni diagram - Vytvoreni pohybu
+
+actor Administrator
+participant UI
+participant System
+participant Soucastka
+participant Sklad
+participant Pohyb
+
+Administrator -> UI : zada pozadavek
+UI -> System : vytvoritPohyb(data)
+
+System -> Soucastka : overDostupnost()
+Soucastka --> System : OK / NOK
+
+alt [dostatek]
+    System -> Pohyb : create()
+    System -> Sklad : aktualizujMnozstvi()
+    System --> UI : potvrzeni
+else [nedostatek]
+    System --> UI : chyba
+end
+
+@enduml

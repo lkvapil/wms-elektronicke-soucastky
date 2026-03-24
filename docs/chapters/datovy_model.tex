@@ -21,6 +21,7 @@ systému co nejpřesnější.
 Systém pracuje s~následujícími hlavními třídami:
 
 \begin{description}
+  \item[\texttt{Administrator}] Hlavní uživatel systému; vytváří pohyby a spravuje součástky.
   \item[\texttt{Sklad}] Fyzický sklad identifikovaný názvem;
         sdružuje skladové lokace.
   \item[\texttt{Lokace}] Konkrétní místo v~skladu (přihrádka, regál)
@@ -69,25 +70,43 @@ Systém pracuje s~následujícími hlavními třídami:
   \label{fig:use_case}
 \end{figure}
 
-\section{Activity Diagram -- WMS proces}
+\section{Activity Diagram -- Vytvoření pohybu}
 
 \begin{figure}[H]
   \centering
   \includegraphics[width=0.7\textwidth]{12_activity_wms.png}
-  \caption{Activity diagram celého WMS procesu}
+  \caption{Activity diagram -- Vytvoření pohybu}
   \label{fig:activity_wms}
 \end{figure}
 
-\section{Scénář use case: Vytvoření pohybu}
+\section{Sekvenční diagram -- Vytvoření pohybu}
 
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\textwidth]{13_sequence_pohyb.png}
+  \caption{Sekvenční diagram -- Vytvoření pohybu}
+  \label{fig:sequence_pohyb}
+\end{figure}
+
+\section{Scénáře use case}
+
+\subsection*{Scénář: Vytvoření pohybu}
 \begin{enumerate}
-  \item Administrator otevře systém.
-  \item Zvolí \textit{Vytvořit pohyb}.
-  \item Vyplní data pohybu (typ, datum, součástka).
-  \item Systém provede kontrolu zadaných dat.
-  \item Pokud \texttt{[data\_ok]} → pohyb je schválen.
+  \item Administrator zvolí \textit{Vytvořit pohyb}.
+  \item Zadá součástku a množství.
+  \item Systém provede kontrolu dat.
+  \item Pokud \texttt{[data\_ok]} $\rightarrow$ pohyb je schválen.
   \item Systém provede pohyb a aktualizuje stav skladu.
   \item Zobrazí se potvrzení výsledku.
+\end{enumerate}
+
+\subsection*{Scénář: Přiřazení součástky k~projektu}
+\begin{enumerate}
+  \item Administrator vybere projekt.
+  \item Zvolí součástku a zadá množství.
+  \item Systém ověří dostupnost voláním \texttt{overDostupnost()}.
+  \item Pokud \texttt{[dostatek]} $\rightarrow$ součástka je přiřazena.
+  \item Systém aktualizuje množství na skladě.
 \end{enumerate}
 
 \section{Popis atributů tříd}

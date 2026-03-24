@@ -6,16 +6,14 @@ actor Administrator
 
 rectangle WMS {
 
-  Administrator -- (Sprava soucastek)
-  Administrator -- (Vytvoreni pohybu)
-  Administrator -- (Prirazeni soucastky k projektu)
-  Administrator -- (Zobrazeni skladu)
+  Administrator -- (Vytvorit pohyb)
+  Administrator -- (Spravovat soucastky)
+  Administrator -- (Priradit soucastku k projektu)
+  Administrator -- (Zobrazit sklad)
 
-  (Sprava soucastek) .> (Kontrola stavu) : <<include>>
-  (Vytvoreni pohybu) .> (Kontrola dat) : <<include>>
-  (Prirazeni soucastky k projektu) .> (Kontrola dostupnosti) : <<include>>
-
-  (Vytvoreni pohybu) .> (Schvaleni pohybu) : <<extend>>
+  (Vytvorit pohyb) .> (Kontrola dat) : <<include>>
+  (Priradit soucastku k projektu) .> (Kontrola dostupnosti) : <<include>>
+  (Vytvorit pohyb) .> (Schvaleni pohybu) : <<extend>>
 
 }
 

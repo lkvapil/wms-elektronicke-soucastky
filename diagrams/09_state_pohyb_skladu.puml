@@ -3,22 +3,17 @@ title State diagram - Pohyb
 
 [*] --> Vytvoren
 
-Vytvoren --> KontrolaDat
+Vytvoren : entry / vytvoritPohyb()
 
-KontrolaDat --> Schvalen : [data_ok]
-KontrolaDat --> Vytvoren : [chyba_dat]
+Vytvoren --> Schvalen : [data_ok]
+Vytvoren --> Zamitnut : [chyba]
 
-Schvalen --> ProbihaPohyb : provestPohyb()
+Schvalen : entry / schvalit()
 
-ProbihaPohyb : entry / aktualizovat_log
-ProbihaPohyb --> ProbihaPohyb : kontrola_stavu
+Schvalen --> Proveden : provestPohyb()
+Proveden : entry / aktualizujMnozstvi()
 
-ProbihaPohyb --> Dokonceno : [hotovo]
-ProbihaPohyb --> Chyba : [chyba]
-
-Chyba : entry / log_chyby
-Chyba --> Vytvoren : oprava()
-
-Dokonceno --> [*]
+Proveden --> [*]
+Zamitnut --> [*]
 
 @enduml
