@@ -8,8 +8,8 @@ skinparam classFontStyle bold
 skinparam ArrowFontSize 13
 skinparam ArrowFontStyle bold
 skinparam linetype ortho
-skinparam nodesep 90
-skinparam ranksep 80
+skinparam nodesep 142
+skinparam ranksep 100
 
 class Uzivatel {
   id: int
