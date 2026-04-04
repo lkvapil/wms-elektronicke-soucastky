@@ -9,8 +9,8 @@ skinparam classFontStyle bold
 skinparam ArrowFontSize 13
 skinparam ArrowFontStyle bold
 skinparam linetype ortho
-skinparam nodesep 140
-skinparam ranksep 110
+skinparam nodesep 70
+skinparam ranksep 60
 
 class Uzivatel {
 }
