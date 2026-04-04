@@ -16,7 +16,6 @@ class Uzivatel {
   id: int
   jmeno: String
   email: String
-  role: String
   vytvoritPohyb()
   spravovatSoucastky()
   priraditSoucastkuProjektu()
