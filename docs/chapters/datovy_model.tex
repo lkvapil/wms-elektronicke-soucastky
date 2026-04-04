@@ -45,6 +45,11 @@ Systém pracuje s~následujícími hlavními třídami:
 
 \section{Stavový diagram \texttt{Pohyb}}
 
+Třída \texttt{Pohyb} reprezentuje skladový pohyb -- tedy přesun, příjem nebo výdej součástek v rámci skladu.
+Každý pohyb prochází životním cyklem: je nejprve vytvořen, poté schválen správcem a nakonec proveden,
+čímž dojde k~aktualizaci množství součástky na skladě. Pohyb může být také zamítnut, pokud jsou zadaná
+data neplatná nebo neúplná.
+
 \begin{figure}[H]
   \centering
   \includegraphics[width=0.5\textwidth]{09_state_pohyb_skladu.png}
