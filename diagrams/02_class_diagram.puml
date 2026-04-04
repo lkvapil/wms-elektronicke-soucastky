@@ -4,6 +4,8 @@ top to bottom direction
 skinparam CircledCharacterRadius 0
 skinparam CircledCharacterFontSize 0
 skinparam defaultFontSize 11
+skinparam ArrowFontSize 13
+skinparam ArrowFontStyle bold
 skinparam linetype ortho
 skinparam nodesep 100
 skinparam ranksep 80
