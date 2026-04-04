@@ -3,16 +3,14 @@ title Class diagram - WMS
 top to bottom direction
 skinparam CircledCharacterRadius 0
 skinparam CircledCharacterFontSize 0
-skinparam defaultFontSize 14
-skinparam classFontSize 15
+skinparam defaultFontSize 13
+skinparam classFontSize 14
 skinparam classFontStyle bold
 skinparam ArrowFontSize 13
 skinparam ArrowFontStyle bold
 skinparam linetype ortho
 skinparam nodesep 140
 skinparam ranksep 110
-skinparam padding 10
-skinparam minClassWidth 160
 
 class Uzivatel {
   vytvoritPohyb()
