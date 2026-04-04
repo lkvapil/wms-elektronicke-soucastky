@@ -1,9 +1,11 @@
 @startuml
 title Class diagram - WMS
+top to bottom direction
 skinparam classAttributeIconSize 0
 skinparam CircledCharacterRadius 0
 skinparam CircledCharacterFontSize 0
 skinparam defaultFontSize 11
+skinparam linetype ortho
 
 class Uzivatel {
   vytvoritPohyb()
@@ -48,12 +50,13 @@ class Lokace {
   oznaceni: String
 }
 
-' hidden sipky pro layout
+' layout
+Uzivatel -[hidden]down- Soucastka
 Projekt -[hidden]right- Soucastka
 Soucastka -[hidden]right- Sklad
-Uzivatel -[hidden]down- Projekt
+Pohyb -[hidden]right- Lokace
+Soucastka -[hidden]down- Pohyb
 
-' vztahy
 Uzivatel ..> Pohyb : vytváří
 Uzivatel ..> Soucastka : spravuje
 Uzivatel ..> Projekt : spravuje
