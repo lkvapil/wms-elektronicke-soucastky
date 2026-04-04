@@ -3,7 +3,9 @@ title Class diagram - WMS
 top to bottom direction
 skinparam CircledCharacterRadius 0
 skinparam CircledCharacterFontSize 0
-skinparam defaultFontSize 11
+skinparam defaultFontSize 14
+skinparam classFontSize 15
+skinparam classFontStyle bold
 skinparam ArrowFontSize 13
 skinparam ArrowFontStyle bold
 skinparam linetype ortho
