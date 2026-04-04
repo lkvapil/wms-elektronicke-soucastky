@@ -86,13 +86,13 @@ Uzivatel --> Soucastka : spravuje
 Uzivatel --> Projekt : spravuje
 Uzivatel --> Sklad : spravuje
 
-' layout - Soucastka nahore uprostred
+' layout - 2 sloupce: vlevo Uzivatel/Sklad/Lokace, vpravo Projekt/Soucastka/Pohyb
 Uzivatel -[hidden]right- Projekt
-Projekt -[hidden]right- Soucastka
-Soucastka -[hidden]right- Sklad
-Soucastka -[hidden]down- Pohyb
-PrijemPohyb -[hidden]right- VydejPohyb
-Pohyb -[hidden]down- PrijemPohyb
+Uzivatel -[hidden]down- Sklad
 Sklad -[hidden]down- Lokace
+Projekt -[hidden]down- Soucastka
+Soucastka -[hidden]down- Pohyb
+Pohyb -[hidden]down- PrijemPohyb
+PrijemPohyb -[hidden]right- VydejPohyb
 
 @enduml
