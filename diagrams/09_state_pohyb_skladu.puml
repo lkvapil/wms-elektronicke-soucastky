@@ -4,13 +4,16 @@ title State diagram - Pohyb
 [*] --> Vytvoren
 
 Vytvoren : entry / vytvoritPohyb()
+Vytvoren --> Validovan : submit()
 
-Vytvoren --> Schvalen : [data_ok]
-Vytvoren --> Zamitnut : [chyba]
+Validovan : entry / overitData()
+Validovan --> Schvalen : [soucastka_dostupna]
+Validovan --> Zamitnut : [neplatna_data]
 
 Schvalen : entry / schvalit()
-
 Schvalen --> Proveden : provestPohyb()
+Schvalen --> Zamitnut : [nedostatecne_mnozstvi]
+
 Proveden : entry / aktualizujMnozstvi()
 
 Proveden --> [*]
