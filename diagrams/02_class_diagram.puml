@@ -1,7 +1,6 @@
 @startuml
 title Class diagram - WMS
 top to bottom direction
-skinparam classAttributeIconSize 0
 skinparam CircledCharacterRadius 0
 skinparam CircledCharacterFontSize 0
 skinparam defaultFontSize 11
@@ -87,5 +86,6 @@ Soucastka -[hidden]right- Sklad
 Soucastka -[hidden]down- Pohyb
 PrijemPohyb -[hidden]right- VydejPohyb
 Pohyb -[hidden]down- PrijemPohyb
+Sklad -[hidden]down- Lokace
 
 @enduml
