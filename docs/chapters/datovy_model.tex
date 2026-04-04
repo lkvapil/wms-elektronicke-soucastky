@@ -137,107 +137,37 @@ Pohyb může být zamítnut ve dvou situacích:
 
 \section{Datový slovník (popis atributů tříd)}
 
-\subsection{Třída \texttt{Soucastka}}
+\subsection*{Entity tříd}
+
+\begin{itemize}
+  \item \textbf{Soucastka}: Skladová položka evidovaná v~systému WMS s~aktuálním množstvím na skladě.
+  \item \textbf{Projekt}: Projekt, ke kterému jsou přiřazeny součástky pro sledování spotřeby.
+  \item \textbf{Pohyb}: Abstraktní třída reprezentující pohyb součástek -- příjem nebo výdej.
+  \item \textbf{PrijemPohyb}: Konkrétní pohyb typu příjem -- naskladnění součástek od dodavatele.
+  \item \textbf{VydejPohyb}: Konkrétní pohyb typu výdej -- vyskladnění součástek ze skladu.
+  \item \textbf{Sklad}: Fyzický sklad rozdělený na lokace, ve kterých jsou uloženy součástky.
+  \item \textbf{Lokace}: Konkrétní místo v~skladu identifikované označením (např. A-01-03).
+  \item \textbf{Uzivatel}: Osoba spravující součástky, pohyby, projekty a sklady v~systému.
+\end{itemize}
+
+\subsection*{Atributy}
 
 \begin{table}[H]
   \centering
-  \caption{Atributy třídy Soucastka}
-  \begin{tabularx}{\textwidth}{llX}
+  \caption{Přehled atributů tříd}
+  \begin{tabularx}{\textwidth}{lX}
     \toprule
-    \textbf{Název}  & \textbf{Typ} & \textbf{Popis} \\
+    \textbf{Entita} & \textbf{Atributy} \\
     \midrule
-    id              & int          & Jednoznačný identifikátor součástky \\
-    nazev           & String       & Název součástky \\
-    mnozstvi        & int          & Aktuální počet kusů na skladě \\
+    Soucastka    & id, nazev, mnozstvi \\
+    Projekt      & id, nazev \\
+    Pohyb        & id, datum, stav \\
+    PrijemPohyb  & dodavatel (dědí z Pohyb) \\
+    VydejPohyb   & duvod (dědí z Pohyb) \\
+    Sklad        & id, nazev \\
+    Lokace       & id, oznaceni \\
+    Uzivatel     & (správce systému, bez persistentních atributů) \\
     \bottomrule
   \end{tabularx}
 \end{table}
 
-\subsection{Třída \texttt{Projekt}}
-
-\begin{table}[H]
-  \centering
-  \caption{Atributy třídy Projekt}
-  \begin{tabularx}{\textwidth}{llX}
-    \toprule
-    \textbf{Název}  & \textbf{Typ} & \textbf{Popis} \\
-    \midrule
-    id              & int          & Jednoznačný identifikátor projektu \\
-    nazev           & String       & Název projektu \\
-    \bottomrule
-  \end{tabularx}
-\end{table}
-
-\subsection{Abstraktní třída \texttt{Pohyb}}
-
-\begin{table}[H]
-  \centering
-  \caption{Atributy abstraktní třídy Pohyb}
-  \begin{tabularx}{\textwidth}{llX}
-    \toprule
-    \textbf{Název}  & \textbf{Typ} & \textbf{Popis} \\
-    \midrule
-    id              & int          & Jednoznačný identifikátor pohybu \\
-    datum           & Date         & Datum provedení pohybu \\
-    stav            & String       & Aktuální stav pohybu (Vytvořen, Schválen, Proveden, Zamítnut) \\
-    \bottomrule
-  \end{tabularx}
-\end{table}
-
-\subsection{Třída \texttt{PrijemPohyb}}
-
-\begin{table}[H]
-  \centering
-  \caption{Atributy třídy PrijemPohyb (dědí z Pohyb)}
-  \begin{tabularx}{\textwidth}{llX}
-    \toprule
-    \textbf{Název}    & \textbf{Typ} & \textbf{Popis} \\
-    \midrule
-    dodavatel         & String       & Název dodavatele součástky \\
-    \bottomrule
-  \end{tabularx}
-\end{table}
-
-\subsection{Třída \texttt{VydejPohyb}}
-
-\begin{table}[H]
-  \centering
-  \caption{Atributy třídy VydejPohyb (dědí z Pohyb)}
-  \begin{tabularx}{\textwidth}{llX}
-    \toprule
-    \textbf{Název}    & \textbf{Typ} & \textbf{Popis} \\
-    \midrule
-    duvod             & String       & Důvod výdeje součástky ze skladu \\
-    \bottomrule
-  \end{tabularx}
-\end{table}
-
-\subsection{Třída \texttt{Sklad}}
-
-\begin{table}[H]
-  \centering
-  \caption{Atributy třídy Sklad}
-  \begin{tabularx}{\textwidth}{llX}
-    \toprule
-    \textbf{Název}  & \textbf{Typ} & \textbf{Popis} \\
-    \midrule
-    id              & int          & Jednoznačný identifikátor skladu \\
-    nazev           & String       & Název skladu \\
-    \bottomrule
-  \end{tabularx}
-\end{table}
-
-\subsection{Třída \texttt{Lokace}}
-
-\begin{table}[H]
-  \centering
-  \caption{Atributy třídy Lokace}
-  \begin{tabularx}{\textwidth}{llX}
-    \toprule
-    \textbf{Název}  & \textbf{Typ} & \textbf{Popis} \\
-    \midrule
-    id              & int          & Jednoznačný identifikátor lokace \\
-    oznaceni        & String       & Označení místa v~skladu (např.\,A-01-03) \\
-    \bottomrule
-  \end{tabularx}
-\end{table}
