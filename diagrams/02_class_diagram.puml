@@ -2,51 +2,52 @@
 title Class diagram - WMS
 top to bottom direction
 skinparam linetype ortho
+skinparam classAttributeIconSize 0
 
 class Administrator {
-  +vytvoritPohyb()
-  +spravovatSoucastky()
+  vytvoritPohyb()
+  spravovatSoucastky()
 }
 
 class Projekt {
-  -id: int
-  -nazev: String
+  id: int
+  nazev: String
 
-  +priradSoucastku(s: Soucastka)
-  +odeberSoucastku(s: Soucastka)
+  priradSoucastku(s: Soucastka)
+  odeberSoucastku(s: Soucastka)
 }
 
 class Soucastka {
-  -id: int
-  -nazev: String
-  -mnozstvi: int
+  id: int
+  nazev: String
+  mnozstvi: int
 
-  +zvysMnozstvi(pocet: int)
-  +snizMnozstvi(pocet: int)
-  +overDostupnost(): boolean
+  zvysMnozstvi(pocet: int)
+  snizMnozstvi(pocet: int)
+  overDostupnost(): boolean
 }
 
 class Pohyb {
-  -id: int
-  -typ: String
-  -datum: Date
-  -stav: String
+  id: int
+  typ: String
+  datum: Date
+  stav: String
 
-  +vytvoritPohyb()
-  +schvalit()
-  +provestPohyb()
+  vytvoritPohyb()
+  schvalit()
+  provestPohyb()
 }
 
 class Sklad {
-  -id: int
-  -nazev: String
+  id: int
+  nazev: String
 
-  +aktualizujMnozstvi()
+  aktualizujMnozstvi()
 }
 
 class Lokace {
-  -id: int
-  -oznaceni: String
+  id: int
+  oznaceni: String
 }
 
 Administrator --> Pohyb
