@@ -2,10 +2,10 @@
 top to bottom direction
 skinparam CircledCharacterRadius 0
 skinparam CircledCharacterFontSize 0
-skinparam defaultFontSize 13
-skinparam classFontSize 14
+skinparam defaultFontSize 14
+skinparam classFontSize 15
 skinparam classFontStyle bold
-skinparam ArrowFontSize 13
+skinparam ArrowFontSize 14
 skinparam ArrowFontStyle bold
 skinparam linetype ortho
 skinparam nodesep 142
@@ -83,14 +83,14 @@ Pohyb --> Sklad : mění stav
 Uzivatel --> Pohyb : vytváří
 Uzivatel --> Projekt : spravuje
 
-' layout - vlevo Uzivatel/Sklad/Lokace, vpravo Projekt/Soucastka/Pohyb
-Uzivatel -[hidden]right- Projekt
-Uzivatel -[hidden]down- Sklad
-Sklad -[hidden]down- Lokace
-Sklad -[hidden]down- Pohyb
-Projekt -[hidden]down- Soucastka
-Pohyb -[hidden]down- PrijemPohyb
-Lokace -[hidden]down- PrijemPohyb
+' layout jako u kolegy - Pohyb nahore, Soucastka dole
 PrijemPohyb -[hidden]right- VydejPohyb
+PrijemPohyb -[hidden]down- Pohyb
+Uzivatel -[hidden]right- Pohyb
+Pohyb -[hidden]down- Sklad
+Uzivatel -[hidden]down- Projekt
+Projekt -[hidden]right- Sklad
+Sklad -[hidden]down- Lokace
+Lokace -[hidden]down- Soucastka
 
 @enduml
