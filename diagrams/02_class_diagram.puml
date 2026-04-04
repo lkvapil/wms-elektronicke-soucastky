@@ -90,6 +90,7 @@ Sklad -[hidden]down- Lokace
 Sklad -[hidden]down- Pohyb
 Projekt -[hidden]down- Soucastka
 Pohyb -[hidden]down- PrijemPohyb
+Lokace -[hidden]down- PrijemPohyb
 PrijemPohyb -[hidden]right- VydejPohyb
 
 @enduml
