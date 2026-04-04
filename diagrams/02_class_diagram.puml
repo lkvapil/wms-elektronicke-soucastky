@@ -82,12 +82,12 @@ Uzivatel --> Projekt : spravuje
 Uzivatel --> Sklad : spravuje
 
 ' layout - Soucastka nahore uprostred
-Soucastka -[hidden]left- Sklad
-Soucastka -[hidden]right- Projekt
+Uzivatel -[hidden]right- Projekt
+Projekt -[hidden]right- Soucastka
+Soucastka -[hidden]right- Sklad
 Soucastka -[hidden]down- Pohyb
-Sklad -[hidden]down- Lokace
-Pohyb -[hidden]down- PrijemPohyb
 PrijemPohyb -[hidden]right- VydejPohyb
-Uzivatel -[hidden]down- Soucastka
+Pohyb -[hidden]down- PrijemPohyb
+Sklad -[hidden]down- Lokace
 
 @enduml
