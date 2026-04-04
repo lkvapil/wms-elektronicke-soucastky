@@ -29,14 +29,22 @@ class Soucastka {
   overDostupnost(): boolean
 }
 
-class Pohyb {
+abstract class Pohyb {
   id: int
-  typ: String
   datum: Date
   stav: String
-  vytvoritPohyb()
   schvalit()
   provestPohyb()
+}
+
+class PrijemPohyb {
+  dodavatel: String
+  vytvoritPohyb()
+}
+
+class VydejPohyb {
+  duvod: String
+  vytvoritPohyb()
 }
 
 class Sklad {
@@ -50,24 +58,32 @@ class Lokace {
   oznaceni: String
 }
 
-' layout
-Uzivatel -[hidden]down- Soucastka
-Projekt -[hidden]right- Soucastka
-Soucastka -[hidden]right- Sklad
-Pohyb -[hidden]right- Lokace
-Soucastka -[hidden]down- Pohyb
+' generalizace
+PrijemPohyb --|> Pohyb
+VydejPohyb --|> Pohyb
 
-Uzivatel ..> Pohyb : vytváří
-Uzivatel ..> Soucastka : spravuje
-Uzivatel ..> Projekt : spravuje
-Uzivatel ..> Sklad : spravuje
+' kvalifikovana vazba
+Sklad "[id: int]" --> "1" Soucastka : najdiSoucastku
 
+' datove vztahy
 Projekt "1" --> "*" Soucastka : obsahuje
 Soucastka "1" --> "*" Pohyb : je součástí
-
 Sklad "1" --> "*" Lokace : obsahuje
 Lokace "1" --> "*" Soucastka : ukládá
-
 Pohyb --> Sklad : mění stav
+
+' uzivatel
+Uzivatel --> Pohyb : vytváří
+Uzivatel --> Soucastka : spravuje
+Uzivatel --> Projekt : spravuje
+Uzivatel --> Sklad : spravuje
+
+' layout
+Uzivatel -[hidden]right- Projekt
+Projekt -[hidden]right- Soucastka
+Soucastka -[hidden]right- Sklad
+Soucastka -[hidden]down- Pohyb
+PrijemPohyb -[hidden]right- VydejPohyb
+Pohyb -[hidden]down- PrijemPohyb
 
 @enduml

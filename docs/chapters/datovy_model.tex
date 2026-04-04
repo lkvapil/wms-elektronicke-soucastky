@@ -41,6 +41,12 @@ Součástky jsou přiřazovány k~projektům a fyzicky umístěny v~lokacích sk
 Třída \texttt{Uzivatel} reprezentuje uživatelskou roli v~systému -- může vytvářet skladové pohyby,
 spravovat součástky, přiřazovat součástky k~projektům a zobrazovat stav skladu.
 
+Diagram využívá \textbf{generalizaci}: abstraktní třída \texttt{Pohyb} je základem pro dvě konkrétní podtřídy
+\texttt{PrijemPohyb} (naskladnění) a \texttt{VydejPohyb} (vyskladnění), které dědí společné atributy
+a přidávají vlastní specifické atributy.
+Vazba mezi \texttt{Sklad} a \texttt{Soucastka} je \textbf{kvalifikovaná} -- sklad přistupuje ke konkrétní
+součástce prostřednictvím kvalifikátoru \texttt{id: int}.
+
 \begin{figure}[H]
   \centering
   \includegraphics[width=0.7\textwidth]{02_class_diagram.png}
@@ -162,19 +168,46 @@ Pohyb může být zamítnut ve dvou situacích:
   \end{tabularx}
 \end{table}
 
-\subsection{Třída \texttt{Pohyb}}
+\subsection{Abstraktní třída \texttt{Pohyb}}
 
 \begin{table}[H]
   \centering
-  \caption{Atributy třídy Pohyb}
+  \caption{Atributy abstraktní třídy Pohyb}
   \begin{tabularx}{\textwidth}{llX}
     \toprule
     \textbf{Název}  & \textbf{Typ} & \textbf{Popis} \\
     \midrule
     id              & int          & Jednoznačný identifikátor pohybu \\
-    typ             & String       & Typ pohybu (příjem, výdej, přesun) \\
     datum           & Date         & Datum provedení pohybu \\
-    stav            & String       & Aktuální stav pohybu (Vytvořen, Schválen, Proveden, Dokončeno) \\
+    stav            & String       & Aktuální stav pohybu (Vytvořen, Schválen, Proveden, Zamítnut) \\
+    \bottomrule
+  \end{tabularx}
+\end{table}
+
+\subsection{Třída \texttt{PrijemPohyb}}
+
+\begin{table}[H]
+  \centering
+  \caption{Atributy třídy PrijemPohyb (dědí z Pohyb)}
+  \begin{tabularx}{\textwidth}{llX}
+    \toprule
+    \textbf{Název}    & \textbf{Typ} & \textbf{Popis} \\
+    \midrule
+    dodavatel         & String       & Název dodavatele součástky \\
+    \bottomrule
+  \end{tabularx}
+\end{table}
+
+\subsection{Třída \texttt{VydejPohyb}}
+
+\begin{table}[H]
+  \centering
+  \caption{Atributy třídy VydejPohyb (dědí z Pohyb)}
+  \begin{tabularx}{\textwidth}{llX}
+    \toprule
+    \textbf{Název}    & \textbf{Typ} & \textbf{Popis} \\
+    \midrule
+    duvod             & String       & Důvod výdeje součástky ze skladu \\
     \bottomrule
   \end{tabularx}
 \end{table}
