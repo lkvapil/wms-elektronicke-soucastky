@@ -1,5 +1,4 @@
 @startuml
-title Class diagram - WMS
 top to bottom direction
 skinparam CircledCharacterRadius 0
 skinparam CircledCharacterFontSize 0
