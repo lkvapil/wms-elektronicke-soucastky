@@ -82,9 +82,7 @@ Pohyb --> Sklad : mění stav
 
 ' uzivatel
 Uzivatel --> Pohyb : vytváří
-Uzivatel --> Soucastka : spravuje
 Uzivatel --> Projekt : spravuje
-Uzivatel --> Sklad : spravuje
 
 ' layout - 2 sloupce: vlevo Uzivatel/Sklad/Lokace, vpravo Projekt/Soucastka/Pohyb
 Uzivatel -[hidden]right- Projekt
