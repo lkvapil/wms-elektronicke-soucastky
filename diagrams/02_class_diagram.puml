@@ -74,7 +74,7 @@ Sklad "[id: int]" --> "1" Soucastka : najdiSoucastku
 
 ' datove vztahy
 Projekt "1" --> "*" Soucastka : obsahuje
-Soucastka "1" --> "*" Pohyb : je součástí
+Pohyb "*" --> "1" Soucastka : je součástí
 Sklad "1" --> "*" Lokace : obsahuje
 Lokace "1" --> "*" Soucastka : ukládá
 Pohyb --> Sklad : mění stav
@@ -85,7 +85,6 @@ Uzivatel --> Projekt : spravuje
 
 ' layout - vlevo Pohyb/Sklad/Lokace, vpravo Uzivatel/Projekt/Soucastka
 PrijemPohyb -[hidden]right- VydejPohyb
-PrijemPohyb -[hidden]down- Pohyb
 Pohyb -[hidden]down- Sklad
 Sklad -[hidden]down- Lokace
 VydejPohyb -[hidden]down- Uzivatel
