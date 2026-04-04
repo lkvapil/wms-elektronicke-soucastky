@@ -1,5 +1,6 @@
 @startuml
-title Class diagram - WMS
+title Class diagram - WMS (final)
+top to bottom direction
 skinparam linetype ortho
 skinparam classAttributeIconSize 0
 skinparam CircledCharacterRadius 0
@@ -8,56 +9,62 @@ skinparam CircledCharacterFontSize 0
 class Uzivatel {
   vytvoritPohyb()
   spravovatSoucastky()
+  priraditSoucastkuProjektu()
 }
 
-together {
-  class Projekt {
-    id: int
-    nazev: String
-    priradSoucastku(s: Soucastka)
-    odeberSoucastku(s: Soucastka)
-  }
+class Projekt {
+  id: int
+  nazev: String
 
-  class Soucastka {
-    id: int
-    nazev: String
-    mnozstvi: int
-    zvysMnozstvi(pocet: int)
-    snizMnozstvi(pocet: int)
-    overDostupnost(): boolean
-  }
-
-  class Sklad {
-    id: int
-    nazev: String
-    aktualizujMnozstvi()
-  }
+  priradSoucastku(s: Soucastka)
+  odeberSoucastku(s: Soucastka)
 }
 
-together {
-  class Pohyb {
-    id: int
-    typ: String
-    datum: Date
-    stav: String
-    vytvoritPohyb()
-    schvalit()
-    provestPohyb()
-  }
+class Soucastka {
+  id: int
+  nazev: String
+  mnozstvi: int
 
-  class Lokace {
-    id: int
-    oznaceni: String
-  }
+  zvysMnozstvi(pocet: int)
+  snizMnozstvi(pocet: int)
+  overDostupnost(): boolean
 }
 
-Uzivatel ..> Pohyb
-Uzivatel ..> Soucastka
-Uzivatel ..> Projekt
-Uzivatel ..> Sklad
-Projekt "1" --> "*" Soucastka
-Soucastka "1" --> "*" Pohyb
-Sklad "1" --> "*" Lokace
-Lokace "1" --> "*" Soucastka
+class Pohyb {
+  id: int
+  typ: String
+  datum: Date
+  stav: String
+
+  vytvoritPohyb()
+  schvalit()
+  provestPohyb()
+}
+
+class Sklad {
+  id: int
+  nazev: String
+
+  aktualizujMnozstvi()
+}
+
+class Lokace {
+  id: int
+  oznaceni: String
+}
+
+' ===== VZTAHY S POPISKY =====
+Uzivatel ..> Pohyb : vytváří
+Uzivatel ..> Soucastka : spravuje
+Uzivatel ..> Projekt : spravuje
+Uzivatel ..> Sklad : spravuje
+
+Projekt "1" --> "*" Soucastka : obsahuje
+Soucastka "1" --> "*" Pohyb : je součástí
+
+Sklad "1" --> "*" Lokace : obsahuje
+Lokace "1" --> "*" Soucastka : ukládá
+
+Pohyb --> Sklad : mění stav
 
 @enduml
