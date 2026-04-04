@@ -37,7 +37,9 @@ Systém pracuje s~následujícími hlavními třídami:
 \section{Diagram tříd}
 
 Diagram zachycuje strukturu systému WMS a vztahy mezi jeho hlavními třídami.
-Správce vytváří pohyby, součástky jsou přiřazovány k~projektům a fyzicky umístěny v~lokacích skladu.
+Součástky jsou přiřazovány k~projektům a fyzicky umístěny v~lokacích skladu.
+Třída \texttt{Administrator} reprezentuje uživatelskou roli -- správce může pouze vytvářet skladové pohyby
+a spravovat součástky, nemá přístup k~projektům ani ke struktuře skladu.
 
 \begin{figure}[H]
   \centering
