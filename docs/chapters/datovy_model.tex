@@ -21,7 +21,7 @@ systému co nejpřesnější.
 Systém pracuje s~následujícími hlavními třídami:
 
 \begin{description}
-  \item[\texttt{Administrator}] Hlavní uživatel systému; vytváří pohyby a spravuje součástky.
+  \item[\texttt{Uzivatel}] Hlavní uživatel systému; vytváří pohyby a spravuje součástky.
   \item[\texttt{Sklad}] Fyzický sklad identifikovaný názvem;
         sdružuje skladové lokace.
   \item[\texttt{Lokace}] Konkrétní místo v~skladu (přihrádka, regál)
@@ -38,8 +38,8 @@ Systém pracuje s~následujícími hlavními třídami:
 
 Diagram zachycuje strukturu systému WMS a vztahy mezi jeho hlavními třídami.
 Součástky jsou přiřazovány k~projektům a fyzicky umístěny v~lokacích skladu.
-Třída \texttt{Administrator} reprezentuje uživatelskou roli -- správce může pouze vytvářet skladové pohyby
-a spravovat součástky, nemá přístup k~projektům ani ke struktuře skladu.
+Třída \texttt{Uzivatel} reprezentuje uživatelskou roli v~systému -- může vytvářet skladové pohyby,
+spravovat součástky, přiřazovat součástky k~projektům a zobrazovat stav skladu.
 
 \begin{figure}[H]
   \centering
@@ -112,7 +112,7 @@ Pohyb může být zamítnut ve dvou situacích:
 
 \subsection*{Scénář: Vytvoření pohybu}
 \begin{enumerate}
-  \item Administrator zvolí \textit{Vytvořit pohyb}.
+  \item Uživatel zvolí \textit{Vytvořit pohyb}.
   \item Zadá součástku a množství.
   \item Systém provede kontrolu dat.
   \item Pokud \texttt{[data\_ok]} $\rightarrow$ pohyb je schválen.
@@ -122,7 +122,7 @@ Pohyb může být zamítnut ve dvou situacích:
 
 \subsection*{Scénář: Přiřazení součástky k~projektu}
 \begin{enumerate}
-  \item Administrator vybere projekt.
+  \item Uživatel vybere projekt.
   \item Zvolí součástku a zadá množství.
   \item Systém ověří dostupnost voláním \texttt{overDostupnost()}.
   \item Pokud \texttt{[dostatek]} $\rightarrow$ součástka je přiřazena.

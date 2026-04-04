@@ -1,14 +1,14 @@
 @startuml
 title Sekvencni diagram - Vytvoreni pohybu
 
-actor Administrator
+actor Uzivatel
 participant UI
 participant System
 participant Soucastka
 participant Sklad
 participant Pohyb
 
-Administrator -> UI : zada pozadavek
+Uzivatel -> UI : zada pozadavek
 UI -> System : vytvoritPohyb(data)
 
 System -> Soucastka : overDostupnost()

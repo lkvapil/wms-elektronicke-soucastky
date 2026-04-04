@@ -6,7 +6,7 @@ skinparam classAttributeIconSize 0
 skinparam CircledCharacterRadius 0
 skinparam CircledCharacterFontSize 0
 
-class Administrator {
+class Uzivatel {
   vytvoritPohyb()
   spravovatSoucastky()
 }
@@ -52,7 +52,10 @@ class Lokace {
   oznaceni: String
 }
 
-Administrator --> Pohyb
+Uzivatel --> Pohyb
+Uzivatel --> Soucastka
+Uzivatel --> Projekt
+Uzivatel --> Sklad
 Projekt "1" --> "*" Soucastka
 Soucastka "1" --> "*" Pohyb
 Sklad "1" --> "*" Lokace

@@ -2,14 +2,14 @@
 left to right direction
 title Use Case diagram - WMS
 
-actor Administrator
+actor Uzivatel
 
 rectangle WMS {
 
-  Administrator -- (Vytvorit pohyb)
-  Administrator -- (Spravovat soucastky)
-  Administrator -- (Priradit soucastku k projektu)
-  Administrator -- (Zobrazit sklad)
+  Uzivatel -- (Vytvorit pohyb)
+  Uzivatel -- (Spravovat soucastky)
+  Uzivatel -- (Priradit soucastku k projektu)
+  Uzivatel -- (Zobrazit sklad)
 
   (Vytvorit pohyb) .> (Kontrola dat) : <<include>>
   (Priradit soucastku k projektu) .> (Kontrola dostupnosti) : <<include>>
