@@ -9,6 +9,8 @@ skinparam ArrowFontStyle bold
 skinparam linetype ortho
 skinparam nodesep 140
 skinparam ranksep 110
+skinparam padding 10
+skinparam minClassWidth 160
 
 class Uzivatel {
   vytvoritPohyb()
