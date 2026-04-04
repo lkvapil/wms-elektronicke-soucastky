@@ -45,7 +45,9 @@ Systém pracuje s~následujícími hlavními třídami:
 
 \section{Stavový diagram \texttt{Pohyb}}
 
-Třída \texttt{Pohyb} reprezentuje skladový pohyb -- tedy přesun, příjem nebo výdej součástek v rámci skladu.
+Třída \texttt{Pohyb} reprezentuje obecný skladový pohyb -- tedy jakoukoli změnu stavu zásob součástek
+v systému. Atribut \texttt{typ} rozlišuje tři druhy pohybu: \emph{příjem} (naskladnění nových součástek),
+\emph{výdej} (odebrání součástek ze skladu) a \emph{přesun} (přemístění součástek mezi lokacemi či sklady).
 Každý pohyb prochází životním cyklem: po vytvoření je odeslán k~validaci (\emph{Validován}), při které
 systém ověří, zda zadaná součástka existuje a je dostupná na skladě. Pokud jsou data platná, pohyb přejde
 do stavu \emph{Schválen} a může být fyzicky proveden -- dojde k~aktualizaci množství na skladě.
