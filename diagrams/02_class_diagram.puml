@@ -7,8 +7,8 @@ skinparam defaultFontSize 11
 skinparam ArrowFontSize 13
 skinparam ArrowFontStyle bold
 skinparam linetype ortho
-skinparam nodesep 100
-skinparam ranksep 80
+skinparam nodesep 140
+skinparam ranksep 110
 
 class Uzivatel {
   vytvoritPohyb()
@@ -81,13 +81,13 @@ Uzivatel --> Soucastka : spravuje
 Uzivatel --> Projekt : spravuje
 Uzivatel --> Sklad : spravuje
 
-' layout
-Uzivatel -[hidden]right- Projekt
-Projekt -[hidden]right- Soucastka
-Soucastka -[hidden]right- Sklad
+' layout - Soucastka nahore uprostred
+Soucastka -[hidden]left- Sklad
+Soucastka -[hidden]right- Projekt
 Soucastka -[hidden]down- Pohyb
-PrijemPohyb -[hidden]right- VydejPohyb
-Pohyb -[hidden]down- PrijemPohyb
 Sklad -[hidden]down- Lokace
+Pohyb -[hidden]down- PrijemPohyb
+PrijemPohyb -[hidden]right- VydejPohyb
+Uzivatel -[hidden]down- Soucastka
 
 @enduml
