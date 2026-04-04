@@ -1,10 +1,9 @@
 @startuml
-title Class diagram - WMS (final)
-top to bottom direction
-skinparam linetype ortho
+title Class diagram - WMS
 skinparam classAttributeIconSize 0
 skinparam CircledCharacterRadius 0
 skinparam CircledCharacterFontSize 0
+skinparam defaultFontSize 11
 
 class Uzivatel {
   vytvoritPohyb()
@@ -15,7 +14,6 @@ class Uzivatel {
 class Projekt {
   id: int
   nazev: String
-
   priradSoucastku(s: Soucastka)
   odeberSoucastku(s: Soucastka)
 }
@@ -24,7 +22,6 @@ class Soucastka {
   id: int
   nazev: String
   mnozstvi: int
-
   zvysMnozstvi(pocet: int)
   snizMnozstvi(pocet: int)
   overDostupnost(): boolean
@@ -35,7 +32,6 @@ class Pohyb {
   typ: String
   datum: Date
   stav: String
-
   vytvoritPohyb()
   schvalit()
   provestPohyb()
@@ -44,7 +40,6 @@ class Pohyb {
 class Sklad {
   id: int
   nazev: String
-
   aktualizujMnozstvi()
 }
 
@@ -53,7 +48,12 @@ class Lokace {
   oznaceni: String
 }
 
-' ===== VZTAHY S POPISKY =====
+' hidden sipky pro layout
+Projekt -[hidden]right- Soucastka
+Soucastka -[hidden]right- Sklad
+Uzivatel -[hidden]down- Projekt
+
+' vztahy
 Uzivatel ..> Pohyb : vytváří
 Uzivatel ..> Soucastka : spravuje
 Uzivatel ..> Projekt : spravuje
