@@ -1,7 +1,149 @@
 \chapter{Datový model}
 \label{chap:datovy_model}
 
-\section{Úvod -- formulace problému}
+\section{Formulace problému}
+
+Cílem tohoto projektu je teoreticky navrhnout informační systém pro správu skladových
+součástek. Systém má umožňovat evidenci součástek, jejich kategorií, dodavatelů
+a skladových lokací. Dále má podporovat sledování pohybů součástek ve skladu,
+jako je naskladnění, vyskladnění nebo přesun mezi jednotlivými lokacemi.
+
+Součástí systému je také možnost přiřazovat součástky k projektům a evidovat
+jejich množství potřebné pro daný projekt. Návrh systému je znázorněn pomocí
+UML class diagramu, který popisuje jednotlivé třídy, jejich atributy a vztahy
+mezi nimi.
+
+\section{Datový slovník}
+
+\subsection*{Entity tříd}
+
+\begin{itemize}
+  \item \textbf{Soucastka}: Skladová položka evidovaná v~systému WMS s~aktuálním množstvím na skladě.
+  \item \textbf{Projekt}: Projekt, ke kterému jsou přiřazeny součástky pro sledování spotřeby.
+  \item \textbf{Pohyb}: Abstraktní třída reprezentující pohyb součástek -- příjem nebo výdej.
+  \item \textbf{PrijemPohyb}: Konkrétní pohyb typu příjem -- naskladnění součástek od dodavatele.
+  \item \textbf{VydejPohyb}: Konkrétní pohyb typu výdej -- vyskladnění součástek ze skladu.
+  \item \textbf{Sklad}: Fyzický sklad rozdělený na lokace, ve kterých jsou uloženy součástky.
+  \item \textbf{Lokace}: Konkrétní místo v~skladu identifikované označením (např. A-01-03).
+  \item \textbf{Uzivatel}: Osoba spravující součástky, pohyby, projekty a sklady v~systému.
+\end{itemize}
+
+\subsection*{Atributy}
+
+\begin{table}[H]
+  \centering
+  \caption{Přehled atributů tříd}
+  \begin{tabularx}{\textwidth}{lX}
+    \toprule
+    \textbf{Entita} & \textbf{Atributy} \\
+    \midrule
+    Soucastka    & id, nazev, mnozstvi \\
+    Projekt      & id, nazev \\
+    Pohyb        & id, datum, stav \\
+    PrijemPohyb  & dodavatel (dědí z Pohyb) \\
+    VydejPohyb   & duvod (dědí z Pohyb) \\
+    Sklad        & id, nazev \\
+    Lokace       & id, oznaceni \\
+    Uzivatel     & (správce systému, bez persistentních atributů) \\
+    \bottomrule
+  \end{tabularx}
+\end{table}
+
+\newpage
+\section{Diagram tříd}
+
+Diagram zachycuje strukturu systému WMS a vztahy mezi jeho hlavními třídami.
+Součástky jsou přiřazovány k~projektům a fyzicky umístěny v~lokacích skladu.
+Třída \texttt{Uzivatel} reprezentuje uživatelskou roli v~systému -- může vytvářet skladové pohyby,
+spravovat součástky, přiřazovat součástky k~projektům a zobrazovat stav skladu.
+
+Diagram využívá \textbf{generalizaci}: abstraktní třída \texttt{Pohyb} je základem pro dvě konkrétní podtřídy
+\texttt{PrijemPohyb} (naskladnění) a \texttt{VydejPohyb} (vyskladnění), které dědí společné atributy
+a přidávají vlastní specifické atributy.
+Vazba mezi \texttt{Sklad} a \texttt{Soucastka} je \textbf{kvalifikovaná} -- sklad přistupuje ke konkrétní
+součástce prostřednictvím kvalifikátoru \texttt{id: int}.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\textwidth]{02_class_diagram.png}
+  \caption{Class diagram WMS}
+  \label{fig:class_diagram}
+\end{figure}
+
+\newpage
+\section{Stavový diagram}
+
+\subsection*{Stavový diagram třídy \texttt{Pohyb}}
+
+Třída \texttt{Pohyb} reprezentuje obecný skladový pohyb -- tedy jakoukoli změnu stavu zásob součástek
+v systému. Každý pohyb prochází životním cyklem: po vytvoření je odeslán k~validaci, při které
+systém ověří, zda zadaná součástka existuje a je dostupná na skladě. Pohyb může být zamítnut
+při neplatných datech nebo při nedostatečném množství na skladě.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.5\textwidth]{09_state_pohyb_skladu.png}
+  \caption{Stavový diagram třídy Pohyb}
+  \label{fig:state_pohyb}
+\end{figure}
+
+\subsection*{Stavový diagram \texttt{Soucastka} (v projektu)}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\textwidth]{10_state_soucastka_projekt.png}
+  \caption{Stavový diagram třídy Soucastka (v projektu)}
+  \label{fig:state_soucastka_projekt}
+\end{figure}
+
+\newpage
+\section{Activity diagram -- Vytvoření pohybu}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.7\textwidth]{12_activity_wms.png}
+  \caption{Activity diagram -- Vytvoření pohybu}
+  \label{fig:activity_wms}
+\end{figure}
+
+\section{Sekvenční diagram -- Vytvoření pohybu}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\textwidth]{13_sequence_pohyb.png}
+  \caption{Sekvenční diagram -- Vytvoření pohybu}
+  \label{fig:sequence_pohyb}
+\end{figure}
+
+\newpage
+\section{Use Case}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.8\textwidth]{11_use_case.png}
+  \caption{Use Case Diagram -- WMS}
+  \label{fig:use_case}
+\end{figure}
+
+\subsection*{Scénář: Vytvoření pohybu}
+\begin{enumerate}
+  \item Uživatel zvolí \textit{Vytvořit pohyb}.
+  \item Zadá součástku a množství.
+  \item Systém provede kontrolu dat.
+  \item Pokud \texttt{[data\_ok]} $\rightarrow$ pohyb je schválen.
+  \item Systém provede pohyb a aktualizuje stav skladu.
+  \item Zobrazí se potvrzení výsledku.
+\end{enumerate}
+
+\subsection*{Scénář: Přiřazení součástky k~projektu}
+\begin{enumerate}
+  \item Uživatel vybere projekt.
+  \item Zvolí součástku a zadá množství.
+  \item Systém ověří dostupnost voláním \texttt{overDostupnost()}.
+  \item Pokud \texttt{[dostatek]} $\rightarrow$ součástka je přiřazena.
+  \item Systém aktualizuje množství na skladě.
+\end{enumerate}
+
 
 Cílem tohoto projektu je teoreticky navrhnout informační systém pro správu skladových
 součástek. Systém má umožňovat evidenci součástek, jejich kategorií, dodavatelů
