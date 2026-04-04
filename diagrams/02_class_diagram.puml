@@ -1,6 +1,5 @@
 @startuml
 title Class diagram - WMS
-top to bottom direction
 skinparam linetype ortho
 skinparam classAttributeIconSize 0
 skinparam CircledCharacterRadius 0
@@ -11,51 +10,51 @@ class Uzivatel {
   spravovatSoucastky()
 }
 
-class Projekt {
-  id: int
-  nazev: String
+together {
+  class Projekt {
+    id: int
+    nazev: String
+    priradSoucastku(s: Soucastka)
+    odeberSoucastku(s: Soucastka)
+  }
 
-  priradSoucastku(s: Soucastka)
-  odeberSoucastku(s: Soucastka)
+  class Soucastka {
+    id: int
+    nazev: String
+    mnozstvi: int
+    zvysMnozstvi(pocet: int)
+    snizMnozstvi(pocet: int)
+    overDostupnost(): boolean
+  }
+
+  class Sklad {
+    id: int
+    nazev: String
+    aktualizujMnozstvi()
+  }
 }
 
-class Soucastka {
-  id: int
-  nazev: String
-  mnozstvi: int
+together {
+  class Pohyb {
+    id: int
+    typ: String
+    datum: Date
+    stav: String
+    vytvoritPohyb()
+    schvalit()
+    provestPohyb()
+  }
 
-  zvysMnozstvi(pocet: int)
-  snizMnozstvi(pocet: int)
-  overDostupnost(): boolean
+  class Lokace {
+    id: int
+    oznaceni: String
+  }
 }
 
-class Pohyb {
-  id: int
-  typ: String
-  datum: Date
-  stav: String
-
-  vytvoritPohyb()
-  schvalit()
-  provestPohyb()
-}
-
-class Sklad {
-  id: int
-  nazev: String
-
-  aktualizujMnozstvi()
-}
-
-class Lokace {
-  id: int
-  oznaceni: String
-}
-
-Uzivatel --> Pohyb
-Uzivatel --> Soucastka
-Uzivatel --> Projekt
-Uzivatel --> Sklad
+Uzivatel ..> Pohyb
+Uzivatel ..> Soucastka
+Uzivatel ..> Projekt
+Uzivatel ..> Sklad
 Projekt "1" --> "*" Soucastka
 Soucastka "1" --> "*" Pohyb
 Sklad "1" --> "*" Lokace
