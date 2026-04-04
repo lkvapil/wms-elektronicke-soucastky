@@ -88,8 +88,8 @@ Uzivatel --> Projekt : spravuje
 Uzivatel -[hidden]right- Projekt
 Uzivatel -[hidden]down- Sklad
 Sklad -[hidden]down- Lokace
+Sklad -[hidden]down- Pohyb
 Projekt -[hidden]down- Soucastka
-Soucastka -[hidden]down- Pohyb
 Pohyb -[hidden]down- PrijemPohyb
 PrijemPohyb -[hidden]right- VydejPohyb
 
