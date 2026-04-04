@@ -6,6 +6,8 @@ skinparam CircledCharacterRadius 0
 skinparam CircledCharacterFontSize 0
 skinparam defaultFontSize 11
 skinparam linetype ortho
+skinparam nodesep 60
+skinparam ranksep 50
 
 class Uzivatel {
   vytvoritPohyb()
