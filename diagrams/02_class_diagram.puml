@@ -3,6 +3,8 @@ title Class diagram - WMS
 top to bottom direction
 skinparam linetype ortho
 skinparam classAttributeIconSize 0
+skinparam CircledCharacterRadius 0
+skinparam CircledCharacterFontSize 0
 
 class Administrator {
   vytvoritPohyb()
