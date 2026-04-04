@@ -277,39 +277,3 @@ Pohyb může být zamítnut ve dvou situacích:
   \item Systém aktualizuje množství na skladě.
 \end{enumerate}
 
-\section{Datový slovník (popis atributů tříd)}
-
-\subsection*{Entity tříd}
-
-\begin{itemize}
-  \item \textbf{Soucastka}: Skladová položka evidovaná v~systému WMS s~aktuálním množstvím na skladě.
-  \item \textbf{Projekt}: Projekt, ke kterému jsou přiřazeny součástky pro sledování spotřeby.
-  \item \textbf{Pohyb}: Abstraktní třída reprezentující pohyb součástek -- příjem nebo výdej.
-  \item \textbf{PrijemPohyb}: Konkrétní pohyb typu příjem -- naskladnění součástek od dodavatele.
-  \item \textbf{VydejPohyb}: Konkrétní pohyb typu výdej -- vyskladnění součástek ze skladu.
-  \item \textbf{Sklad}: Fyzický sklad rozdělený na lokace, ve kterých jsou uloženy součástky.
-  \item \textbf{Lokace}: Konkrétní místo v~skladu identifikované označením (např. A-01-03).
-  \item \textbf{Uzivatel}: Osoba spravující součástky, pohyby, projekty a sklady v~systému.
-\end{itemize}
-
-\subsection*{Atributy}
-
-\begin{table}[H]
-  \centering
-  \caption{Přehled atributů tříd}
-  \begin{tabularx}{\textwidth}{lX}
-    \toprule
-    \textbf{Entita} & \textbf{Atributy} \\
-    \midrule
-    Soucastka    & id, nazev, mnozstvi \\
-    Projekt      & id, nazev \\
-    Pohyb        & id, datum, stav \\
-    PrijemPohyb  & dodavatel (dědí z Pohyb) \\
-    VydejPohyb   & duvod (dědí z Pohyb) \\
-    Sklad        & id, nazev \\
-    Lokace       & id, oznaceni \\
-    Uzivatel     & (správce systému, bez persistentních atributů) \\
-    \bottomrule
-  \end{tabularx}
-\end{table}
-
