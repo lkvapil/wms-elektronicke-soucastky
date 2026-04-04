@@ -84,13 +84,13 @@ Pohyb --> Sklad : mění stav
 Uzivatel --> Pohyb : vytváří
 Uzivatel --> Projekt : spravuje
 
-' layout - vlevo Uzivatel/Pohyb/subclasses, vpravo Projekt/Soucastka/Sklad/Lokace
+' layout - vlevo Uzivatel/Sklad/Lokace, vpravo Projekt/Soucastka/Pohyb
 Uzivatel -[hidden]right- Projekt
-Uzivatel -[hidden]down- Pohyb
+Uzivatel -[hidden]down- Sklad
+Sklad -[hidden]down- Lokace
+Projekt -[hidden]down- Soucastka
+Soucastka -[hidden]down- Pohyb
 Pohyb -[hidden]down- PrijemPohyb
 PrijemPohyb -[hidden]right- VydejPohyb
-Projekt -[hidden]down- Soucastka
-Soucastka -[hidden]down- Sklad
-Sklad -[hidden]down- Lokace
 
 @enduml
