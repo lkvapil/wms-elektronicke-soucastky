@@ -9,14 +9,11 @@ Evidovana : do / čekat na naskladnění
 Evidovana --> Dostupna : Naskladněna na sklad
 
 Dostupna : do / sledovat stav zásob
+Dostupna : Rezervována / rezervovat(pocet)
+Dostupna : Rezervace zrušena / zrusitRezervaci(pocet)
 Dostupna --> Dostupna : Naskladněno / zvysMnozstvi()
-Dostupna --> Rezervovana : Rezervována pro projekt
+Dostupna --> Vydana : Vydána ze skladu
 Dostupna --> Odepsana : Odepsána
-
-Rezervovana : entry / rezervovat(pocet)
-Rezervovana : do / blokovat rezervovaneMnozstvi
-Rezervovana --> Dostupna : Rezervace zrušena / zrusitRezervaci(pocet)
-Rezervovana --> Vydana : Vydána ze skladu
 
 Vydana : entry / snizMnozstvi()
 Vydana : do / evidovat spotřebu

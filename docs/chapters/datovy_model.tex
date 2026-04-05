@@ -18,7 +18,7 @@ mezi nimi.
 \subsection*{Entity tříd}
 
 \begin{itemize}
-  \item \textbf{Soucastka}: Skladová položka evidovaná v~systému WMS s~aktuálním množstvím na skladě. Atribut \texttt{rezervovaneMnozstvi} sleduje, kolik kusů je aktuálně blokováno pro projekty -- součástka tak může být současně \textit{Dostupna} i částečně rezervována. Součástka může nabývat stavů: \textit{Dostupna} (volná k~použití), \textit{Rezervovana} (část nebo celé množství blokováno pro projekt), \textit{Vydana} (fyzicky vydána ze skladu) nebo \textit{Odepsana} (trvale vyřazena z~evidence).
+  \item \textbf{Soucastka}: Skladová položka evidovaná v~systému WMS s~aktuálním množstvím na skladě. Atribut \texttt{rezervovaneMnozstvi} sleduje, kolik kusů je aktuálně blokováno pro projekty -- součástka tak může být \textit{Dostupna} i s~částečnou rezervací zároveň. Součástka může nabývat stavů: \textit{Dostupna} (k~dispozici, případně s~rezervovanou částí), \textit{Vydana} (fyzicky vydána ze skladu) nebo \textit{Odepsana} (trvale vyřazena z~evidence).
   \item \textbf{Projekt}: Projekt, ke kterému jsou přiřazeny součástky pro sledování spotřeby.
   \item \textbf{SkladovyPohyb}: Abstraktní třída reprezentující pohyb součástek -- příjem, výdej nebo přesun.
   \item \textbf{PrijemPohyb}: Konkrétní pohyb typu příjem -- naskladnění součástek od dodavatele (dědí ze \textbf{SkladovyPohyb}).
@@ -38,7 +38,7 @@ mezi nimi.
     \toprule
     \textbf{Entita} & \textbf{Atributy} \\
     \midrule
-    Soucastka    & id, nazev, mnozstvi, rezervovaneMnozstvi, stav (Dostupna $|$ Rezervovana $|$ Vydana $|$ Odepsana) \\
+    Soucastka    & id, nazev, mnozstvi, rezervovaneMnozstvi, stav (Dostupna $|$ Vydana $|$ Odepsana) \\
     Projekt      & id, nazev \\
     SkladovyPohyb & id, datum, stav, typ (prijem $|$ vydej $|$ presun), mnozstvi \\
     PrijemPohyb  & dodavatel -- vlastní; id, datum, stav, typ -- zděděno \\
@@ -115,20 +115,15 @@ v systému. Každý pohyb prochází životním cyklem řízeným třemi metodam
 
 Diagram zachycuje, jak se mění stav součástky v~průběhu skladových operací.
 Součástka je nejprve přidána do systému pomocí \texttt{evidovatSoucastku()} -- nachází se ve stavu \textit{Evidovana} s~nulovým množstvím.
-Po naskladnění přechází do stavu \textit{Dostupna}, kde je k~dispozici pro rezervaci nebo výdej.
+Po naskladnění přechází do stavu \textit{Dostupna}, kde je k~dispozici pro výdej.
 Opakované naskladnění (např. doplnění zásob) ji nechá ve stavu \textit{Dostupna} a zavolá \texttt{zvysMnozstvi()}.
 
-Z~tohoto stavu mohou nastat dva přechody:
-\begin{itemize}
-  \item \textbf{Rezervována pro projekt} -- součástka přechází do stavu \textit{Rezervovana},
-  	  kde je část množství blokována pro konkrétní projekt (\texttt{rezervovat(pocet)}).
-        Atribut \texttt{rezervovaneMnozstvi} sleduje, kolik kusů je aktuálně rezervováno.
-        Rezervaci lze zrušit voláním \texttt{zrusitRezervaci(pocet)} a součástka se vrátí do \textit{Dostupna}.
-  \item \textbf{Vydána ze skladu} -- součástka přechází do stavu \textit{Vydana},
-        kde se zavolá \texttt{snizMnozstvi()}. Lze ji vrátit zpět do \textit{Dostupna}, nebo odepsat.
-\end{itemize}
+Součástka zůstává ve stavu \textit{Dostupna} i při rezervaci -- rezervace se projeví pouze změnou atributu
+\texttt{rezervovaneMnozstvi} (voláním \texttt{rezervovat(pocet)}) a lze ji kdykoli zrušit (\texttt{zrusitRezervaci(pocet)}).
+Samotná součástka nemění stav; do stavu \textit{Vydana} přechází až při fyzickém výdeji ze skladu, kdy se zavolá \texttt{snizMnozstvi()}.
+Vydanou součástku lze vrátit zpět do \textit{Dostupna}, nebo odepsat.
 
-Ze stavů \textit{Rezervovana} i \textit{Vydana} lze součástku \textbf{Odepsat} -- přechází do terminálního stavu \textit{Odepsana},
+Součástku lze \textbf{odepsat} ze stavů \textit{Dostupna} i \textit{Vydana} -- přechází do terminálního stavu \textit{Odepsana},
 ze kterého již není návratu.
 \begin{figure}[H]
   \centering
