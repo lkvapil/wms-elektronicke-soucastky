@@ -11,10 +11,11 @@ Dostupna : Rezervace zrušena / zrusitRezervaci(pocet)
 Dostupna --> Vydana : Vydána ze skladu
 Dostupna --> Odepsana : Odepsána
 
-Vydana : entry / snizMnozstvi()
+Vydana : entry / snizMnozstvi(pocet)
 Vydana : entry / evidovat spotřebu
 Vydana --> [*] : Vydána ze skladu
 
+Odepsana : entry / snizMnozstvi(pocet)
 Odepsana : entry / vyřazena z evidence
 Odepsana --> [*] : Součástka odepsána
 
