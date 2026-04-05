@@ -60,6 +60,15 @@ spravovat součástky, přiřazovat součástky k~projektům a zobrazovat stav s
 Diagram využívá \textbf{generalizaci}: abstraktní třída \texttt{SkladovyPohyb} je základem pro dvě konkrétní podtřídy
 \texttt{PrijemPohyb} (naskladnění) a \texttt{VydejPohyb} (vyskladnění), které dědí společné atributy
 a přidávají vlastní specifické atributy.
+
+Třída \texttt{SkladovyPohyb} zaznamenává každou změnu stavu zásob v~systému. Konkrétně:
+\begin{itemize}
+  \item \texttt{PrijemPohyb} -- příjem součástek na sklad od dodavatele; zvyšuje množství dané součástky.
+  \item \texttt{VydejPohyb} -- výdej součástek ze skladu na projekt; snižuje množství dané součástky.
+\end{itemize}
+Každý pohyb se váže na konkrétní součástku (vazba \texttt{je součástí}) a mění stav skladu (vazba \texttt{mění stav}).
+Pohyb nemění fyzickou lokaci součástky -- ta je pevně dána vazbou \texttt{Lokace} $\rightarrow$ \texttt{Soucastka}.
+
 Vazba mezi \texttt{Sklad} a \texttt{Soucastka} je \textbf{kvalifikovaná} -- sklad přistupuje ke konkrétní
 součástce prostřednictvím kvalifikátoru \texttt{id: int}.
 
