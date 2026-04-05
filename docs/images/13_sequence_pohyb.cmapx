@@ -1,4 +1,7 @@
 <map id="13_sequence_pohyb_map" name="13_sequence_pohyb_map">
-<area shape="rect" id="id1" href="dostatek" title="dostatek" alt="" coords="214,254,263,267"/>
-<area shape="rect" id="id2" href="nedostatek" title="nedostatek" alt="" coords="141,358,204,371"/>
+<area shape="rect" id="id1" href="data" title="data" alt="" coords="87,171,104,184"/>
+<area shape="rect" id="id2" href="data" title="data" alt="" coords="15,379,40,392"/>
+<area shape="rect" id="id3" href="typ" title="typ" alt="" coords="111,241,162,254"/>
+<area shape="rect" id="id4" href="typ" title="typ" alt="" coords="183,195,241,208"/>
+<area shape="rect" id="id5" href="typ" title="typ" alt="" coords="111,285,171,298"/>
 </map>

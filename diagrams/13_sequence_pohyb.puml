@@ -1,25 +1,23 @@
 @startuml
-title Sekvencni diagram - Vytvoreni pohybu
 
 actor Uzivatel
-participant UI
-participant System
+participant SkladovyPohyb
 participant Soucastka
-participant Sklad
-participant Pohyb
 
-Uzivatel -> UI : zada pozadavek
-UI -> System : vytvoritPohyb(data)
+Uzivatel -> SkladovyPohyb : vytvoritPohyb()
+SkladovyPohyb -> SkladovyPohyb : overitData()
 
-System -> Soucastka : overDostupnost()
-Soucastka --> System : OK / NOK
-
-alt [dostatek]
-    System -> Pohyb : create()
-    System -> Sklad : aktualizujMnozstvi()
-    System --> UI : potvrzeni
-else [nedostatek]
-    System --> UI : chyba
+alt [data OK]
+    alt [typ == příjem]
+        SkladovyPohyb -> Soucastka : zvysMnozstvi(pocet)
+    else [typ == výdej]
+        SkladovyPohyb -> Soucastka : snizMnozstvi(pocet)
+    else [typ == přesun]
+        SkladovyPohyb -> SkladovyPohyb : zmenLokaci()
+    end
+    SkladovyPohyb --> Uzivatel : pohyb potvrzen
+else [data NOK]
+    SkladovyPohyb --> Uzivatel : pohyb zamítnut
 end
 
 @enduml

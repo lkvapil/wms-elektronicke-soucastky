@@ -43,7 +43,7 @@ mezi nimi.
     SkladovyPohyb & id, datum, stav, typ (prijem $|$ vydej $|$ presun), mnozstvi \\
     PrijemPohyb  & dodavatel -- vlastní; id, datum, stav, typ -- zděděno \\
     VydejPohyb   & duvod -- vlastní; id, datum, stav, typ -- zděděno \\
-    PresunutiPohyb & zdrojLokace, cilLokace -- vlastní; id, datum, stav, typ -- zděděno \\
+    PresunutiPohyb & zdrojLokaceId: int, cilLokaceId: int -- vlastní; id, datum, stav, typ -- zděděno \\
     Sklad        & id, nazev \\
     Lokace       & id, oznaceni \\
     Uzivatel     & id, jmeno, email \\
@@ -101,8 +101,8 @@ v systému. Každý pohyb prochází životním cyklem řízeným třemi metodam
   \item \texttt{vytvoritPohyb()} -- inicializuje nový pohyb: přiřadí ID, nastaví datum vzniku, typ pohybu a vazbu na součástku;
   \item \texttt{overitData()} -- ověří platnost zadaných dat: existenci součástky, vyplnění povinných polí,
         dostatečné množství na skladě (příjem/výdej) nebo platnost lokací (přesun);
-  \item \texttt{provestPohyb()} -- fyzicky provede pohyb: u~příjmu zavolá \texttt{soucastka.zvysMnozstvi()},
-        u~výdeje \texttt{soucastka.snizMnozstvi()} a u~přesunu \texttt{zmenLokaci()}.
+  \item \texttt{provestPohyb()} -- fyzicky provede pohyb: u~příjmu zavolá \texttt{soucastka.zvysMnozstvi(pocet)},
+        u~výdeje \texttt{soucastka.snizMnozstvi(pocet)} a u~přesunu \texttt{zmenLokaci()}.
 \end{itemize}
 \begin{figure}[H]
   \centering
