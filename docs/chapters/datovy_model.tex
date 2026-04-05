@@ -117,12 +117,12 @@ Diagram zachycuje, jak se mění stav součástky v~průběhu skladových operac
 Součástka je přidána do systému a okamžitě vstupuje do stavu \textit{Dostupna} s~nulovým množstvím.
 Každá součástka prochází stavy řízenými těmito přechody:
 \begin{itemize}
-  \item \textbf{Dostupna} -- výchozí stav; součástka je v~systému a lze s~ní pracovat.
+  \item \textit{Dostupna} -- výchozí stav; součástka je v~systému a lze s~ní pracovat.
         Naskladnění zvýší množství (\texttt{zvysMnozstvi(pocet)}), rezervace upraví \texttt{rezervovaneMnozstvi}
         (\texttt{rezervovat(pocet)}, \texttt{zrusitRezervaci(pocet)}) -- stav se nemění.
-  \item \textbf{Vydana} -- součástka byla fyzicky vydána ze skladu; zavolají se \texttt{snizMnozstvi(pocet)}
+  \item \textit{Vydana} -- součástka byla fyzicky vydána ze skladu; zavolají se \texttt{snizMnozstvi(pocet)}
         a \texttt{evidovat spotřebu}. Vydaná součástka je spotřebována -- terminální stav.
-  \item \textbf{Odepsana} -- součástka byla vyřazena z~evidence (např. poškozena na skladě);
+  \item \textit{Odepsana} -- součástka byla vyřazena z~evidence (např. poškozena na skladě);
         zavolají se \texttt{snizMnozstvi(pocet)} a \texttt{vyřazena z evidence} -- terminální stav.
 \end{itemize}
 \begin{figure}[H]
