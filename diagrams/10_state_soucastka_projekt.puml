@@ -12,7 +12,7 @@ Dostupna --> Vydana : Vydána ze skladu
 Dostupna --> Odepsana : Odepsána
 
 Vydana : entry / snizMnozstvi()
-Vydana : do / evidovat spotřebu
+Vydana : entry / evidovat spotřebu
 Vydana --> [*] : Vydána ze skladu
 
 Odepsana : entry / vyřazena z evidence
