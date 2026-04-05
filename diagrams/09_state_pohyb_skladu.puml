@@ -7,14 +7,11 @@ Vytvoren : entry / vytvoritPohyb()
 Vytvoren --> Validovan : submit()
 
 Validovan : entry / overitData()
-Validovan --> Schvalen : [data_platna]
+Validovan --> Proveden_Prijem : provestPohyb() [data_platna / prijem]
+Validovan --> Proveden_Vydej : provestPohyb() [data_platna / vydej]
+Validovan --> Proveden_Presun : provestPohyb() [data_platna / presun]
 Validovan --> Zamitnut : [neplatna_data]
 Validovan --> Zamitnut : [nedostatecne_mnozstvi]
-
-Schvalen : entry / schvalit()
-Schvalen --> Proveden_Prijem : provestPohyb() [prijem]
-Schvalen --> Proveden_Vydej : provestPohyb() [vydej]
-Schvalen --> Proveden_Presun : provestPohyb() [presun]
 
 Proveden_Prijem : entry / soucastka.zvysMnozstvi()
 Proveden_Vydej : entry / soucastka.snizMnozstvi()

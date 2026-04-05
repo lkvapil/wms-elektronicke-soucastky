@@ -88,12 +88,11 @@ součástce prostřednictvím kvalifikátoru \texttt{id: int}.
 \subsection*{Stavový diagram třídy \texttt{SkladovyPohyb}}
 
 Třída \texttt{SkladovyPohyb} reprezentuje obecný skladový pohyb -- tedy jakoukoli změnu stavu zásob součástek
-v systému. Každý pohyb prochází životním cyklem řízeným čtyřmi metodami:
+v systému. Každý pohyb prochází životním cyklem řízeným třemi metodami:
 \begin{itemize}
   \item \texttt{vytvoritPohyb()} -- inicializuje nový pohyb: přiřadí ID, nastaví datum vzniku, typ pohybu a vazbu na součástku;
   \item \texttt{overitData()} -- ověří platnost zadaných dat: existenci součástky, vyplnění povinných polí,
         dostatečné množství na skladě (příjem/výdej) nebo platnost lokací (přesun);
-  \item \texttt{schvalit()} -- potvrdí správnost pohybu a změní stav na \emph{Schválen}, čímž ho připraví k provedení;
   \item \texttt{provestPohyb()} -- fyzicky provede pohyb: u~příjmu zavolá \texttt{soucastka.zvysMnozstvi()},
         u~výdeje \texttt{soucastka.snizMnozstvi()} a u~přesunu \texttt{zmenLokaci()}.
 \end{itemize}
@@ -220,7 +219,7 @@ Třída \texttt{SkladovyPohyb} reprezentuje obecný skladový pohyb -- tedy jako
 v systému. Atribut \texttt{typ} rozlišuje tři druhy pohybu: \emph{příjem} (naskladnění nových součástek),
 \emph{výdej} (odebrání součástek ze skladu) a \emph{přesun} (přemístění součástek mezi lokacemi či sklady).
 
-Životní cyklus pohybu je řízen čtyřmi metodami:
+Životní cyklus pohybu je řízen třemi metodami:
 \begin{description}
   \item[\texttt{vytvoritPohyb()}] Inicializuje nový pohyb -- přiřadí ID, nastaví datum vzniku, typ pohybu a vazbu na součástku.
   \item[\texttt{overitData()}] Ověří platnost zadaných dat. Pohyb je zamítnut pokud:
@@ -229,7 +228,6 @@ v systému. Atribut \texttt{typ} rozlišuje tři druhy pohybu: \emph{příjem} (
       \item požadované množství výdeje přesahuje aktuální stav na skladě (\texttt{[nedostatecne\_mnozstvi]}),
       \item u~přesunu: zdrojová lokace neobsahuje danou součástku nebo cílová lokace neexistuje.
     \end{itemize}
-  \item[\texttt{schvalit()}] Potvrdí správnost pohybu a změní stav na \emph{Schválen}, čímž ho připraví k fyzickému provedení.
   \item[\texttt{provestPohyb()}] Fyzicky provede pohyb: u~příjmu zavolá \texttt{soucastka.zvysMnozstvi()},
         u~výdeje \texttt{soucastka.snizMnozstvi()} a u~přesunu \texttt{zmenLokaci()}.
 \end{description}

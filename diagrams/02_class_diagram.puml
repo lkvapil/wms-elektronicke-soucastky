@@ -40,7 +40,6 @@ abstract class SkladovyPohyb {
   id: int
   datum: Date
   stav: String
-  schvalit()
   provestPohyb()
 }
 
