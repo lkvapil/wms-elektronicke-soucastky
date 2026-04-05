@@ -1,6 +1,5 @@
 @startuml
 top to bottom direction
-title State diagram - SkladovyPohyb
 
 [*] --> Vytvoren
 
