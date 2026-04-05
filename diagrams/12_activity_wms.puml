@@ -1,25 +1,28 @@
 @startuml
-title Activity diagram - Vytvoreni pohybu
 
 start
 
-:Zadat data;
-:Kontrola dat;
+:Uživatel zadá data pohybu\n(typ, součástka, množství);
+
+:vytvoritPohyb()\n-- inicializuje pohyb, přiřadí ID, datum, typ;
+
+:overitData()\n-- ověří existenci součástky,\ndostatečné množství, platnost lokací;
 
 if (Data OK?) then (ano)
-  :Schvaleni;
+  :provestPohyb();
 
-  if (Schvaleno?) then (ano)
-    :Provedeni pohybu;
-    :Aktualizace skladu;
-    :Potvrzeni;
-  else (ne)
-    :Zamitnuto;
+  if (Typ pohybu?) then (příjem)
+    :soucastka.zvysMnozstvi(pocet);
+  else (výdej)
+    :soucastka.snizMnozstvi(pocet);
+  else (přesun)
+    :zmenLokaci();
   endif
 
+  :Pohyb potvrzen;
+
 else (ne)
-  :Oprava dat;
-  :Kontrola dat;
+  :Pohyb zamítnut\n-- uložena chyba;
 endif
 
 stop

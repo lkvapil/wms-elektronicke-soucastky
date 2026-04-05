@@ -135,6 +135,14 @@ Stav součástky je řízen těmito metodami:
 \newpage
 \section{Activity diagram -- Vytvoření pohybu}
 
+Diagram zachycuje průběh vytvoření skladového pohybu v~systému WMS.
+Pohyb prochází třemi fázemi řízenými metodami třídy \texttt{SkladovyPohyb}:
+\begin{itemize}
+  \item \texttt{vytvoritPohyb()} -- uživatel zadá typ pohybu, součástku a množství; metoda inicializuje pohyb, přiřadí ID a datum vzniku.
+  \item \texttt{overitData()} -- ověří platnost zadaných dat: existenci součástky, dostatečné množství na skladě a platnost lokací u~přesunu.
+  \item \texttt{provestPohyb()} -- fyzicky provede pohyb podle typu: příjem zavolá \texttt{zvysMnozstvi(pocet)}, výdej \texttt{snizMnozstvi(pocet)}, přesun \texttt{zmenLokaci()}. Pokud data nejsou platná, pohyb je zamítnut a uložena chyba.
+\end{itemize}
+
 \begin{figure}[H]
   \centering
   \includegraphics[width=0.7\textwidth]{12_activity_wms.png}
