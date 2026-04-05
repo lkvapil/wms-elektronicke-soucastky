@@ -28,10 +28,13 @@ class Soucastka {
   id: int
   nazev: String
   mnozstvi: int
+  rezervovaneMnozstvi: int
   stav: String
   evidovatSoucastku()
   zvysMnozstvi(pocet: int)
   snizMnozstvi(pocet: int)
+  rezervovat(pocet: int)
+  zrusitRezervaci(pocet: int)
   overDostupnost(): boolean
 }
 

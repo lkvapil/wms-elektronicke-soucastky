@@ -13,9 +13,9 @@ Dostupna --> Dostupna : Naskladněno / zvysMnozstvi()
 Dostupna --> Rezervovana : Rezervována pro projekt
 Dostupna --> Odepsana : Odepsána
 
-Rezervovana : entry / rezervovatMnozstvi()
-Rezervovana : do / blokovat množství
-Rezervovana --> Dostupna : Rezervace zrušena
+Rezervovana : entry / rezervovat(pocet)
+Rezervovana : do / blokovat rezervovaneMnozstvi
+Rezervovana --> Dostupna : Rezervace zrušena / zrusitRezervaci(pocet)
 Rezervovana --> Vydana : Vydána ze skladu
 
 Vydana : entry / snizMnozstvi()

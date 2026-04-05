@@ -18,7 +18,7 @@ mezi nimi.
 \subsection*{Entity tříd}
 
 \begin{itemize}
-  \item \textbf{Soucastka}: Skladová položka evidovaná v~systému WMS s~aktuálním množstvím na skladě. Součástka může nabývat stavů: \textit{Dostupna} (volná k~použití), \textit{Rezervovana} (blokována pro projekt), \textit{Vydana} (fyzicky vydána ze skladu) nebo \textit{Odepsana} (trvale vyřazena z~evidence).
+  \item \textbf{Soucastka}: Skladová položka evidovaná v~systému WMS s~aktuálním množstvím na skladě. Atribut \texttt{rezervovaneMnozstvi} sleduje, kolik kusů je aktuálně blokováno pro projekty -- součástka tak může být současně \textit{Dostupna} i částečně rezervována. Součástka může nabývat stavů: \textit{Dostupna} (volná k~použití), \textit{Rezervovana} (část nebo celé množství blokováno pro projekt), \textit{Vydana} (fyzicky vydána ze skladu) nebo \textit{Odepsana} (trvale vyřazena z~evidence).
   \item \textbf{Projekt}: Projekt, ke kterému jsou přiřazeny součástky pro sledování spotřeby.
   \item \textbf{SkladovyPohyb}: Abstraktní třída reprezentující pohyb součástek -- příjem, výdej nebo přesun.
   \item \textbf{PrijemPohyb}: Konkrétní pohyb typu příjem -- naskladnění součástek od dodavatele (dědí ze \textbf{SkladovyPohyb}).
@@ -38,7 +38,7 @@ mezi nimi.
     \toprule
     \textbf{Entita} & \textbf{Atributy} \\
     \midrule
-    Soucastka    & id, nazev, mnozstvi, stav (Dostupna $|$ Rezervovana $|$ Vydana $|$ Odepsana) \\
+    Soucastka    & id, nazev, mnozstvi, rezervovaneMnozstvi, stav (Dostupna $|$ Rezervovana $|$ Vydana $|$ Odepsana) \\
     Projekt      & id, nazev \\
     SkladovyPohyb & id, datum, stav, typ (prijem $|$ vydej $|$ presun), mnozstvi \\
     PrijemPohyb  & dodavatel -- vlastní; id, datum, stav, typ -- zděděno \\
@@ -121,8 +121,9 @@ Opakované naskladnění (např. doplnění zásob) ji nechá ve stavu \textit{D
 Z~tohoto stavu mohou nastat dva přechody:
 \begin{itemize}
   \item \textbf{Rezervována pro projekt} -- součástka přechází do stavu \textit{Rezervovana},
-        kde je blokována pro konkrétní projekt (\texttt{rezervovatMnozstvi()}).
-        Rezervaci lze zrušit a součástka se vrátí do \textit{Dostupna}.
+  	  kde je část množství blokována pro konkrétní projekt (\texttt{rezervovat(pocet)}).
+        Atribut \texttt{rezervovaneMnozstvi} sleduje, kolik kusů je aktuálně rezervováno.
+        Rezervaci lze zrušit voláním \texttt{zrusitRezervaci(pocet)} a součástka se vrátí do \textit{Dostupna}.
   \item \textbf{Vydána ze skladu} -- součástka přechází do stavu \textit{Vydana},
         kde se zavolá \texttt{snizMnozstvi()}. Lze ji vrátit zpět do \textit{Dostupna}, nebo odepsat.
 \end{itemize}
