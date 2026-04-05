@@ -2,6 +2,8 @@
 skinparam defaultFontSize 13
 skinparam sequenceArrowThickness 1.5
 skinparam sequenceParticipantBorderThickness 1.5
+skinparam sequenceGroupBorderThickness 1.5
+skinparam sequenceBoxBorderColor #888888
 
 actor "Uživatel" as Uzivatel
 participant "SkladovyPohyb" as Pohyb
@@ -9,50 +11,31 @@ participant "Soucastka" as Soucastka
 participant "Lokace" as Lokace
 
 Uzivatel -> Pohyb : vytvoritPohyb(typ, soucastka, mnozstvi)
-activate Pohyb
+Pohyb -> Soucastka : overitData()
+Soucastka --> Pohyb : ok / chyba
 
-Pohyb -> Pohyb : overitData()
-activate Pohyb
-
-Pohyb -> Soucastka : existuje?
-activate Soucastka
-Soucastka --> Pohyb : true / false
-deactivate Soucastka
-
-alt [data NOK]
-    Pohyb --> Uzivatel : chybová hláška, pohyb zamítnut
-else [data OK]
-    deactivate Pohyb
-
-    Pohyb -> Pohyb : provestPohyb()
-    activate Pohyb
-
-    alt [typ == příjem]
-        Pohyb -> Soucastka : zvysMnozstvi(pocet)
-        activate Soucastka
-        Soucastka --> Pohyb : ok
-        deactivate Soucastka
-
-    else [typ == výdej]
-        Pohyb -> Soucastka : snizMnozstvi(pocet)
-        activate Soucastka
-        Soucastka --> Pohyb : ok
-        deactivate Soucastka
-
-    else [typ == přesun]
-        Pohyb -> Soucastka : overDostupnost()
-        activate Soucastka
-        Soucastka --> Pohyb : true
-        deactivate Soucastka
-        Pohyb -> Lokace : zmenLokaci(zdrojLokaceId, cilLokaceId)
-        activate Lokace
-        Lokace --> Pohyb : ok
-        deactivate Lokace
-    end
-
-    deactivate Pohyb
-    Pohyb --> Uzivatel : pohyb potvrzen
+alt data nejsou platná
+    Pohyb --> Uzivatel : pohyb zamítnut
 end
 
-deactivate Pohyb
+Pohyb -> Pohyb : provestPohyb()
+
+group typ == příjem
+    Pohyb -> Soucastka : zvysMnozstvi(pocet)
+    Soucastka --> Pohyb : ok
+end
+
+group typ == výdej
+    Pohyb -> Soucastka : snizMnozstvi(pocet)
+    Soucastka --> Pohyb : ok
+end
+
+group typ == přesun
+    Pohyb -> Soucastka : overDostupnost()
+    Soucastka --> Pohyb : ok
+    Pohyb -> Lokace : zmenLokaci(zdrojLokaceId, cilLokaceId)
+    Lokace --> Pohyb : ok
+end
+
+Pohyb --> Uzivatel : pohyb potvrzen
 @enduml
