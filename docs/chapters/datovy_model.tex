@@ -96,7 +96,6 @@ systém ověří:
   \item u~příjmu a výdeje: zda je součástka dostupná na skladě v~dostatečném množství a zda je uveden platný dodavatel (u~příjmu),
   \item u~přesunu: zda zdrojová lokace obsahuje danou součástku a zda cílová lokace existuje ve skladu.
 \end{itemize}
-Pohyb může být zamítnut při neplatných datech, nedostatečném množství na skladě nebo neplatné lokaci.
 Po schválení je pohyb fyzicky proveden: příjem volá \texttt{soucastka.zvysMnozstvi()},
 výdej \texttt{soucastka.snizMnozstvi()} a přesun \texttt{zmenLokaci()}.
 \begin{figure}[H]
