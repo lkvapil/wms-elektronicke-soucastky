@@ -1,29 +1,35 @@
 @startuml
+skinparam defaultFontSize 13
+skinparam ActivityBorderThickness 1.5
+skinparam ArrowThickness 1.5
 
+|Uživatel|
 start
+:Zadá typ pohybu, součástku a množství;
 
-:Uživatel zadá data pohybu\n(typ, součástka, množství);
+|Systém|
+:vytvoritPohyb()\ninicializuje pohyb, přiřadí ID a datum;
 
-:vytvoritPohyb()\n-- inicializuje pohyb, přiřadí ID, datum, typ;
+:overitData()\nověří existenci součástky,\ndostatečné množství a platnost lokací;
 
-:overitData()\n-- ověří existenci součástky,\ndostatečné množství, platnost lokací;
+if (Data platná?) then (ano)
 
-if (Data OK?) then (ano)
-
-  if (Typ == příjem?) then (ano)
-    :soucastka.zvysMnozstvi(pocet);
-  elseif (Typ == výdej?) then (ano)
-    :soucastka.snizMnozstvi(pocet);
+  if (typ == příjem?) then (ano)
+    :Soucastka.zvysMnozstvi(pocet);
+  elseif (typ == výdej?) then (ano)
+    :Soucastka.snizMnozstvi(pocet);
   else (přesun)
-    :zmenLokaci();
+    :Soucastka.overDostupnost();
+    :Lokace.zmenLokaci\n(zdrojLokaceId, cilLokaceId);
   endif
 
+  |Uživatel|
   :Pohyb potvrzen;
 
 else (ne)
-  :Pohyb zamítnut\n-- uložena chyba;
+  |Uživatel|
+  :Chybová hláška\npohyb zamítnut;
 endif
 
 stop
-
 @enduml
