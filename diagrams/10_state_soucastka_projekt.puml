@@ -17,6 +17,7 @@ Vydana : do / evidovat spotřebu
 Vydana --> Dostupna : Vrácena na sklad
 Vydana --> Odepsana : Odepsána
 
+Odepsana : entry / vyřazena z evidence
 Odepsana --> [*] : Součástka odepsána
 
 @enduml
