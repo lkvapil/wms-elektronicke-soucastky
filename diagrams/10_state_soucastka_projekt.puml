@@ -3,7 +3,7 @@ top to bottom direction
 title State diagram - Soucastka
 
 
-[*] --> Dostupna : Přidána do systému / evidovatSoucastku()
+[*] --> Dostupna : Přidána do systému
 
 Dostupna : do / sledovat stav zásob
 Dostupna : Rezervována / rezervovat(pocet)

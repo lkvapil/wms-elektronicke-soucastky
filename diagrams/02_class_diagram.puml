@@ -30,7 +30,6 @@ class Soucastka {
   mnozstvi: int
   rezervovaneMnozstvi: int
   stav: String
-  evidovatSoucastku()
   zvysMnozstvi(pocet: int)
   snizMnozstvi(pocet: int)
   rezervovat(pocet: int)

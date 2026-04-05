@@ -56,7 +56,7 @@ mezi nimi.
 
 Diagram zachycuje strukturu systému WMS a vztahy mezi jeho hlavními třídami.
 Součástky jsou přiřazovány k~projektům a fyzicky umístěny v~lokacích skladu.
-Třída \texttt{Uzivatel} reprezentuje uživatelskou roli v~systému. Vytvoření pohybu provádí voláním \texttt{SkladovyPohyb.vytvoritPohyb()}, evidenci součástky voláním \texttt{Soucastka.evidovatSoucastku()} a přiřazení součástky k~projektu voláním \texttt{Projekt.priradSoucastku()}.
+Třída \texttt{Uzivatel} reprezentuje uživatelské roli v~systému. Vytvoření pohybu provádí voláním \texttt{SkladovyPohyb.vytvoritPohyb()} a přiřazení součástky k~projektu voláním \texttt{Projekt.priradSoucastku()}.
 
 Diagram využívá \textbf{generalizaci}: abstraktní třída \texttt{SkladovyPohyb} je základem pro tři konkrétní podtřídy
 \texttt{PrijemPohyb} (naskladnění), \texttt{VydejPohyb} (vyskladnění) a \texttt{PresunutiPohyb} (přesun mezi lokacemi),
@@ -114,7 +114,7 @@ v systému. Každý pohyb prochází životním cyklem řízeným třemi metodam
 \subsection*{Stavový diagram třídy \texttt{Soucastka}}
 
 Diagram zachycuje, jak se mění stav součástky v~průběhu skladových operací.
-Součástka je přidána do systému voláním \texttt{evidovatSoucastku()} a okamžitě vstupuje do stavu \textit{Dostupna} s~nulovým množstvím.
+Součástka je přidána do systému a okamžitě vstupuje do stavu \textit{Dostupna} s~nulovým množstvím.
 Naskladněním (opakovaně i při doplnění zásob) se zavolá \texttt{zvysMnozstvi()} -- součástka zůstává v~\textit{Dostupna}.
 
 Součástka zůstává ve stavu \textit{Dostupna} i při rezervaci -- rezervace se projeví pouze změnou atributu
