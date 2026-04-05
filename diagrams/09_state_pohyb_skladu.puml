@@ -1,5 +1,5 @@
 @startuml
-title State diagram - Pohyb
+title State diagram - SkladovyPohyb
 
 [*] --> Vytvoren
 

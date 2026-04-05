@@ -36,7 +36,7 @@ class Soucastka {
   overDostupnost(): boolean
 }
 
-abstract class Pohyb {
+abstract class SkladovyPohyb {
   id: int
   datum: Date
   stav: String
@@ -66,26 +66,26 @@ class Lokace {
 }
 
 ' generalizace
-PrijemPohyb --|> Pohyb
-VydejPohyb --|> Pohyb
+PrijemPohyb --|> SkladovyPohyb
+VydejPohyb --|> SkladovyPohyb
 
 ' kvalifikovana vazba
 Sklad "[id: int]" --> "1" Soucastka : najdiSoucastku
 
 ' datove vztahy
 Projekt "1" --> "*" Soucastka : obsahuje
-Pohyb "*" --> "1" Soucastka : je součástí
+SkladovyPohyb "*" --> "1" Soucastka : je součástí
 Sklad "1" --> "*" Lokace : obsahuje
 Lokace "1" --> "*" Soucastka : ukládá
-Pohyb --> Sklad : mění stav
+SkladovyPohyb --> Sklad : mění stav
 
 ' uzivatel
-Uzivatel --> Pohyb : vytváří
+Uzivatel --> SkladovyPohyb : vytváří
 Uzivatel --> Projekt : spravuje
 
-' layout - vlevo Pohyb/Sklad/Lokace, vpravo Uzivatel/Projekt/Soucastka
+' layout - vlevo SkladovyPohyb/Sklad/Lokace, vpravo Uzivatel/Projekt/Soucastka
 PrijemPohyb -[hidden]right- VydejPohyb
-Pohyb -[hidden]down- Sklad
+SkladovyPohyb -[hidden]down- Sklad
 Sklad -[hidden]down- Lokace
 VydejPohyb -[hidden]down- Uzivatel
 Uzivatel -[hidden]down- Projekt

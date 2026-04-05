@@ -20,9 +20,9 @@ mezi nimi.
 \begin{itemize}
   \item \textbf{Soucastka}: Skladová položka evidovaná v~systému WMS s~aktuálním množstvím na skladě.
   \item \textbf{Projekt}: Projekt, ke kterému jsou přiřazeny součástky pro sledování spotřeby.
-  \item \textbf{Pohyb}: Abstraktní třída reprezentující pohyb součástek -- příjem nebo výdej.
-  \item \textbf{PrijemPohyb}: Konkrétní pohyb typu příjem -- naskladnění součástek od dodavatele.
-  \item \textbf{VydejPohyb}: Konkrétní pohyb typu výdej -- vyskladnění součástek ze skladu.
+  \item \textbf{SkladovyPohyb}: Abstraktní třída reprezentující pohyb součástek -- příjem nebo výdej.
+  \item \textbf{PrijemPohyb}: Konkrétní pohyb typu příjem -- naskladnění součástek od dodavatele (dědí ze \textbf{SkladovyPohyb}).
+  \item \textbf{VydejPohyb}: Konkrétní pohyb typu výdej -- vyskladnění součástek ze skladu (dědí ze \textbf{SkladovyPohyb}).
   \item \textbf{Sklad}: Fyzický sklad rozdělený na lokace, ve kterých jsou uloženy součástky.
   \item \textbf{Lokace}: Konkrétní místo v~skladu identifikované označením (např. A-01-03).
   \item \textbf{Uzivatel}: Osoba spravující součástky, pohyby, projekty a sklady v~systému.
@@ -39,9 +39,9 @@ mezi nimi.
     \midrule
     Soucastka    & id, nazev, mnozstvi \\
     Projekt      & id, nazev \\
-    Pohyb        & id, datum, stav \\
-    PrijemPohyb  & dodavatel (dědí z Pohyb) \\
-    VydejPohyb   & duvod (dědí z Pohyb) \\
+    SkladovyPohyb & id, datum, stav \\
+    PrijemPohyb  & dodavatel (dědí z SkladovyPohyb) \\
+    VydejPohyb   & duvod (dědí z SkladovyPohyb) \\
     Sklad        & id, nazev \\
     Lokace       & id, oznaceni \\
     Uzivatel     & id, jmeno, email \\
@@ -57,7 +57,7 @@ Součástky jsou přiřazovány k~projektům a fyzicky umístěny v~lokacích sk
 Třída \texttt{Uzivatel} reprezentuje uživatelskou roli v~systému -- může vytvářet skladové pohyby,
 spravovat součástky, přiřazovat součástky k~projektům a zobrazovat stav skladu.
 
-Diagram využívá \textbf{generalizaci}: abstraktní třída \texttt{Pohyb} je základem pro dvě konkrétní podtřídy
+Diagram využívá \textbf{generalizaci}: abstraktní třída \texttt{SkladovyPohyb} je základem pro dvě konkrétní podtřídy
 \texttt{PrijemPohyb} (naskladnění) a \texttt{VydejPohyb} (vyskladnění), které dědí společné atributy
 a přidávají vlastní specifické atributy.
 Vazba mezi \texttt{Sklad} a \texttt{Soucastka} je \textbf{kvalifikovaná} -- sklad přistupuje ke konkrétní
@@ -73,9 +73,9 @@ součástce prostřednictvím kvalifikátoru \texttt{id: int}.
 \newpage
 \section{Stavový diagram}
 
-\subsection*{Stavový diagram třídy \texttt{Pohyb}}
+\subsection*{Stavový diagram třídy \texttt{SkladovyPohyb}}
 
-Třída \texttt{Pohyb} reprezentuje obecný skladový pohyb -- tedy jakoukoli změnu stavu zásob součástek
+Třída \texttt{SkladovyPohyb} reprezentuje obecný skladový pohyb -- tedy jakoukoli změnu stavu zásob součástek
 v systému. Každý pohyb prochází životním cyklem: po vytvoření je odeslán k~validaci, při které
 systém ověří:
 \begin{itemize}
@@ -89,7 +89,7 @@ Pohyb může být zamítnut při neplatných datech nebo při nedostatečném mn
 \begin{figure}[H]
   \centering
   \includegraphics[width=0.5\textwidth]{09_state_pohyb_skladu.png}
-  \caption{Stavový diagram třídy Pohyb}
+  \caption{Stavový diagram třídy SkladovyPohyb}
   \label{fig:state_pohyb}
 \end{figure}
 
@@ -178,7 +178,7 @@ Systém pracuje s~následujícími hlavními třídami:
         obsahuje atributy \texttt{id}, \texttt{nazev} a aktuální \texttt{mnozstvi} na skladě.
   \item[\texttt{Projekt}] Projekt, ke kterému jsou součástky přiřazovány;
         identifikován pomocí \texttt{id} a \texttt{nazev}.
-  \item[\texttt{Pohyb}] Záznam o~pohybu součástky (příjem, výdej, přesun);
+  \item[\texttt{SkladovyPohyb}] Záznam o~pohybu součástky (příjem, výdej, přesun);
         obsahuje \texttt{id}, \texttt{typ} pohybu, \texttt{datum} provedení a aktuální \texttt{stav}.
 \end{description}
 
@@ -189,7 +189,7 @@ Součástky jsou přiřazovány k~projektům a fyzicky umístěny v~lokacích sk
 Třída \texttt{Uzivatel} reprezentuje uživatelskou roli v~systému -- může vytvářet skladové pohyby,
 spravovat součástky, přiřazovat součástky k~projektům a zobrazovat stav skladu.
 
-Diagram využívá \textbf{generalizaci}: abstraktní třída \texttt{Pohyb} je základem pro dvě konkrétní podtřídy
+Diagram využívá \textbf{generalizaci}: abstraktní třída \texttt{SkladovyPohyb} je základem pro dvě konkrétní podtřídy
 \texttt{PrijemPohyb} (naskladnění) a \texttt{VydejPohyb} (vyskladnění), které dědí společné atributy
 a přidávají vlastní specifické atributy.
 Vazba mezi \texttt{Sklad} a \texttt{Soucastka} je \textbf{kvalifikovaná} -- sklad přistupuje ke konkrétní
@@ -203,9 +203,9 @@ součástce prostřednictvím kvalifikátoru \texttt{id: int}.
 \end{figure}
 
 \newpage
-\section{Stavový diagram třídy \texttt{Pohyb}}
+\section{Stavový diagram třídy \texttt{SkladovyPohyb}}
 
-Třída \texttt{Pohyb} reprezentuje obecný skladový pohyb -- tedy jakoukoli změnu stavu zásob součástek
+Třída \texttt{SkladovyPohyb} reprezentuje obecný skladový pohyb -- tedy jakoukoli změnu stavu zásob součástek
 v systému. Atribut \texttt{typ} rozlišuje tři druhy pohybu: \emph{příjem} (naskladnění nových součástek),
 \emph{výdej} (odebrání součástek ze skladu) a \emph{přesun} (přemístění součástek mezi lokacemi či sklady).
 Každý pohyb prochází životním cyklem: po vytvoření je odeslán k~validaci (\emph{Validován}), při které
@@ -222,7 +222,7 @@ Pohyb může být zamítnut ve dvou situacích:
 \begin{figure}[H]
   \centering
   \includegraphics[width=0.5\textwidth]{09_state_pohyb_skladu.png}
-  \caption{Stavový diagram třídy Pohyb}
+  \caption{Stavový diagram třídy SkladovyPohyb}
   \label{fig:state_pohyb}
 \end{figure}
 
