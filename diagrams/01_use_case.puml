@@ -1,14 +1,49 @@
 @startuml 01_use_case
-!theme cerulean-outline
-title WMS Elektronické součástky – Use Case diagram
+left to right direction
 
-skinparam actorStyle awesome
-skinparam backgroundColor #FAFAFA
-skinparam usecase {
-  BackgroundColor #F2F2F2
-  BorderColor #444444
-  ArrowColor #222222
+actor "Uživatel" as Uzivatel
+
+rectangle "WMS – Elektronické součástky" {
+
+  package "Skladové pohyby" {
+    usecase "Příjem na sklad" as UC_PRIJEM
+    usecase "Výdej ze skladu" as UC_VYDEJ
+    usecase "Přesun součástky" as UC_PRESUN
+    usecase "Ověřit data pohybu" as UC_OVERIT
+  }
+
+  package "Součástky" {
+    usecase "Přidat součástku" as UC_ADD
+    usecase "Editovat součástku" as UC_EDIT
+    usecase "Zobrazit zásoby" as UC_ZASOBY
+    usecase "Ověřit dostupnost" as UC_DOSTUPNOST
+  }
+
+  package "Projekty" {
+    usecase "Spravovat projekt" as UC_PROJEKT
+    usecase "Přiřadit součástku\nk projektu" as UC_PRIRADIT
+    usecase "Odebrat součástku\nz projektu" as UC_ODEBRAT
+  }
+
 }
+
+Uzivatel --> UC_PRIJEM
+Uzivatel --> UC_VYDEJ
+Uzivatel --> UC_PRESUN
+Uzivatel --> UC_ADD
+Uzivatel --> UC_EDIT
+Uzivatel --> UC_ZASOBY
+Uzivatel --> UC_PROJEKT
+Uzivatel --> UC_PRIRADIT
+
+UC_PRIJEM  ..> UC_OVERIT : <<include>>
+UC_VYDEJ   ..> UC_OVERIT : <<include>>
+UC_PRESUN  ..> UC_OVERIT : <<include>>
+
+UC_PRIRADIT ..> UC_DOSTUPNOST : <<include>>
+UC_ODEBRAT  ..> UC_PROJEKT    : <<include>>
+
+@enduml
 
 '─── Aktéři ───────────────────────────────────────────────────────────────────
 actor "Skladník"       as Skladnik       #LightSteelBlue
