@@ -115,14 +115,16 @@ v systému. Každý pohyb prochází životním cyklem řízeným třemi metodam
 
 Diagram zachycuje, jak se mění stav součástky v~průběhu skladových operací.
 Součástka je přidána do systému a okamžitě vstupuje do stavu \textit{Dostupna} s~nulovým množstvím.
-Naskladněním (opakovaně i při doplnění zásob) se zavolá \texttt{zvysMnozstvi()} -- součástka zůstává v~\textit{Dostupna}.
-
-Součástka zůstává ve stavu \textit{Dostupna} i při rezervaci -- rezervace se projeví pouze změnou atributu
-\texttt{rezervovaneMnozstvi} (voláním \texttt{rezervovat(pocet)}) a lze ji kdykoli zrušit (\texttt{zrusitRezervaci(pocet)}).
-Samotná součástka nemění stav; do stavu \textit{Vydana} přechází až při fyzickém výdeji ze skladu, kdy se zavolají \texttt{snizMnozstvi(pocet)} a \texttt{evidovat spotřebu}. Vydaná součástka je spotřebována -- nelze ji vrátit.
-
-Součástku lze \textbf{odepsat} ze stavu \textit{Dostupna} (např. poškozena na skladě) -- přechází do terminálního stavu \textit{Odepsana},
-ze kterého již není návratu.
+Každá součástka prochází stavy řízenými těmito přechody:
+\begin{itemize}
+  \item \textbf{Dostupna} -- výchozí stav; součástka je v~systému a lze s~ní pracovat.
+        Naskladnění zvýší množství (\texttt{zvysMnozstvi(pocet)}), rezervace upraví \texttt{rezervovaneMnozstvi}
+        (\texttt{rezervovat(pocet)}, \texttt{zrusitRezervaci(pocet)}) -- stav se nemění.
+  \item \textbf{Vydana} -- součástka byla fyzicky vydána ze skladu; zavolají se \texttt{snizMnozstvi(pocet)}
+        a \texttt{evidovat spotřebu}. Vydaná součástka je spotřebována -- terminální stav.
+  \item \textbf{Odepsana} -- součástka byla vyřazena z~evidence (např. poškozena na skladě);
+        zavolají se \texttt{snizMnozstvi(pocet)} a \texttt{vyřazena z evidence} -- terminální stav.
+\end{itemize}
 \begin{figure}[H]
   \centering
   \includegraphics[width=0.55\textwidth]{10_state_soucastka_projekt.png}
