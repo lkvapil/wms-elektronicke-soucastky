@@ -63,7 +63,6 @@ class PresunutiPohyb {
 class Sklad {
   id: int
   nazev: String
-  aktualizujMnozstvi()
 }
 
 class Lokace {
