@@ -54,6 +54,12 @@ class VydejPohyb {
   vytvoritPohyb()
 }
 
+class PresunutiPohyb {
+  zdrojLokaceId: int
+  cilLokaceId: int
+  zmenLokaci()
+}
+
 class Sklad {
   id: int
   nazev: String
@@ -68,6 +74,7 @@ class Lokace {
 ' generalizace
 PrijemPohyb --|> SkladovyPohyb
 VydejPohyb --|> SkladovyPohyb
+PresunutiPohyb --|> SkladovyPohyb
 
 ' kvalifikovana vazba
 Sklad "[id: int]" --> "1" Soucastka : najdiSoucastku
@@ -85,6 +92,7 @@ Uzivatel --> Projekt : spravuje
 
 ' layout - vlevo SkladovyPohyb/Sklad/Lokace, vpravo Uzivatel/Projekt/Soucastka
 PrijemPohyb -[hidden]right- VydejPohyb
+VydejPohyb -[hidden]right- PresunutiPohyb
 SkladovyPohyb -[hidden]down- Sklad
 Sklad -[hidden]down- Lokace
 VydejPohyb -[hidden]down- Uzivatel

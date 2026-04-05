@@ -15,6 +15,7 @@ Schvalen --> Proveden : provestPohyb()
 Schvalen --> Zamitnut : [nedostatecne_mnozstvi]
 
 Proveden : entry / aktualizujMnozstvi()
+Proveden : entry / zmenLokaci()
 
 Proveden --> [*]
 Zamitnut --> [*]
