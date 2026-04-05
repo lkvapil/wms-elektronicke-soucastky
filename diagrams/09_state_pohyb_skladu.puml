@@ -11,13 +11,15 @@ Validovan --> Schvalen : [soucastka_dostupna]
 Validovan --> Zamitnut : [neplatna_data]
 
 Schvalen : entry / schvalit()
-Schvalen --> Proveden : provestPohyb()
+Schvalen --> Proveden_Pohyb : provestPohyb() [prijem / vydej]
+Schvalen --> Proveden_Presun : provestPohyb() [presun]
 Schvalen --> Zamitnut : [nedostatecne_mnozstvi]
 
-Proveden : entry / aktualizujMnozstvi()
-Proveden : entry / zmenLokaci()
+Proveden_Pohyb : entry / aktualizujMnozstvi()
+Proveden_Presun : entry / zmenLokaci()
 
-Proveden --> [*]
+Proveden_Pohyb --> [*]
+Proveden_Presun --> [*]
 Zamitnut --> [*]
 
 @enduml
