@@ -6,10 +6,11 @@ actor "Uživatel" as Uzivatel
 rectangle "WMS – Elektronické součástky" {
 
   package "Skladové pohyby" {
+    usecase "Vytvořit pohyb" as UC_POHYB
+    usecase "Ověřit data pohybu" as UC_OVERIT
     usecase "Příjem na sklad" as UC_PRIJEM
     usecase "Výdej ze skladu" as UC_VYDEJ
     usecase "Přesun součástky" as UC_PRESUN
-    usecase "Ověřit data pohybu" as UC_OVERIT
   }
 
   package "Součástky" {
@@ -27,133 +28,21 @@ rectangle "WMS – Elektronické součástky" {
 
 }
 
-Uzivatel --> UC_PRIJEM
-Uzivatel --> UC_VYDEJ
-Uzivatel --> UC_PRESUN
+Uzivatel --> UC_POHYB
 Uzivatel --> UC_ADD
 Uzivatel --> UC_EDIT
 Uzivatel --> UC_ZASOBY
 Uzivatel --> UC_PROJEKT
 Uzivatel --> UC_PRIRADIT
+Uzivatel --> UC_ODEBRAT
 
-UC_PRIJEM  ..> UC_OVERIT : <<include>>
-UC_VYDEJ   ..> UC_OVERIT : <<include>>
-UC_PRESUN  ..> UC_OVERIT : <<include>>
-
+' include: od zahrnujiciho k zahrnutemu (povinne)
+UC_POHYB    ..> UC_OVERIT     : <<include>>
 UC_PRIRADIT ..> UC_DOSTUPNOST : <<include>>
-UC_ODEBRAT  ..> UC_PROJEKT    : <<include>>
 
-@enduml
-
-'─── Aktéři ───────────────────────────────────────────────────────────────────
-actor "Skladník"       as Skladnik       #LightSteelBlue
-actor "Administrátor"  as Admin          #LightSalmon
-actor "Čtenář"         as Ctenar         #LightGreen
-actor "Systém\n(automatické úlohy)" as Sys #Gold
-
-'─── Hranice systému ──────────────────────────────────────────────────────────
-rectangle "WMS – Elektronické součástky" {
-
-  '── Součástky ────────────────────────────────────────────
-  package "Správa součástek" {
-    usecase "Zobrazit seznam\nsouček" as UC_LIST
-    usecase "Vyhledat součástku\n(parametrické filtrování)" as UC_SEARCH
-    usecase "Přidat součástku" as UC_ADD
-    usecase "Editovat součástku" as UC_EDIT
-    usecase "Archivovat součástku" as UC_ARCH
-    usecase "Zobrazit datasheet" as UC_DS
-  }
-
-  '── Zásoby ───────────────────────────────────────────────
-  package "Správa zásob" {
-    usecase "Příjem na sklad" as UC_RECV
-    usecase "Výdej ze skladu\n(na projekt)" as UC_ISSUE
-    usecase "Přeskladnění" as UC_TRANSFER
-    usecase "Zobrazit aktuální\nzásoby" as UC_STOCK
-    usecase "Exportovat zásoby\n(CSV / PDF)" as UC_EXPORT
-  }
-
-  '── Inventura ────────────────────────────────────────────
-  package "Inventura" {
-    usecase "Zahájit inventuru" as UC_INV_START
-    usecase "Zadat fyzické počty" as UC_INV_COUNT
-    usecase "Potvrdit a uzavřít\ninventuru" as UC_INV_CLOSE
-    usecase "Generovat inventurní\nlist" as UC_INV_SHEET
-  }
-
-  '── Objednávky ───────────────────────────────────────────
-  package "Objednávky & Dodavatelé" {
-    usecase "Správa dodavatelů" as UC_SUPPLIER
-    usecase "Vytvořit objednávku" as UC_ORDER_NEW
-    usecase "Sledovat stav\nobjednávky" as UC_ORDER_STATUS
-    usecase "Přijmout objednávku\nna sklad" as UC_ORDER_RECV
-  }
-
-  '── Reporty ──────────────────────────────────────────────
-  package "Reporty" {
-    usecase "Report stavu skladu" as UC_REP_STOCK
-    usecase "Report pohybů\nzásob" as UC_REP_MOVE
-    usecase "Součástky pod\nlimitem zásob" as UC_REP_LOW
-    usecase "Ocenění skladu" as UC_REP_VAL
-  }
-
-  '── Správa systému ───────────────────────────────────────
-  package "Správa systému" {
-    usecase "Správa uživatelů\na rolí" as UC_USERS
-    usecase "Správa skladových\nmíst" as UC_LOC
-    usecase "Správa kategorií" as UC_CAT
-    usecase "Konfigurace\nupozornění" as UC_NOTIF_CFG
-  }
-
-  '── Automatické úlohy ────────────────────────────────────
-  usecase "Upozornění na nízké\nzásoby" as UC_ALERT
-  usecase "Plánovaný report\nzásob" as UC_SCHED_REP
-
-}
-
-'─── Vazby – Čtenář ───────────────────────────────────────────────────────────
-Ctenar --> UC_LIST
-Ctenar --> UC_SEARCH
-Ctenar --> UC_STOCK
-Ctenar --> UC_DS
-Ctenar --> UC_REP_STOCK
-Ctenar --> UC_REP_MOVE
-Ctenar --> UC_EXPORT
-
-'─── Vazby – Skladník (dědí Čtenář) ──────────────────────────────────────────
-Skladnik --|> Ctenar
-Skladnik --> UC_ADD
-Skladnik --> UC_EDIT
-Skladnik --> UC_ARCH
-Skladnik --> UC_RECV
-Skladnik --> UC_ISSUE
-Skladnik --> UC_TRANSFER
-Skladnik --> UC_INV_START
-Skladnik --> UC_INV_COUNT
-Skladnik --> UC_INV_CLOSE
-Skladnik --> UC_INV_SHEET
-Skladnik --> UC_SUPPLIER
-Skladnik --> UC_ORDER_NEW
-Skladnik --> UC_ORDER_STATUS
-Skladnik --> UC_ORDER_RECV
-Skladnik --> UC_REP_LOW
-Skladnik --> UC_REP_VAL
-
-'─── Vazby – Admin (dědí Skladník) ───────────────────────────────────────────
-Admin --|> Skladnik
-Admin --> UC_USERS
-Admin --> UC_LOC
-Admin --> UC_CAT
-Admin --> UC_NOTIF_CFG
-
-'─── Vazby – Systém ───────────────────────────────────────────────────────────
-Sys --> UC_ALERT
-Sys --> UC_SCHED_REP
-
-'─── Include / Extend ────────────────────────────────────────────────────────
-UC_RECV       ..> UC_ORDER_RECV : <<include>>
-UC_ORDER_RECV ..> UC_STOCK      : <<include>>
-UC_ISSUE      ..> UC_STOCK      : <<include>>
-UC_INV_CLOSE  ..> UC_REP_STOCK  : <<extend>>
+' extend: od pridaneho k puvodnimu (specializace)
+UC_PRIJEM ..> UC_POHYB : <<extend>>
+UC_VYDEJ  ..> UC_POHYB : <<extend>>
+UC_PRESUN ..> UC_POHYB : <<extend>>
 
 @enduml
