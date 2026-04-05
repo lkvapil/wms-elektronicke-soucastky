@@ -9,11 +9,10 @@ start
 :overitData()\n-- ověří existenci součástky,\ndostatečné množství, platnost lokací;
 
 if (Data OK?) then (ano)
-  :provestPohyb();
 
-  if (Typ pohybu?) then (příjem)
+  if (Typ == příjem?) then (ano)
     :soucastka.zvysMnozstvi(pocet);
-  else (výdej)
+  elseif (Typ == výdej?) then (ano)
     :soucastka.snizMnozstvi(pocet);
   else (přesun)
     :zmenLokaci();
