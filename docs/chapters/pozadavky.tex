@@ -13,19 +13,47 @@ Uživatel provádí veškeré operace se systémem -- vytváří skladové pohyb
   \label{fig:use_case}
 \end{figure}
 
-\subsection*{Scénář: Vytvoření pohybu}
+\newpage
+\subsection*{Scénář: Příjem na sklad (\texttt{PrijemPohyb})}
 \begin{enumerate}
-  \item Uživatel zvolí typ pohybu -- příjem (\texttt{PrijemPohyb}), výdej (\texttt{VydejPohyb}) nebo přesun (\texttt{PresunutiPohyb}).
-  \item Zadá součástku a množství.
-  \item Systém volá \texttt{overitData()} -- ověří existenci součástky, dostatečné množství a platnost lokací.
-  \item Pokud data OK $\rightarrow$ systém volá \texttt{provestPohyb()} a aktualizuje zásoby.
-  \item Pohyb je potvrzen; v~případě chyby je zamítnut.
+  \item Uživatel zvolí typ pohybu \emph{příjem} a zadá součástku, množství a dodavatele.
+  \item Systém volá \texttt{overitData()} -- ověří existenci součástky a platnost cílové lokace.
+  \item Pokud data OK $\rightarrow$ systém volá \texttt{provestPohyb()}, který interně volá \texttt{Soucastka.zvysMnozstvi()}.
+  \item Pohyb je potvrzen a zásoby jsou aktualizovány.
+  \item \textbf{Alternativní tok:} součástka neexistuje nebo lokace je neplatná $\rightarrow$ systém vrátí chybovou hlášku a pohyb je zamítnut.
+\end{enumerate}
+
+\subsection*{Scénář: Výdej ze skladu (\texttt{VydejPohyb})}
+\begin{enumerate}
+  \item Uživatel zvolí typ pohybu \emph{výdej} a zadá součástku, množství a důvod výdeje.
+  \item Systém volá \texttt{overitData()} -- ověří existenci součástky a zda \texttt{mnozstvi} $\geq$ požadovanému množství.
+  \item Pokud data OK $\rightarrow$ systém volá \texttt{provestPohyb()}, který interně volá \texttt{Soucastka.snizMnozstvi()}.
+  \item Pohyb je potvrzen a zásoby jsou sníženy.
+  \item \textbf{Alternativní tok:} nedostatečné množství na skladě $\rightarrow$ systém vrátí chybovou hlášku a pohyb je zamítnut.
+\end{enumerate}
+
+\subsection*{Scénář: Přesun součástky (\texttt{PresunutiPohyb})}
+\begin{enumerate}
+  \item Uživatel zvolí typ pohybu \emph{přesun} a zadá součástku, množství, zdrojovou a cílovou lokaci.
+  \item Systém volá \texttt{overitData()} -- ověří existenci součástky, dostatečné množství ve zdrojové lokaci a platnost cílové lokace.
+  \item Pokud data OK $\rightarrow$ systém volá \texttt{provestPohyb()} a poté \texttt{PresunutiPohyb.zmenLokaci()}.
+  \item Pohyb je potvrzen; součástka je evidována v~cílové lokaci.
+  \item \textbf{Alternativní tok:} zdrojová nebo cílová lokace je neplatná $\rightarrow$ systém vrátí chybovou hlášku a pohyb je zamítnut.
 \end{enumerate}
 
 \subsection*{Scénář: Přiřazení součástky k~projektu}
 \begin{enumerate}
   \item Uživatel vybere projekt a zadá součástku s~množstvím.
-  \item Systém volá \texttt{overDostupnost()} -- ověří, zda \texttt{mnozstvi -- rezervovaneMnozstvi > 0}.
-  \item Pokud je dostatek volných kusů $\rightarrow$ systém volá \texttt{Projekt.priradSoucastku()}.
-  \item Součástka je přiřazena k~projektu; zásoby jsou aktualizovány.
+  \item Systém volá \texttt{Soucastka.overDostupnost()} -- ověří, zda \texttt{mnozstvi} $-$ \texttt{rezervovaneMnozstvi} $> 0$.
+  \item Pokud je dostatek volných kusů $\rightarrow$ systém volá \texttt{Projekt.priradSoucastku()}, které interně zavolá \texttt{Soucastka.rezervovat()}.
+  \item Součástka je přiřazena k~projektu a rezervované množství je aktualizováno.
+  \item \textbf{Alternativní tok:} nedostatečný počet volných kusů $\rightarrow$ systém vrátí chybovou hlášku a přiřazení je zamítnuto.
+\end{enumerate}
+
+\subsection*{Scénář: Správa součástek}
+\begin{enumerate}
+  \item Uživatel přidá novou součástku (UC\_ADD) nebo upraví existující (UC\_EDIT).
+  \item Systém ověří validitu zadaných dat (název, počáteční množství, lokace).
+  \item Pokud data OK $\rightarrow$ součástka je uložena; zásoby jsou aktualizovány.
+  \item \textbf{Alternativní tok:} neplatná data $\rightarrow$ systém vrátí chybovou hlášku, součástka není uložena.
 \end{enumerate}
