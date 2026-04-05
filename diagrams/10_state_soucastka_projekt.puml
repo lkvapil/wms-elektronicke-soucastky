@@ -6,9 +6,9 @@ title State diagram - Soucastka
 [*] --> Dostupna : Přidána do systému
 
 Dostupna : do / sledovat stav zásob
+Dostupna : Naskladněno / zvysMnozstvi(pocet)
 Dostupna : Rezervována / rezervovat(pocet)
 Dostupna : Rezervace zrušena / zrusitRezervaci(pocet)
-Dostupna --> Dostupna : Naskladněno / zvysMnozstvi()
 Dostupna --> Vydana : Vydána ze skladu
 Dostupna --> Odepsana : Odepsána
 
