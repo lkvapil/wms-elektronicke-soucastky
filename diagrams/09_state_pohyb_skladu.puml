@@ -12,14 +12,16 @@ Validovan --> Zamitnut : [neplatna_data]
 Validovan --> Zamitnut : [nedostatecne_mnozstvi]
 
 Schvalen : entry / schvalit()
-Schvalen --> Proveden_Pohyb : provestPohyb() [prijem / vydej]
+Schvalen --> Proveden_Prijem : provestPohyb() [prijem]
+Schvalen --> Proveden_Vydej : provestPohyb() [vydej]
 Schvalen --> Proveden_Presun : provestPohyb() [presun]
 
-Proveden_Pohyb : entry / soucastka.zvysMnozstvi()
-Proveden_Pohyb : entry / soucastka.snizMnozstvi()
+Proveden_Prijem : entry / soucastka.zvysMnozstvi()
+Proveden_Vydej : entry / soucastka.snizMnozstvi()
 Proveden_Presun : entry / zmenLokaci()
 
-Proveden_Pohyb --> [*]
+Proveden_Prijem --> [*]
+Proveden_Vydej --> [*]
 Proveden_Presun --> [*]
 Zamitnut --> [*]
 

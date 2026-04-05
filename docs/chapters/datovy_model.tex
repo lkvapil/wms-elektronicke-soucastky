@@ -59,9 +59,9 @@ Součástky jsou přiřazovány k~projektům a fyzicky umístěny v~lokacích sk
 Třída \texttt{Uzivatel} reprezentuje uživatelskou roli v~systému -- může vytvářet skladové pohyby,
 spravovat součástky, přiřazovat součástky k~projektům a zobrazovat stav skladu.
 
-Diagram využívá \textbf{generalizaci}: abstraktní třída \texttt{SkladovyPohyb} je základem pro dvě konkrétní podtřídy
-\texttt{PrijemPohyb} (naskladnění) a \texttt{VydejPohyb} (vyskladnění), které dědí společné atributy
-a přidávají vlastní specifické atributy.
+Diagram využívá \textbf{generalizaci}: abstraktní třída \texttt{SkladovyPohyb} je základem pro tři konkrétní podtřídy
+\texttt{PrijemPohyb} (naskladnění), \texttt{VydejPohyb} (vyskladnění) a \texttt{PresunutiPohyb} (přesun mezi lokacemi),
+které dědí společné atributy a přidávají vlastní specifické atributy.
 
 Třída \texttt{SkladovyPohyb} zaznamenává každou změnu stavu zásob v~systému. Konkrétně:
 \begin{itemize}
@@ -97,7 +97,8 @@ systém ověří:
   \item u~přesunu: zda zdrojová lokace obsahuje danou součástku a zda cílová lokace existuje ve skladu.
 \end{itemize}
 Pohyb může být zamítnut při neplatných datech, nedostatečném množství na skladě nebo neplatné lokaci.
-
+Po schválení je pohyb fyzicky proveden: příjem volá \texttt{soucastka.zvysMnozstvi()},
+výdej \texttt{soucastka.snizMnozstvi()} a přesun \texttt{zmenLokaci()}.
 \begin{figure}[H]
   \centering
   \includegraphics[width=0.8\textwidth]{09_state_pohyb_skladu.png}
@@ -201,9 +202,9 @@ Součástky jsou přiřazovány k~projektům a fyzicky umístěny v~lokacích sk
 Třída \texttt{Uzivatel} reprezentuje uživatelskou roli v~systému -- může vytvářet skladové pohyby,
 spravovat součástky, přiřazovat součástky k~projektům a zobrazovat stav skladu.
 
-Diagram využívá \textbf{generalizaci}: abstraktní třída \texttt{SkladovyPohyb} je základem pro dvě konkrétní podtřídy
-\texttt{PrijemPohyb} (naskladnění) a \texttt{VydejPohyb} (vyskladnění), které dědí společné atributy
-a přidávají vlastní specifické atributy.
+Diagram využívá \textbf{generalizaci}: abstraktní třída \texttt{SkladovyPohyb} je základem pro tři konkrétní podtřídy
+\texttt{PrijemPohyb} (naskladnění), \texttt{VydejPohyb} (vyskladnění) a \texttt{PresunutiPohyb} (přesun mezi lokacemi),
+které dědí společné atributy a přidávají vlastní specifické atributy.
 Vazba mezi \texttt{Sklad} a \texttt{Soucastka} je \textbf{kvalifikovaná} -- sklad přistupuje ke konkrétní
 součástce prostřednictvím kvalifikátoru \texttt{id: int}.
 
@@ -221,15 +222,16 @@ Třída \texttt{SkladovyPohyb} reprezentuje obecný skladový pohyb -- tedy jako
 v systému. Atribut \texttt{typ} rozlišuje tři druhy pohybu: \emph{příjem} (naskladnění nových součástek),
 \emph{výdej} (odebrání součástek ze skladu) a \emph{přesun} (přemístění součástek mezi lokacemi či sklady).
 Každý pohyb prochází životním cyklem: po vytvoření je odeslán k~validaci (\emph{Validován}), při které
-systém ověří, zda zadaná součástka existuje a je dostupná na skladě. Pokud jsou data platná, pohyb přejde
-do stavu \emph{Schválen} a může být fyzicky proveden -- dojde k~aktualizaci množství na skladě.
-Pohyb může být zamítnut ve dvou situacích:
+systém ověří dostupnost součástky, platnost dat a dostatečné množství.
+Pohyb může být zamítnut pouze při validaci:
 \begin{itemize}
-  \item při validaci (\texttt{[neplatna\_data]}) -- součástka s daným ID neexistuje v systému,
-        chybí povinné údaje (typ pohybu, cílová lokace, datum) nebo zadané množství je 0 či záporné;
-  \item po schválení (\texttt{[nedostatecne\_mnozstvi]}) -- požadované množství výdeje je vyšší
-        než aktuální stav součástky na skladě.
+  \item \texttt{[neplatna\_data]} -- součástka neexistuje, chybí povinné údaje nebo množství je 0 či záporné;
+  \item \texttt{[nedostatecne\_mnozstvi]} -- požadované množství výdeje přesahuje aktuální stav na skladě;
+  \item u~přesunu: zdrojová lokace neobsahuje danou součástku nebo cílová lokace neexistuje.
 \end{itemize}
+Pokud jsou data platná, pohyb přejde do stavu \emph{Schválen} a může být fyzicky proveden.
+Každý typ pohybu má vlastní terminální stav: \emph{Proveden\_Prijem} volá \texttt{soucastka.zvysMnozstvi()},
+\emph{Proveden\_Vydej} volá \texttt{soucastka.snizMnozstvi()} a \emph{Proveden\_Presun} volá \texttt{zmenLokaci()}.
 
 \begin{figure}[H]
   \centering
