@@ -114,9 +114,8 @@ v systému. Každý pohyb prochází životním cyklem řízeným třemi metodam
 \subsection*{Stavový diagram třídy \texttt{Soucastka}}
 
 Diagram zachycuje, jak se mění stav součástky v~průběhu skladových operací.
-Součástka je nejprve přidána do systému pomocí \texttt{evidovatSoucastku()} -- nachází se ve stavu \textit{Evidovana} s~nulovým množstvím.
-Po naskladnění přechází do stavu \textit{Dostupna}, kde je k~dispozici pro výdej.
-Opakované naskladnění (např. doplnění zásob) ji nechá ve stavu \textit{Dostupna} a zavolá \texttt{zvysMnozstvi()}.
+Součástka je přidána do systému voláním \texttt{evidovatSoucastku()} a okamžitě vstupuje do stavu \textit{Dostupna} s~nulovým množstvím.
+Naskladněním (opakovaně i při doplnění zásob) se zavolá \texttt{zvysMnozstvi()} -- součástka zůstává v~\textit{Dostupna}.
 
 Součástka zůstává ve stavu \textit{Dostupna} i při rezervaci -- rezervace se projeví pouze změnou atributu
 \texttt{rezervovaneMnozstvi} (voláním \texttt{rezervovat(pocet)}) a lze ji kdykoli zrušit (\texttt{zrusitRezervaci(pocet)}).
