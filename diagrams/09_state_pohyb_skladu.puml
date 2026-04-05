@@ -1,5 +1,6 @@
 @startuml
 scale 2
+left to right direction
 title State diagram - SkladovyPohyb
 
 [*] --> Vytvoren
