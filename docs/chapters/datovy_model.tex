@@ -164,27 +164,27 @@ Pohyb prochází třemi fázemi řízenými metodami třídy \texttt{SkladovyPoh
 
 \begin{figure}[H]
   \centering
-  \includegraphics[width=0.8\textwidth]{11_use_case.png}
-  \caption{Use Case Diagram -- WMS}
-  \label{fig:use_case}
+  \includegraphics[width=\textwidth]{11_use_case.png}
+  \caption{Use Case diagram -- datový model WMS}
+  \label{fig:use_case_datovy}
 \end{figure}
+
+Diagram zachycuje hlavní případy užití z~pohledu datového modelu. Jediným aktérem je \textbf{Uživatel}, který odpovídá třídě \texttt{Uzivatel} v~class diagramu.
 
 \subsection*{Scénář: Vytvoření pohybu}
 \begin{enumerate}
-  \item Uživatel zvolí \textit{Vytvořit pohyb}.
+  \item Uživatel zvolí typ pohybu -- příjem (\texttt{PrijemPohyb}), výdej (\texttt{VydejPohyb}) nebo přesun (\texttt{PresunutiPohyb}).
   \item Zadá součástku a množství.
-  \item Systém provede kontrolu dat.
-  \item Pokud \texttt{[data\_ok]} $\rightarrow$ pohyb je schválen.
-  \item Systém provede pohyb a aktualizuje stav skladu.
-  \item Zobrazí se potvrzení výsledku.
+  \item Systém volá \texttt{overitData()} -- ověří existenci součástky, dostatečné množství a platnost lokací.
+  \item Pokud data OK $\rightarrow$ systém volá \texttt{provestPohyb()} a aktualizuje zásoby.
+  \item Pohyb je potvrzen; v~případě chyby je zamítnut.
 \end{enumerate}
 
 \subsection*{Scénář: Přiřazení součástky k~projektu}
 \begin{enumerate}
-  \item Uživatel vybere projekt.
-  \item Zvolí součástku a zadá množství.
-  \item Systém ověří dostupnost voláním \texttt{overDostupnost()}.
-  \item Pokud \texttt{[dostatek]} $\rightarrow$ součástka je přiřazena.
-  \item Systém aktualizuje množství na skladě.
+  \item Uživatel vybere projekt a zadá součástku s~množstvím.
+  \item Systém volá \texttt{overDostupnost()} -- ověří, zda \texttt{mnozstvi -- rezervovaneMnozstvi > 0}.
+  \item Pokud je dostatek volných kusů $\rightarrow$ systém volá \texttt{Projekt.priradSoucastku()}.
+  \item Součástka je přiřazena k~projektu; zásoby jsou aktualizovány.
 \end{enumerate}
 
