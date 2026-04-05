@@ -1,9 +1,6 @@
-\chapter{Datový model}
-\label{chap:datovy_model}
+\chapter{Formulace problému}
 
-\section{Formulace problému}
-
-\subsection{Účel}
+\section{Účel}
 
 Cílem tohoto projektu je teoreticky navrhnout informační systém pro správu skladových
 součástek. Systém má umožňovat evidenci součástek, jejich kategorií, dodavatelů
@@ -13,16 +10,16 @@ jako je naskladnění, vyskladnění nebo přesun mezi jednotlivými lokacemi.
 Součástí systému je také možnost přiřazovat součástky k projektům a evidovat
 jejich množství potřebné pro daný projekt.
 
-\subsection{Specifikace}
+\section{Specifikace}
 
 Návrh systému je znázorněn pomocí UML diagramů, které popisují jednotlivé třídy,
 jejich atributy, vztahy mezi nimi a chování systému při klíčových operacích.
 Systém zahrnuje objektový model (class diagram), dynamický model (stavové diagramy)
 a model interakcí (use case diagram, scénáře, sekvenční a aktivity diagram).
 
-\section{Datový slovník}
+\chapter{Datový slovník}
 
-\subsection{Entity tříd}
+\section{Entity tříd}
 
 \begin{itemize}
   \item \textbf{Soucastka}: Skladová položka evidovaná v~systému WMS s~aktuálním množstvím na skladě. Atribut \texttt{rezervovaneMnozstvi} sleduje, kolik kusů je aktuálně blokováno pro projekty -- součástka tak může být \textit{Dostupna} i s~částečnou rezervací zároveň. Součástka může nabývat stavů: \textit{Dostupna} (k~dispozici, případně s~rezervovanou částí), \textit{Vydana} (fyzicky vydána ze skladu) nebo \textit{Odepsana} (trvale vyřazena z~evidence).
@@ -36,7 +33,7 @@ a model interakcí (use case diagram, scénáře, sekvenční a aktivity diagram
   \item \textbf{Uzivatel}: Osoba spravující součástky, pohyby, projekty a sklady v~systému.
 \end{itemize}
 
-\subsection{Atributy}
+\section{Atributy}
 
 \begin{table}[H]
   \centering
@@ -59,7 +56,7 @@ a model interakcí (use case diagram, scénáře, sekvenční a aktivity diagram
 \end{table}
 
 \newpage
-\section{Objektový model}
+\chapter{Objektový model}
 
 Diagram zachycuje strukturu systému WMS a vztahy mezi jeho hlavními třídami.
 Součástky jsou přiřazovány k~projektům a fyzicky umístěny v~lokacích skladu.
@@ -98,9 +95,9 @@ součástce prostřednictvím kvalifikátoru \texttt{id: int}.
 \end{figure}
 
 \newpage
-\section{Dynamický model}
+\chapter{Dynamický model}
 
-\subsection{Stavový diagram třídy \texttt{SkladovyPohyb}}
+\section{Stavový diagram třídy \texttt{SkladovyPohyb}}
 
 Třída \texttt{SkladovyPohyb} reprezentuje obecný skladový pohyb -- tedy jakoukoli změnu stavu zásob součástek
 v systému. Každý pohyb prochází životním cyklem řízeným třemi metodami:
@@ -118,7 +115,7 @@ v systému. Každý pohyb prochází životním cyklem řízeným třemi metodam
   \label{fig:state_pohyb}
 \end{figure}
 
-\subsection{Stavový diagram třídy \texttt{Soucastka}}
+\section{Stavový diagram třídy \texttt{Soucastka}}
 
 Diagram zachycuje, jak se mění stav součástky v~průběhu skladových operací.
 Součástka je přidána do systému a okamžitě vstupuje do stavu \textit{Dostupna} s~nulovým množstvím.
@@ -140,9 +137,9 @@ Stav součástky je řízen těmito metodami:
 \end{figure}
 
 \newpage
-\section{Model interakcí}
+\chapter{Model interakcí}
 
-\subsection{Use Case diagram}
+\section{Use Case diagram}
 
 Hlavní aktér systému je \textbf{Uživatel}, který odpovídá třídě \texttt{Uzivatel} v~datovém modelu.
 Uživatel provádí veškeré operace se systémem -- vytváří skladové pohyby, spravuje součástky i projekty.
@@ -155,9 +152,9 @@ Uživatel provádí veškeré operace se systémem -- vytváří skladové pohyb
 \end{figure}
 
 \newpage
-\subsection{Scénáře}
+\section{Scénáře}
 
-\subsubsection{Scénář: Příjem na sklad (\texttt{PrijemPohyb})}
+\subsection{Scénář: Příjem na sklad (\texttt{PrijemPohyb})}
 \begin{enumerate}
   \item Uživatel zvolí typ pohybu \emph{příjem} a zadá součástku, množství a dodavatele.
   \item Systém volá \texttt{overitData()} -- ověří existenci součástky a platnost cílové lokace.
@@ -166,7 +163,7 @@ Uživatel provádí veškeré operace se systémem -- vytváří skladové pohyb
   \item \textbf{Alternativní tok:} součástka neexistuje nebo lokace je neplatná $\rightarrow$ systém vrátí chybovou hlášku a pohyb je zamítnut.
 \end{enumerate}
 
-\subsubsection{Scénář: Výdej ze skladu (\texttt{VydejPohyb})}
+\subsection{Scénář: Výdej ze skladu (\texttt{VydejPohyb})}
 \begin{enumerate}
   \item Uživatel zvolí typ pohybu \emph{výdej} a zadá součástku, množství a důvod výdeje.
   \item Systém volá \texttt{overitData()} -- ověří existenci součástky a zda \texttt{mnozstvi} $\geq$ požadovanému množství.
@@ -175,7 +172,7 @@ Uživatel provádí veškeré operace se systémem -- vytváří skladové pohyb
   \item \textbf{Alternativní tok:} nedostatečné množství na skladě $\rightarrow$ systém vrátí chybovou hlášku a pohyb je zamítnut.
 \end{enumerate}
 
-\subsubsection{Scénář: Přesun součástky (\texttt{PresunutiPohyb})}
+\subsection{Scénář: Přesun součástky (\texttt{PresunutiPohyb})}
 \begin{enumerate}
   \item Uživatel zvolí typ pohybu \emph{přesun} a zadá součástku, množství, zdrojovou a cílovou lokaci.
   \item Systém volá \texttt{overitData()} -- ověří existenci součástky, dostatečné množství ve zdrojové lokaci a platnost cílové lokace.
@@ -184,7 +181,7 @@ Uživatel provádí veškeré operace se systémem -- vytváří skladové pohyb
   \item \textbf{Alternativní tok:} zdrojová nebo cílová lokace je neplatná $\rightarrow$ systém vrátí chybovou hlášku a pohyb je zamítnut.
 \end{enumerate}
 
-\subsubsection{Scénář: Přiřazení součástky k~projektu}
+\subsection{Scénář: Přiřazení součástky k~projektu}
 \begin{enumerate}
   \item Uživatel vybere projekt a zadá součástku s~množstvím.
   \item Systém volá \texttt{Soucastka.overDostupnost()} -- ověří, zda \texttt{mnozstvi} $-$ \texttt{rezervovaneMnozstvi} $> 0$.
@@ -193,7 +190,7 @@ Uživatel provádí veškeré operace se systémem -- vytváří skladové pohyb
   \item \textbf{Alternativní tok:} nedostatečný počet volných kusů $\rightarrow$ systém vrátí chybovou hlášku a přiřazení je zamítnuto.
 \end{enumerate}
 
-\subsubsection{Scénář: Správa součástek}
+\subsection{Scénář: Správa součástek}
 \begin{enumerate}
   \item Uživatel přidá novou součástku nebo upraví existující.
   \item Systém ověří validitu zadaných dat (název, počáteční množství, lokace).
@@ -201,7 +198,7 @@ Uživatel provádí veškeré operace se systémem -- vytváří skladové pohyb
   \item \textbf{Alternativní tok:} neplatná data $\rightarrow$ systém vrátí chybovou hlášku, součástka není uložena.
 \end{enumerate}
 
-\subsection{Sekvenční diagram -- Vytvoření pohybu}
+\section{Sekvenční diagram -- Vytvoření pohybu}
 
 \begin{figure}[H]
   \centering
@@ -210,7 +207,7 @@ Uživatel provádí veškeré operace se systémem -- vytváří skladové pohyb
   \label{fig:sequence_pohyb}
 \end{figure}
 
-\subsection{Aktivity diagram -- Vytvoření pohybu}
+\section{Aktivity diagram -- Vytvoření pohybu}
 
 Diagram zachycuje průběh vytvoření skladového pohybu v~systému.
 Pohyb prochází třemi fázemi řízenými metodami třídy \texttt{SkladovyPohyb}:
@@ -228,7 +225,7 @@ Pohyb prochází třemi fázemi řízenými metodami třídy \texttt{SkladovyPoh
 \end{figure}
 
 \newpage
-\section{Závěr}
+\chapter{Závěr}
 
 Navržený datový model systému WMS zachycuje strukturu, chování i interakce hlavních entit systému.
 Objektový model (class diagram) definuje třídy a jejich vztahy.
