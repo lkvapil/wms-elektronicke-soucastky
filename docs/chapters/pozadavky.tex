@@ -90,11 +90,26 @@
 Hlavní aktér systému je \textbf{Uživatel}, který odpovídá třídě \texttt{Uzivatel} v~datovém modelu.
 Uživatel provádí veškeré operace se systémem -- vytváří skladové pohyby, spravuje součástky i projekty.
 
-Podrobný Use Case diagram je zobrazen v~\autoref{fig:use_case}.
-
 \begin{figure}[H]
   \centering
   \includegraphics[width=\textwidth]{01_use_case.png}
   \caption{Use Case diagram systému WMS -- elektronické součástky}
   \label{fig:use_case}
 \end{figure}
+
+\subsection*{Scénář: Vytvoření pohybu}
+\begin{enumerate}
+  \item Uživatel zvolí typ pohybu -- příjem (\texttt{PrijemPohyb}), výdej (\texttt{VydejPohyb}) nebo přesun (\texttt{PresunutiPohyb}).
+  \item Zadá součástku a množství.
+  \item Systém volá \texttt{overitData()} -- ověří existenci součástky, dostatečné množství a platnost lokací.
+  \item Pokud data OK $\rightarrow$ systém volá \texttt{provestPohyb()} a aktualizuje zásoby.
+  \item Pohyb je potvrzen; v~případě chyby je zamítnut.
+\end{enumerate}
+
+\subsection*{Scénář: Přiřazení součástky k~projektu}
+\begin{enumerate}
+  \item Uživatel vybere projekt a zadá součástku s~množstvím.
+  \item Systém volá \texttt{overDostupnost()} -- ověří, zda \texttt{mnozstvi -- rezervovaneMnozstvi > 0}.
+  \item Pokud je dostatek volných kusů $\rightarrow$ systém volá \texttt{Projekt.priradSoucastku()}.
+  \item Součástka je přiřazena k~projektu; zásoby jsou aktualizovány.
+\end{enumerate}
