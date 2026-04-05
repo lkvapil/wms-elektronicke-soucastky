@@ -30,7 +30,7 @@ a model interakcí (use case diagram, scénáře, sekvenční a aktivity diagram
   \item \textbf{SkladovyPohyb}: Abstraktní třída reprezentující pohyb součástek -- příjem, výdej nebo přesun.
   \item \textbf{PrijemPohyb}: Konkrétní pohyb typu příjem -- naskladnění součástek od dodavatele (dědí ze \textbf{SkladovyPohyb}).
   \item \textbf{VydejPohyb}: Konkrétní pohyb typu výdej -- vyskladnění součástek ze skladu (dědí ze \textbf{SkladovyPohyb}). Atribut \texttt{duvod} popisuje účel výdeje, např. \textit{použití v projektu}, \textit{reklamace}, \textit{interní spotřeba} nebo \textit{oprava}.
-  \item \textbf{PresunutiPohyb}: Konkrétní pohyb typu přesun -- přemístnění součástek mezi lokáními ve skladu (dědí ze \textbf{SkladovyPohyb}).
+  \item \textbf{PresunutiPohyb}: Konkrétní pohyb typu přesun -- přemístnění součástek mezi lokacemi ve skladu (dědí ze \textbf{SkladovyPohyb}).
   \item \textbf{Sklad}: Fyzický sklad rozdělený na lokace, ve kterých jsou uloženy součástky.
   \item \textbf{Lokace}: Konkrétní místo v~skladu identifikované označením (např. A-01-03).
   \item \textbf{Uzivatel}: Osoba spravující součástky, pohyby, projekty a sklady v~systému.
@@ -63,7 +63,7 @@ a model interakcí (use case diagram, scénáře, sekvenční a aktivity diagram
 
 Diagram zachycuje strukturu systému WMS a vztahy mezi jeho hlavními třídami.
 Součástky jsou přiřazovány k~projektům a fyzicky umístěny v~lokacích skladu.
-Třída \texttt{Uzivatel} reprezentuje uživatelské roli v~systému. Vytvoření pohybu provádí voláním \texttt{SkladovyPohyb.vytvoritPohyb()} a přiřazení součástky k~projektu voláním \texttt{Projekt.priradSoucastku()}.
+Třída \texttt{Uzivatel} reprezentuje uživatelskou roli v~systému. Vytvoření pohybu provádí voláním \texttt{SkladovyPohyb.vytvoritPohyb()} a přiřazení součástky k~projektu voláním \texttt{Projekt.priradSoucastku()}.
 
 Diagram využívá \textbf{generalizaci}: abstraktní třída \texttt{SkladovyPohyb} je základem pro tři konkrétní podtřídy
 \texttt{PrijemPohyb} (naskladnění), \texttt{VydejPohyb} (vyskladnění) a \texttt{PresunutiPohyb} (přesun mezi lokacemi),
@@ -93,7 +93,7 @@ součástce prostřednictvím kvalifikátoru \texttt{id: int}.
 \begin{figure}[H]
   \centering
   \includegraphics[width=\textwidth]{02_class_diagram.png}
-  \caption{Class diagram WMS}
+  \caption{Class diagram}
   \label{fig:class_diagram}
 \end{figure}
 
@@ -212,7 +212,7 @@ Uživatel provádí veškeré operace se systémem -- vytváří skladové pohyb
 
 \subsection*{Aktivity diagram -- Vytvoření pohybu}
 
-Diagram zachycuje průběh vytvoření skladového pohybu v~systému WMS.
+Diagram zachycuje průběh vytvoření skladového pohybu v~systému.
 Pohyb prochází třemi fázemi řízenými metodami třídy \texttt{SkladovyPohyb}:
 \begin{itemize}
   \item \texttt{vytvoritPohyb()} -- uživatel zadá typ pohybu, součástku a množství; metoda inicializuje pohyb, přiřadí ID a datum vzniku.
