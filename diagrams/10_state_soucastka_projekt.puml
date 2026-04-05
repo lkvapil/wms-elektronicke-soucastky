@@ -1,21 +1,28 @@
 @startuml
+top to bottom direction
 title State diagram - Soucastka
 
-[*] --> Volna
 
-Volna --> Prirazena : priraditProjekt()
+[*] --> Evidovana : Přidána do systému / evidovatSoucastku()
 
-Prirazena : entry / rezervace_skladu
-Prirazena --> Prirazena : kontrola_stavu
+Evidovana : do / čekat na naskladnění
+Evidovana --> Dostupna : Naskladněna na sklad
 
-Prirazena --> Pouzita : pouzit()
+Dostupna : do / sledovat stav zásob
+Dostupna --> Dostupna : Naskladněno / zvysMnozstvi()
+Dostupna --> Rezervovana : Rezervována pro projekt
+Dostupna --> Odepsana : Odepsána
 
-Pouzita : entry / odecteni_ze_skladu
-Pouzita --> Odepsana : odepsat()
+Rezervovana : entry / rezervovatMnozstvi()
+Rezervovana : do / blokovat množství
+Rezervovana --> Dostupna : Rezervace zrušena
+Rezervovana --> Vydana : Vydána ze skladu
 
-Prirazena --> Volna : [zruseni]
-Pouzita --> Prirazena : [vraceni]
+Vydana : entry / snizMnozstvi()
+Vydana : do / evidovat spotřebu
+Vydana --> Dostupna : Vrácena na sklad
+Vydana --> Odepsana : Odepsána
 
-Odepsana --> [*]
+Odepsana --> [*] : Součástka odepsána
 
 @enduml

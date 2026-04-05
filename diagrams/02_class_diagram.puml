@@ -31,6 +31,8 @@ class Soucastka {
   id: int
   nazev: String
   mnozstvi: int
+  stav: String
+  evidovatSoucastku()
   zvysMnozstvi(pocet: int)
   snizMnozstvi(pocet: int)
   overDostupnost(): boolean
@@ -40,6 +42,10 @@ abstract class SkladovyPohyb {
   id: int
   datum: Date
   stav: String
+  typ: String
+  mnozstvi: int
+  {abstract} vytvoritPohyb()
+  overitData()
   provestPohyb()
 }
 
@@ -56,12 +62,14 @@ class VydejPohyb {
 class PresunutiPohyb {
   zdrojLokaceId: int
   cilLokaceId: int
+  vytvoritPohyb()
   zmenLokaci()
 }
 
 class Sklad {
   id: int
   nazev: String
+  najdiSoucastku(id: int): Soucastka
 }
 
 class Lokace {
@@ -78,8 +86,8 @@ PresunutiPohyb --|> SkladovyPohyb
 Sklad "[id: int]" --> "1" Soucastka : najdiSoucastku
 
 ' datove vztahy
-Projekt "1" --> "*" Soucastka : obsahuje
-SkladovyPohyb "*" --> "1" Soucastka : je součástí
+Projekt "1" --> "*" Soucastka : přiřazuje
+SkladovyPohyb "*" --> "*" Soucastka : je součástí
 Sklad "1" --> "*" Lokace : obsahuje
 Lokace "1" --> "*" Soucastka : ukládá
 SkladovyPohyb --> Sklad : mění stav

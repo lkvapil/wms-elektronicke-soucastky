@@ -1,27 +1,42 @@
 @startuml
-scale 2
-left to right direction
+top to bottom direction
 title State diagram - SkladovyPohyb
 
 [*] --> Vytvoren
 
 Vytvoren : entry / vytvoritPohyb()
-Vytvoren --> Validovan : submit()
+Vytvoren : do / čekat na odeslání
+Vytvoren : exit / uložit pohyb
+Vytvoren --> Validovan : Pohyb odeslán
 
 Validovan : entry / overitData()
-Validovan --> Proveden_Prijem : provestPohyb() [data_platna / prijem]
-Validovan --> Proveden_Vydej : provestPohyb() [data_platna / vydej]
-Validovan --> Proveden_Presun : provestPohyb() [data_platna / presun]
-Validovan --> Zamitnut : [neplatna_data]
-Validovan --> Zamitnut : [nedostatecne_mnozstvi]
+Validovan : do / kontrolovat data
+Validovan : exit / potvrdit výsledek
+Validovan --> Proveden_Prijem : Typ == příjem
+Validovan --> Proveden_Vydej : Typ == výdej
+Validovan --> Proveden_Presun : Typ == přesun
+Validovan --> Zamitnut : Neplatná data
+Validovan --> Zamitnut : Nedostatečné množství
+
+Zamitnut : entry / zaznamenat chybu
+Zamitnut : do / čekat
+Zamitnut : exit / notifikovat uživatele
 
 Proveden_Prijem : entry / soucastka.zvysMnozstvi()
-Proveden_Vydej : entry / soucastka.snizMnozstvi()
-Proveden_Presun : entry / zmenLokaci()
+Proveden_Prijem : do / aktualizovat sklad
+Proveden_Prijem : exit / uložit záznam
 
-Proveden_Prijem --> [*]
-Proveden_Vydej --> [*]
-Proveden_Presun --> [*]
-Zamitnut --> [*]
+Proveden_Vydej : entry / soucastka.snizMnozstvi()
+Proveden_Vydej : do / aktualizovat sklad
+Proveden_Vydej : exit / uložit záznam
+
+Proveden_Presun : entry / zmenLokaci()
+Proveden_Presun : do / aktualizovat lokaci
+Proveden_Presun : exit / uložit záznam
+
+Proveden_Prijem --> [*] : Pohyb dokončen
+Proveden_Vydej --> [*] : Pohyb dokončen
+Proveden_Presun --> [*] : Pohyb dokončen
+Zamitnut --> [*] : Pohyb byl zamítnut
 
 @enduml

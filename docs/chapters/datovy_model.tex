@@ -18,11 +18,11 @@ mezi nimi.
 \subsection*{Entity tříd}
 
 \begin{itemize}
-  \item \textbf{Soucastka}: Skladová položka evidovaná v~systému WMS s~aktuálním množstvím na skladě.
+  \item \textbf{Soucastka}: Skladová položka evidovaná v~systému WMS s~aktuálním množstvím na skladě. Součástka může nabývat stavů: \textit{Dostupna} (volná k~použití), \textit{Rezervovana} (blokována pro projekt), \textit{Vydana} (fyzicky vydána ze skladu) nebo \textit{Odepsana} (trvale vyřazena z~evidence).
   \item \textbf{Projekt}: Projekt, ke kterému jsou přiřazeny součástky pro sledování spotřeby.
   \item \textbf{SkladovyPohyb}: Abstraktní třída reprezentující pohyb součástek -- příjem, výdej nebo přesun.
   \item \textbf{PrijemPohyb}: Konkrétní pohyb typu příjem -- naskladnění součástek od dodavatele (dědí ze \textbf{SkladovyPohyb}).
-  \item \textbf{VydejPohyb}: Konkrétní pohyb typu výdej -- vyskladnění součástek ze skladu (dědí ze \textbf{SkladovyPohyb}).
+  \item \textbf{VydejPohyb}: Konkrétní pohyb typu výdej -- vyskladnění součástek ze skladu (dědí ze \textbf{SkladovyPohyb}). Atribut \texttt{duvod} popisuje účel výdeje, např. \textit{použití v projektu}, \textit{reklamace}, \textit{interní spotřeba} nebo \textit{oprava}.
   \item \textbf{PresunutiPohyb}: Konkrétní pohyb typu přesun -- přemístnění součástek mezi lokáními ve skladu (dědí ze \textbf{SkladovyPohyb}).
   \item \textbf{Sklad}: Fyzický sklad rozdělený na lokace, ve kterých jsou uloženy součástky.
   \item \textbf{Lokace}: Konkrétní místo v~skladu identifikované označením (např. A-01-03).
@@ -38,12 +38,12 @@ mezi nimi.
     \toprule
     \textbf{Entita} & \textbf{Atributy} \\
     \midrule
-    Soucastka    & id, nazev, mnozstvi \\
+    Soucastka    & id, nazev, mnozstvi, stav (Dostupna $|$ Rezervovana $|$ Vydana $|$ Odepsana) \\
     Projekt      & id, nazev \\
-    SkladovyPohyb & id, datum, stav \\
-    PrijemPohyb  & dodavatel (dědí z SkladovyPohyb) \\
-    VydejPohyb   & duvod (dědí z SkladovyPohyb) \\
-    PresunutiPohyb & zdrojLokace, cilLokace (dědí z SkladovyPohyb) \\
+    SkladovyPohyb & id, datum, stav, typ (prijem $|$ vydej $|$ presun), mnozstvi \\
+    PrijemPohyb  & dodavatel -- vlastní; id, datum, stav, typ -- zděděno \\
+    VydejPohyb   & duvod -- vlastní; id, datum, stav, typ -- zděděno \\
+    PresunutiPohyb & zdrojLokace, cilLokace -- vlastní; id, datum, stav, typ -- zděděno \\
     Sklad        & id, nazev \\
     Lokace       & id, oznaceni \\
     Uzivatel     & id, jmeno, email \\
@@ -62,6 +62,13 @@ spravovat součástky, přiřazovat součástky k~projektům a zobrazovat stav s
 Diagram využívá \textbf{generalizaci}: abstraktní třída \texttt{SkladovyPohyb} je základem pro tři konkrétní podtřídy
 \texttt{PrijemPohyb} (naskladnění), \texttt{VydejPohyb} (vyskladnění) a \texttt{PresunutiPohyb} (přesun mezi lokacemi),
 které dědí společné atributy a přidávají vlastní specifické atributy.
+
+Třída \texttt{SkladovyPohyb} deklaruje abstraktní metodu \texttt{vytvoritPohyb()}, kterou každá podtřída implementuje po svém:
+\begin{itemize}
+  \item \texttt{PrijemPohyb.vytvoritPohyb()} -- vytvoří příjem a nastaví atribut \texttt{dodavatel}.
+  \item \texttt{VydejPohyb.vytvoritPohyb()} -- vytvoří výdej a nastaví atribut \texttt{duvod}.
+  \item \texttt{PresunutiPohyb.vytvoritPohyb()} -- vytvoří přesun a nastaví \texttt{zdrojLokaceId} a \texttt{cilLokaceId}.
+\end{itemize}
 
 Třída \texttt{SkladovyPohyb} zaznamenává každou změnu stavu zásob v~systému. Konkrétně:
 \begin{itemize}
@@ -96,19 +103,35 @@ v systému. Každý pohyb prochází životním cyklem řízeným třemi metodam
   \item \texttt{provestPohyb()} -- fyzicky provede pohyb: u~příjmu zavolá \texttt{soucastka.zvysMnozstvi()},
         u~výdeje \texttt{soucastka.snizMnozstvi()} a u~přesunu \texttt{zmenLokaci()}.
 \end{itemize}
-\begin{sidewaysfigure}[p]
-  \centering
-  \includegraphics[width=\textheight, height=\textwidth, keepaspectratio]{09_state_pohyb_skladu.png}
-  \caption{Stavový diagram třídy SkladovyPohyb}
-  \label{fig:state_pohyb}
-\end{sidewaysfigure}
-
-\subsection*{Stavový diagram \texttt{Soucastka} (v projektu)}
-
 \begin{figure}[H]
   \centering
-  \includegraphics[width=\textwidth]{10_state_soucastka_projekt.png}
-  \caption{Stavový diagram třídy Soucastka (v projektu)}
+  \makebox[\textwidth][c]{\includegraphics[width=1.25\textwidth]{09_state_pohyb_skladu.png}}
+  \caption{Stavový diagram třídy SkladovyPohyb}
+  \label{fig:state_pohyb}
+\end{figure}
+
+\subsection*{Stavový diagram třídy \texttt{Soucastka}}
+
+Diagram zachycuje, jak se mění stav součástky v~průběhu skladových operací.
+Součástka je nejprve přidána do systému pomocí \texttt{evidovatSoucastku()} -- nachází se ve stavu \textit{Evidovana} s~nulovým množstvím.
+Po naskladnění přechází do stavu \textit{Dostupna}, kde je k~dispozici pro rezervaci nebo výdej.
+Opakované naskladnění (např. doplnění zásob) ji nechá ve stavu \textit{Dostupna} a zavolá \texttt{zvysMnozstvi()}.
+
+Z~tohoto stavu mohou nastat dva přechody:
+\begin{itemize}
+  \item \textbf{Rezervována pro projekt} -- součástka přechází do stavu \textit{Rezervovana},
+        kde je blokována pro konkrétní projekt (\texttt{rezervovatMnozstvi()}).
+        Rezervaci lze zrušit a součástka se vrátí do \textit{Dostupna}.
+  \item \textbf{Vydána ze skladu} -- součástka přechází do stavu \textit{Vydana},
+        kde se zavolá \texttt{snizMnozstvi()}. Lze ji vrátit zpět do \textit{Dostupna}, nebo odepsat.
+\end{itemize}
+
+Ze stavů \textit{Rezervovana} i \textit{Vydana} lze součástku \textbf{Odepsat} -- přechází do terminálního stavu \textit{Odepsana},
+ze kterého již není návratu.
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.7\textwidth]{10_state_soucastka_projekt.png}
+  \caption{Stavový diagram třídy Soucastka}
   \label{fig:state_soucastka_projekt}
 \end{figure}
 
@@ -140,142 +163,6 @@ v systému. Každý pohyb prochází životním cyklem řízeným třemi metodam
   \caption{Use Case Diagram -- WMS}
   \label{fig:use_case}
 \end{figure}
-
-\subsection*{Scénář: Vytvoření pohybu}
-\begin{enumerate}
-  \item Uživatel zvolí \textit{Vytvořit pohyb}.
-  \item Zadá součástku a množství.
-  \item Systém provede kontrolu dat.
-  \item Pokud \texttt{[data\_ok]} $\rightarrow$ pohyb je schválen.
-  \item Systém provede pohyb a aktualizuje stav skladu.
-  \item Zobrazí se potvrzení výsledku.
-\end{enumerate}
-
-\subsection*{Scénář: Přiřazení součástky k~projektu}
-\begin{enumerate}
-  \item Uživatel vybere projekt.
-  \item Zvolí součástku a zadá množství.
-  \item Systém ověří dostupnost voláním \texttt{overDostupnost()}.
-  \item Pokud \texttt{[dostatek]} $\rightarrow$ součástka je přiřazena.
-  \item Systém aktualizuje množství na skladě.
-\end{enumerate}
-
-
-Cílem tohoto projektu je teoreticky navrhnout informační systém pro správu skladových
-součástek. Systém má umožňovat evidenci součástek, jejich kategorií, dodavatelů
-a skladových lokací. Dále má podporovat sledování pohybů součástek ve skladu,
-jako je naskladnění, vyskladnění nebo přesun mezi jednotlivými lokacemi.
-
-Součástí systému je také možnost přiřazovat součástky k projektům a evidovat
-jejich množství potřebné pro daný projekt. Návrh systému je znázorněn pomocí
-UML class diagramu, který popisuje jednotlivé třídy, jejich atributy a vztahy
-mezi nimi. Diagram využívá vybrané vlastnosti UML, jako jsou zobecnění,
-kardinality, agregace, kvalifikované vazby a atributy spojení, aby byl model
-systému co nejpřesnější.
-
-\newpage
-\section{Přehled entit}
-
-Systém pracuje s~následujícími hlavními třídami:
-
-\begin{description}
-  \item[\texttt{Uzivatel}] Hlavní uživatel systému; vytváří pohyby a spravuje součástky.
-  \item[\texttt{Sklad}] Fyzický sklad identifikovaný názvem;
-        sdružuje skladové lokace.
-  \item[\texttt{Lokace}] Konkrétní místo v~skladu (přihrádka, regál)
-        identifikované označením.
-  \item[\texttt{Soucastka}] Elektronická součástka evidovaná v~systému;
-        obsahuje atributy \texttt{id}, \texttt{nazev} a aktuální \texttt{mnozstvi} na skladě.
-  \item[\texttt{Projekt}] Projekt, ke kterému jsou součástky přiřazovány;
-        identifikován pomocí \texttt{id} a \texttt{nazev}.
-  \item[\texttt{SkladovyPohyb}] Záznam o~pohybu součástky (příjem, výdej, přesun);
-        obsahuje \texttt{id}, \texttt{typ} pohybu, \texttt{datum} provedení a aktuální \texttt{stav}.
-\end{description}
-
-\section{Diagram tříd}
-
-Diagram zachycuje strukturu systému WMS a vztahy mezi jeho hlavními třídami.
-Součástky jsou přiřazovány k~projektům a fyzicky umístěny v~lokacích skladu.
-Třída \texttt{Uzivatel} reprezentuje uživatelskou roli v~systému -- může vytvářet skladové pohyby,
-spravovat součástky, přiřazovat součástky k~projektům a zobrazovat stav skladu.
-
-Diagram využívá \textbf{generalizaci}: abstraktní třída \texttt{SkladovyPohyb} je základem pro tři konkrétní podtřídy
-\texttt{PrijemPohyb} (naskladnění), \texttt{VydejPohyb} (vyskladnění) a \texttt{PresunutiPohyb} (přesun mezi lokacemi),
-které dědí společné atributy a přidávají vlastní specifické atributy.
-Vazba mezi \texttt{Sklad} a \texttt{Soucastka} je \textbf{kvalifikovaná} -- sklad přistupuje ke konkrétní
-součástce prostřednictvím kvalifikátoru \texttt{id: int}.
-
-\begin{figure}[H]
-  \centering
-  \includegraphics[width=\textwidth]{02_class_diagram.png}
-  \caption{Class diagram WMS}
-  \label{fig:class_diagram}
-\end{figure}
-
-\newpage
-\section{Stavový diagram třídy \texttt{SkladovyPohyb}}
-
-Třída \texttt{SkladovyPohyb} reprezentuje obecný skladový pohyb -- tedy jakoukoli změnu stavu zásob součástek
-v systému. Atribut \texttt{typ} rozlišuje tři druhy pohybu: \emph{příjem} (naskladnění nových součástek),
-\emph{výdej} (odebrání součástek ze skladu) a \emph{přesun} (přemístění součástek mezi lokacemi či sklady).
-
-Životní cyklus pohybu je řízen třemi metodami:
-\begin{description}
-  \item[\texttt{vytvoritPohyb()}] Inicializuje nový pohyb -- přiřadí ID, nastaví datum vzniku, typ pohybu a vazbu na součástku.
-  \item[\texttt{overitData()}] Ověří platnost zadaných dat. Pohyb je zamítnut pokud:
-    \begin{itemize}
-      \item součástka neexistuje, chybí povinné údaje nebo množství je 0 či záporné (\texttt{[neplatna\_data]}),
-      \item požadované množství výdeje přesahuje aktuální stav na skladě (\texttt{[nedostatecne\_mnozstvi]}),
-      \item u~přesunu: zdrojová lokace neobsahuje danou součástku nebo cílová lokace neexistuje.
-    \end{itemize}
-  \item[\texttt{provestPohyb()}] Fyzicky provede pohyb: u~příjmu zavolá \texttt{soucastka.zvysMnozstvi()},
-        u~výdeje \texttt{soucastka.snizMnozstvi()} a u~přesunu \texttt{zmenLokaci()}.
-\end{description}
-
-\begin{sidewaysfigure}[p]
-  \centering
-  \includegraphics[width=\textheight, height=\textwidth, keepaspectratio]{09_state_pohyb_skladu.png}
-  \caption{Stavový diagram třídy SkladovyPohyb}
-  \label{fig:state_pohyb}
-\end{sidewaysfigure}
-
-\section{Stavový diagram \texttt{Soucastka} (v projektu)}
-
-\begin{figure}[H]
-  \centering
-  \includegraphics[width=\textwidth]{10_state_soucastka_projekt.png}
-  \caption{Stavový diagram třídy Soucastka (v projektu)}
-  \label{fig:state_soucastka_projekt}
-\end{figure}
-
-\section{Use Case Diagram}
-
-\begin{figure}[H]
-  \centering
-  \includegraphics[width=0.8\textwidth]{11_use_case.png}
-  \caption{Use Case Diagram -- WMS}
-  \label{fig:use_case}
-\end{figure}
-
-\section{Activity Diagram -- Vytvoření pohybu}
-
-\begin{figure}[H]
-  \centering
-  \includegraphics[width=0.7\textwidth]{12_activity_wms.png}
-  \caption{Activity diagram -- Vytvoření pohybu}
-  \label{fig:activity_wms}
-\end{figure}
-
-\section{Sekvenční diagram -- Vytvoření pohybu}
-
-\begin{figure}[H]
-  \centering
-  \includegraphics[width=\textwidth]{13_sequence_pohyb.png}
-  \caption{Sekvenční diagram -- Vytvoření pohybu}
-  \label{fig:sequence_pohyb}
-\end{figure}
-
-\section{Scénáře use case}
 
 \subsection*{Scénář: Vytvoření pohybu}
 \begin{enumerate}
