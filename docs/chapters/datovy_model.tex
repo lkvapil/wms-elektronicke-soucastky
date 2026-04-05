@@ -119,10 +119,9 @@ Naskladněním (opakovaně i při doplnění zásob) se zavolá \texttt{zvysMnoz
 
 Součástka zůstává ve stavu \textit{Dostupna} i při rezervaci -- rezervace se projeví pouze změnou atributu
 \texttt{rezervovaneMnozstvi} (voláním \texttt{rezervovat(pocet)}) a lze ji kdykoli zrušit (\texttt{zrusitRezervaci(pocet)}).
-Samotná součástka nemění stav; do stavu \textit{Vydana} přechází až při fyzickém výdeji ze skladu, kdy se zavolá \texttt{snizMnozstvi()}.
-Vydanou součástku lze vrátit zpět do \textit{Dostupna}, nebo odepsat.
+Samotná součástka nemění stav; do stavu \textit{Vydana} přechází až při fyzickém výdeji ze skladu, kdy se zavolají \texttt{snizMnozstvi(pocet)} a \texttt{evidovat spotřebu}. Vydaná součástka je spotřebována -- nelze ji vrátit.
 
-Součástku lze \textbf{odepsat} ze stavů \textit{Dostupna} i \textit{Vydana} -- přechází do terminálního stavu \textit{Odepsana},
+Součástku lze \textbf{odepsat} ze stavu \textit{Dostupna} (např. poškozena na skladě) -- přechází do terminálního stavu \textit{Odepsana},
 ze kterého již není návratu.
 \begin{figure}[H]
   \centering
