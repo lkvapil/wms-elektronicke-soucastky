@@ -96,8 +96,8 @@ systém ověří:
   \item u~příjmu a výdeje: zda je součástka dostupná na skladě v~dostatečném množství a zda je uveden platný dodavatel (u~příjmu),
   \item u~přesunu: zda zdrojová lokace obsahuje danou součástku a zda cílová lokace existuje ve skladu.
 \end{itemize}
-Po schválení je pohyb fyzicky proveden: příjem volá \texttt{soucastka.zvysMnozstvi()},
-výdej \texttt{soucastka.snizMnozstvi()} a přesun \texttt{zmenLokaci()}.
+Po schválení zavolá \texttt{provestPohyb()} příslušnou akci:
+u~příjmu \texttt{soucastka.zvysMnozstvi()}, u~výdeje \texttt{soucastka.snizMnozstvi()} a u~přesunu \texttt{zmenLokaci()}.
 \begin{figure}[H]
   \centering
   \includegraphics[width=0.8\textwidth]{09_state_pohyb_skladu.png}
@@ -229,8 +229,8 @@ Pohyb může být zamítnut pouze při validaci:
   \item u~přesunu: zdrojová lokace neobsahuje danou součástku nebo cílová lokace neexistuje.
 \end{itemize}
 Pokud jsou data platná, pohyb přejde do stavu \emph{Schválen} a může být fyzicky proveden.
-Každý typ pohybu má vlastní terminální stav: \emph{Proveden\_Prijem} volá \texttt{soucastka.zvysMnozstvi()},
-\emph{Proveden\_Vydej} volá \texttt{soucastka.snizMnozstvi()} a \emph{Proveden\_Presun} volá \texttt{zmenLokaci()}.
+Po schválení zavolá \texttt{provestPohyb()} příslušnou akci: u~příjmu \texttt{soucastka.zvysMnozstvi()},
+u~výdeje \texttt{soucastka.snizMnozstvi()} a u~přesunu \texttt{zmenLokaci()}.
 
 \begin{figure}[H]
   \centering
