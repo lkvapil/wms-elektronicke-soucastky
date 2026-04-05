@@ -115,6 +115,9 @@ v systému. Každý pohyb prochází životním cyklem řízeným třemi metodam
 
 Diagram zachycuje, jak se mění stav součástky v~průběhu skladových operací.
 Součástka je přidána do systému a okamžitě vstupuje do stavu \textit{Dostupna} s~nulovým množstvím.
+Stav \textit{Dostupna} je hlavní pracovní stav součástky -- může mít \texttt{mnozstvi = 0} (čeká na naskladnění)
+i nenulové množství, přičemž část může být blokována atributem \texttt{rezervovaneMnozstvi}.
+Metoda \texttt{overDostupnost()} ověří, zda je volné množství (\texttt{mnozstvi - rezervovaneMnozstvi > 0}).
 Stav součástky je řízen těmito metodami:
 \begin{itemize}
   \item \texttt{zvysMnozstvi(pocet)} -- zavolá se při naskladnění; zvýší atribut \texttt{mnozstvi}, součástka zůstává ve stavu \textit{Dostupna}.
