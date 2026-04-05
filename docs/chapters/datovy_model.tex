@@ -77,17 +77,12 @@ součástce prostřednictvím kvalifikátoru \texttt{id: int}.
 
 Třída \texttt{Pohyb} reprezentuje obecný skladový pohyb -- tedy jakoukoli změnu stavu zásob součástek
 v systému. Každý pohyb prochází životním cyklem: po vytvoření je odeslán k~validaci, při které
-systém ověří, zda zadaná součástka existuje a je dostupná na skladě. Pohyb může být zamítnut
-při neplatných datech nebo při nedostatečném množství na skladě.
-
-Validace je nezbytná z~těchto důvodů:
+systém ověří:
 \begin{itemize}
-  \item \textbf{Výdej neexistující součástky} -- pohyb by odkazoval na součástku, která v~systému není evidována.
-  \item \textbf{Záporné množství na skladě} -- výdej více kusů, než je fyzicky k~dispozici, by vedl k~nekonzistentnímu stavu.
-  \item \textbf{Neplatná data} -- chybějící dodavatel u~příjmu, neplatné datum nebo jiné povinné údaje.
+  \item zda zadaná součástka existuje v~systému,
+  \item zda je dostupná na skladě v~dostatečném množství.
 \end{itemize}
-
-Bez validace by systém mohl schválit pohyb, který je fyzicky nemožný, a způsobit tak nesoulad mezi evidovaným a skutečným stavem skladu.
+Pohyb může být zamítnut při neplatných datech nebo při nedostatečném množství na skladě.
 
 \begin{figure}[H]
   \centering
