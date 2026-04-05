@@ -1,23 +1,58 @@
 @startuml
+skinparam defaultFontSize 13
+skinparam sequenceArrowThickness 1.5
+skinparam sequenceParticipantBorderThickness 1.5
 
-actor Uzivatel
-participant SkladovyPohyb
-participant Soucastka
+actor "Uživatel" as Uzivatel
+participant "SkladovyPohyb" as Pohyb
+participant "Soucastka" as Soucastka
+participant "Lokace" as Lokace
 
-Uzivatel -> SkladovyPohyb : vytvoritPohyb()
-SkladovyPohyb -> SkladovyPohyb : overitData()
+Uzivatel -> Pohyb : vytvoritPohyb(typ, soucastka, mnozstvi)
+activate Pohyb
 
-alt [data OK]
+Pohyb -> Pohyb : overitData()
+activate Pohyb
+
+Pohyb -> Soucastka : existuje?
+activate Soucastka
+Soucastka --> Pohyb : true / false
+deactivate Soucastka
+
+alt [data NOK]
+    Pohyb --> Uzivatel : chybová hláška, pohyb zamítnut
+else [data OK]
+    deactivate Pohyb
+
+    Pohyb -> Pohyb : provestPohyb()
+    activate Pohyb
+
     alt [typ == příjem]
-        SkladovyPohyb -> Soucastka : zvysMnozstvi(pocet)
+        Pohyb -> Soucastka : zvysMnozstvi(pocet)
+        activate Soucastka
+        Soucastka --> Pohyb : ok
+        deactivate Soucastka
+
     else [typ == výdej]
-        SkladovyPohyb -> Soucastka : snizMnozstvi(pocet)
+        Pohyb -> Soucastka : snizMnozstvi(pocet)
+        activate Soucastka
+        Soucastka --> Pohyb : ok
+        deactivate Soucastka
+
     else [typ == přesun]
-        SkladovyPohyb -> SkladovyPohyb : zmenLokaci()
+        Pohyb -> Soucastka : overDostupnost()
+        activate Soucastka
+        Soucastka --> Pohyb : true
+        deactivate Soucastka
+        Pohyb -> Lokace : zmenLokaci(zdrojLokaceId, cilLokaceId)
+        activate Lokace
+        Lokace --> Pohyb : ok
+        deactivate Lokace
     end
-    SkladovyPohyb --> Uzivatel : pohyb potvrzen
-else [data NOK]
-    SkladovyPohyb --> Uzivatel : pohyb zamítnut
+
+    deactivate Pohyb
+    Pohyb --> Uzivatel : pohyb potvrzen
 end
 
+deactivate Pohyb
 @enduml
