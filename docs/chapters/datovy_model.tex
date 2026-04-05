@@ -105,8 +105,12 @@ v systému. Každý pohyb prochází životním cyklem řízeným třemi metodam
   \item \texttt{vytvoritPohyb()} -- inicializuje nový pohyb: přiřadí ID, nastaví datum vzniku, typ pohybu a vazbu na součástku;
   \item \texttt{overitData()} -- ověří platnost zadaných dat: existenci součástky, vyplnění povinných polí,
         dostatečné množství na skladě (příjem/výdej) nebo platnost lokací (přesun);
-  \item \texttt{provestPohyb()} -- fyzicky provede pohyb: u~příjmu zavolá \texttt{soucastka.zvysMnozstvi(pocet)},
-        u~výdeje \texttt{soucastka.snizMnozstvi(pocet)} a u~přesunu \texttt{zmenLokaci()}.
+  \item \texttt{provestPohyb()} -- fyzicky provede pohyb podle typu:
+    \begin{itemize}
+      \item příjem $\rightarrow$ \texttt{soucastka.zvysMnozstvi(pocet)}
+      \item výdej $\rightarrow$ \texttt{soucastka.snizMnozstvi(pocet)}
+      \item přesun $\rightarrow$ \texttt{zmenLokaci()}
+    \end{itemize}
 \end{itemize}
 \begin{figure}[H]
   \centering
