@@ -88,16 +88,15 @@ součástce prostřednictvím kvalifikátoru \texttt{id: int}.
 \subsection*{Stavový diagram třídy \texttt{SkladovyPohyb}}
 
 Třída \texttt{SkladovyPohyb} reprezentuje obecný skladový pohyb -- tedy jakoukoli změnu stavu zásob součástek
-v systému. Každý pohyb prochází životním cyklem: po vytvoření je odeslán k~validaci, při které
-systém ověří:
+v systému. Každý pohyb prochází životním cyklem řízeným čtyřmi metodami:
 \begin{itemize}
-  \item zda zadaná součástka existuje v~systému,
-  \item zda jsou vyplněna všechna povinná pole (datum, typ pohybu),
-  \item u~příjmu a výdeje: zda je součástka dostupná na skladě v~dostatečném množství a zda je uveden platný dodavatel (u~příjmu),
-  \item u~přesunu: zda zdrojová lokace obsahuje danou součástku a zda cílová lokace existuje ve skladu.
+  \item \texttt{vytvoritPohyb()} -- inicializuje nový pohyb: přiřadí ID, nastaví datum vzniku, typ pohybu a vazbu na součástku;
+  \item \texttt{overitData()} -- ověří platnost zadaných dat: existenci součástky, vyplnění povinných polí,
+        dostatečné množství na skladě (příjem/výdej) nebo platnost lokací (přesun);
+  \item \texttt{schvalit()} -- potvrdí správnost pohybu a změní stav na \emph{Schválen}, čímž ho připraví k provedení;
+  \item \texttt{provestPohyb()} -- fyzicky provede pohyb: u~příjmu zavolá \texttt{soucastka.zvysMnozstvi()},
+        u~výdeje \texttt{soucastka.snizMnozstvi()} a u~přesunu \texttt{zmenLokaci()}.
 \end{itemize}
-Po schválení zavolá \texttt{provestPohyb()} příslušnou akci:
-u~příjmu \texttt{soucastka.zvysMnozstvi()}, u~výdeje \texttt{soucastka.snizMnozstvi()} a u~přesunu \texttt{zmenLokaci()}.
 \begin{figure}[H]
   \centering
   \includegraphics[width=0.8\textwidth]{09_state_pohyb_skladu.png}
@@ -220,17 +219,20 @@ součástce prostřednictvím kvalifikátoru \texttt{id: int}.
 Třída \texttt{SkladovyPohyb} reprezentuje obecný skladový pohyb -- tedy jakoukoli změnu stavu zásob součástek
 v systému. Atribut \texttt{typ} rozlišuje tři druhy pohybu: \emph{příjem} (naskladnění nových součástek),
 \emph{výdej} (odebrání součástek ze skladu) a \emph{přesun} (přemístění součástek mezi lokacemi či sklady).
-Každý pohyb prochází životním cyklem: po vytvoření je odeslán k~validaci (\emph{Validován}), při které
-systém ověří dostupnost součástky, platnost dat a dostatečné množství.
-Pohyb může být zamítnut pouze při validaci:
-\begin{itemize}
-  \item \texttt{[neplatna\_data]} -- součástka neexistuje, chybí povinné údaje nebo množství je 0 či záporné;
-  \item \texttt{[nedostatecne\_mnozstvi]} -- požadované množství výdeje přesahuje aktuální stav na skladě;
-  \item u~přesunu: zdrojová lokace neobsahuje danou součástku nebo cílová lokace neexistuje.
-\end{itemize}
-Pokud jsou data platná, pohyb přejde do stavu \emph{Schválen} a může být fyzicky proveden.
-Po schválení zavolá \texttt{provestPohyb()} příslušnou akci: u~příjmu \texttt{soucastka.zvysMnozstvi()},
-u~výdeje \texttt{soucastka.snizMnozstvi()} a u~přesunu \texttt{zmenLokaci()}.
+
+Životní cyklus pohybu je řízen čtyřmi metodami:
+\begin{description}
+  \item[\texttt{vytvoritPohyb()}] Inicializuje nový pohyb -- přiřadí ID, nastaví datum vzniku, typ pohybu a vazbu na součástku.
+  \item[\texttt{overitData()}] Ověří platnost zadaných dat. Pohyb je zamítnut pokud:
+    \begin{itemize}
+      \item součástka neexistuje, chybí povinné údaje nebo množství je 0 či záporné (\texttt{[neplatna\_data]}),
+      \item požadované množství výdeje přesahuje aktuální stav na skladě (\texttt{[nedostatecne\_mnozstvi]}),
+      \item u~přesunu: zdrojová lokace neobsahuje danou součástku nebo cílová lokace neexistuje.
+    \end{itemize}
+  \item[\texttt{schvalit()}] Potvrdí správnost pohybu a změní stav na \emph{Schválen}, čímž ho připraví k fyzickému provedení.
+  \item[\texttt{provestPohyb()}] Fyzicky provede pohyb: u~příjmu zavolá \texttt{soucastka.zvysMnozstvi()},
+        u~výdeje \texttt{soucastka.snizMnozstvi()} a u~přesunu \texttt{zmenLokaci()}.
+\end{description}
 
 \begin{figure}[H]
   \centering
