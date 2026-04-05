@@ -2,33 +2,33 @@
 skinparam defaultFontSize 13
 skinparam ActivityBorderThickness 1.5
 skinparam ArrowThickness 1.5
+skinparam ActivityDiamondBorderThickness 1.5
 
-|Uživatel|
 start
-:Zadá typ pohybu, součástku a množství;
 
-|Systém|
-:vytvoritPohyb()\ninicializuje pohyb, přiřadí ID a datum;
+:Uživatel zadá typ pohybu, součástku a množství;
 
-:overitData()\nověří existenci součástky,\ndostatečné množství a platnost lokací;
+:vytvoritPohyb();
+
+:overitData();
 
 if (Data platná?) then (ano)
 
-  if (typ == příjem?) then (ano)
-    :Soucastka.zvysMnozstvi(pocet);
-  elseif (typ == výdej?) then (ano)
-    :Soucastka.snizMnozstvi(pocet);
-  else (přesun)
-    :Soucastka.overDostupnost();
-    :Lokace.zmenLokaci\n(zdrojLokaceId, cilLokaceId);
-  endif
+  fork
+    :zvysMnozstvi(pocet);
+    note left: typ == příjem
+  fork again
+    :snizMnozstvi(pocet);
+    note right: typ == výdej
+  fork again
+    :overDostupnost()\nzmenLokaci();
+    note right: typ == přesun
+  end fork
 
-  |Uživatel|
   :Pohyb potvrzen;
 
 else (ne)
-  |Uživatel|
-  :Chybová hláška\npohyb zamítnut;
+  :Pohyb zamítnut;
 endif
 
 stop
